@@ -16,31 +16,26 @@ class AnalyticsCommand(PluginCommand):
         ::
 
           Usage:
-                analytics --file=FILE
-                analytics list
+                analytics server start [--cloud=CLOUD]
+                analytics server stop [--cloud=CLOUD]
 
-          This command does some useful things.
-
-          Arguments:
-              FILE   a file name
+          This command manages the cloudmesh analytics server on the given cloud.
+          If the cloud is not spified it is run on localhost
 
           Options:
-              -f      specify the file
+              --clout=CLOUD  The name of the cloud as specified in the
+                             cloudmesh.yaml file
 
         """
-        arguments.FILE = arguments['--file'] or None
 
         VERBOSE(arguments)
 
-        m = Manager()
-
-        if arguments.FILE:
-            print("option a")
-            m.list(path_expand(arguments.FILE))
-
-        elif arguments.list:
-            print("option b")
-            m.list("just calling list without parameter")
-
         Console.error("This is just a sample")
+
+        if arguments.server and arguments.start:
+            print("start the server")
+
+        if arguments.server and arguments.stop:
+            print("stop the server")
+
         return ""
