@@ -7,13 +7,13 @@ info:
   version: 0.0.2
 
 servers:
-  - url: http://localhost:8000/cloudmesh-ai-services
+  - url: http://localhost:8000/cloudmesh-analytics
 
 paths:
   /file/upload:
     post:
       summary: uploading file to the server
-      operationId: cloudmesh.file.upload
+      operationId: cloudmesh.analytics.server.cloudmesh.file.upload
       requestBody:
         description: the file uploaded by the user
         required: true
@@ -47,7 +47,7 @@ paths:
   /file/list:
     get:
       summary: list all uploaded files
-      operationId: cloudmesh.file.list
+      operationId:  cloudmesh.analytics.server.cloudmesh.file.list
       responses:
         '200':
           description: upload succeed
@@ -64,7 +64,7 @@ paths:
   /file/read/{file_name}:
     get:
       summary: read file content
-      operationId: cloudmesh.file.read
+      operationId: cloudmesh.analytics.server.cloudmesh.file.read
       parameters:
         - in: path
           name: file_name   # Note the name is the same as in the path
@@ -88,7 +88,7 @@ paths:
   /analytics/linear-regression/{file_name}:
     post:
       summary: doing linear regression
-      operationId: cloudmesh.analytics.linear_regression
+      operationId: cloudmesh.analytics.server.cloudmesh.analytics.linear_regression
       parameters:
         - in: path
           name: file_name   # Note the name is the same as in the path
@@ -117,7 +117,7 @@ paths:
   /analytics/pca:
     get:
       summary: principle components analysis
-      operationId: cloudmesh.analytics.pca # working directory
+      operationId: cloudmesh.analytics.server.cloudmesh.analytics.pca # working directory
       responses:
         '200':
           description: cpu info

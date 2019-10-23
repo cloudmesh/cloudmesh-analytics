@@ -1,12 +1,7 @@
 import os
 import connexion
 import sys
-import cloudmesh.analytics.db as db
-
-
-# Add the project directory to the system path
-# sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
-
+from . import db
 
 def create_app(test_config=None):
     # create and configure the app
@@ -14,7 +9,9 @@ def create_app(test_config=None):
     c_app.add_api('analytics.yaml')
     c_app.app.config.from_mapping(
         SECRET_KEY='dev',
+        #TODO: Instance path requires fix
         DATABASE=os.path.join(c_app.app.instance_path, 'ai_service.sqlite'),
+        #TODO: The os.getcwd is changed. the default path need fix
         UPLOAD_FOLDER='../files'
     )
 
@@ -46,7 +43,3 @@ def create_app(test_config=None):
     db.init_app(c_app.app)
 
     return c_app.app
-
-
-if __name__ == '__main__':
-    create_app().run(port=8000, debug=True)

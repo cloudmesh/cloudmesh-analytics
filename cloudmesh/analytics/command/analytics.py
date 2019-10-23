@@ -7,6 +7,10 @@ from cloudmesh.common.util import path_expand
 from pprint import pprint
 from cloudmesh.common.debug import VERBOSE
 
+from ..server import server
+import os
+import numpy as np
+
 class AnalyticsCommand(PluginCommand):
 
     # noinspection PyUnusedLocal
@@ -34,6 +38,8 @@ class AnalyticsCommand(PluginCommand):
 
         if arguments.server and arguments.start:
             print("start the server")
+            np.save('flask_pid', np.array([flask_id]))
+            server.create_app().run(port=8000, debug=True)
 
         if arguments.server and arguments.stop:
             print("stop the server")

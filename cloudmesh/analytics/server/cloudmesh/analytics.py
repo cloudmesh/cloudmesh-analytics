@@ -3,7 +3,7 @@ from flask import jsonify, current_app
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from werkzeug.utils import secure_filename
-from cloudmesh.file_helpers import *
+from .file_helpers import *
 
 def linear_regression(file_name, body):
     """
