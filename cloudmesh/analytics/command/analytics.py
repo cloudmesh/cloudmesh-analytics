@@ -9,7 +9,9 @@ from cloudmesh.common.debug import VERBOSE
 
 from ..server import server
 import os
+import psutil
 import numpy as np
+from pathlib import Path
 
 class AnalyticsCommand(PluginCommand):
 
@@ -38,10 +40,21 @@ class AnalyticsCommand(PluginCommand):
 
         if arguments.server and arguments.start:
             print("start the server")
-            np.save('flask_pid', np.array([flask_id]))
+            #TODO: Need suppress console log
+            # Launch a server and save pid in the current directory
+            np.save(os.path.join(Path(__file__).parent.absolute() ,'server_pid'), np.array([os.getpid()]))
             server.create_app().run(port=8000, debug=True)
 
         if arguments.server and arguments.stop:
             print("stop the server")
+
+            # Load the file contains pid and shutdown the server
+            server_pid = np.load(os.path.join(Path(__file__).parent.absolute() ,'server_pid.npy'))[0]
+            if server_pid in psutil.pids():
+                p = psutil.Process(server_pid)
+                p.terminate()
+                os.remove(os.path.join(Path(__file__).parent.absolute(), 'server_pid.npy'))
+            else:
+                os.remove(os.path.join(Path(__file__).parent.absolute() ,'server_pid.npy'))
 
         return ""
