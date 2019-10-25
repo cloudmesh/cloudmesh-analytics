@@ -1,8 +1,8 @@
 """
-This module includes the helper functions for the help.py in order to distinguish the functions that are endpoints
+This module includes the helper functions for the help.py in order to characterize the endpoint functions
 """
 import os
-from flask import jsonify, current_app
+from flask import current_app
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from werkzeug.utils import secure_filename

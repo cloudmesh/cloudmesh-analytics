@@ -17,12 +17,12 @@ def linear_regression(file_name, body):
     #TODO: Data format is not correct
     try:
         data = read_csv(file_name)
-        X = data[:,0]
-        Y = data[:,1]
-        reg = LinearRegression(**paras).fit(X,Y)
-        return jsonify({'coefficient':reg.coef_ })
+        X = data[:,:-1]
+        Y = data[:,-1]
+        reg = LinearRegression(**paras).fit(X, Y)
+        return jsonify({'coefficient':reg.coef_.tolist() })
     except Exception as e:
-        return jsonify({'error_message': str(e)})
+        return jsonify({'error': str(e)})
 
 def pca():
     return jsonify({"output": 'run_pca_success'})
