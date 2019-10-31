@@ -1,7 +1,7 @@
-
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(os.getcwd()),'/cloudmesh'))
+# Add the path for configuring tests
+# sys.path.append(os.path.join(os.path.dirname(os.getcwd()),'/cloudmesh'))
 
 from cloudmesh.analytics.server.server import create_app
 from flask import jsonify
@@ -11,9 +11,6 @@ from io import StringIO, BytesIO
 import numpy as np
 import pytest
 import cloudmesh.analytics.server.cloudmesh.analytics as ai
-
-# Add the path for configuring tests
-
 
 def test_config():
     """
@@ -44,7 +41,7 @@ class TestFileOperations:
         :param client:
         :return: A binary string that includes a list of uploaded file names
         """
-        assert self.post_file(client, './test_assets/test_upload.csv','test_upload.csv') \
+        assert self.post_file(client, './tests/test_assets/test_upload.csv','test_upload.csv') \
                == \
                b'{"file_name":"test_upload.csv"}\n'
 
@@ -55,7 +52,7 @@ class TestFileOperations:
         :param client:
         :return: A binary string that includes a list of uploaded file names
         """
-        assert self.post_file(client, './test_assets/sample_matrix.csv','sample_matrix.csv') \
+        assert self.post_file(client, './tests/test_assets/sample_matrix.csv','sample_matrix.csv') \
                == \
                b'{"file_name":"sample_matrix.csv"}\n'
 
@@ -66,7 +63,7 @@ class TestFileOperations:
         :param client:
         :return: A binary string that includes a list of uploaded file names
         """
-        assert self.post_file(client, './test_assets/diabetes.csv','diabetes.csv') \
+        assert self.post_file(client, './tests/test_assets/diabetes.csv','diabetes.csv') \
                == \
                b'{"file_name":"diabetes.csv"}\n'
 
@@ -76,7 +73,7 @@ class TestFileOperations:
         :param client:
         :return:
         """
-        assert self.post_file(client, './test_assets/test_upload.csv', 'test_upload.txt') \
+        assert self.post_file(client, './tests/test_assets/test_upload.csv', 'test_upload.txt') \
                == \
                b'{"error_message":"Wrong file format"}\n'
 
@@ -92,7 +89,9 @@ class TestLinearRegression:
         Return a list sample parameters
         :return:
         """
-        return np.load('../tests/test_assets/test_paras.npy', allow_pickle=True).item()
+        print(__name__)
+        print(os.getcwd())
+        return np.load('./tests/test_assets/test_paras.npy', allow_pickle=True).item()
 
     # def test_generate_sample_parameters(self, client):
     #     """
@@ -173,15 +172,15 @@ def test_run_pca(client):
 
     assert response.data == ''
 
-def generate_file():
-    """
-    Converting the sci-kit learn built in sample data to the csv format
-    :return:
-    """
-    data = np.load('./testing_files/diabetes.npy')
-    target = np.load('./testing_files/diabetes_target.npy')
-    target = np.reshape(target, (len(target),1))
-    data = np.append(data, target, axis=1)
-    np.savetxt("./testing_files/diabetes.csv", data, delimiter=",")
+# def generate_file():
+#     """
+#     Converting the sci-kit learn built in sample data to the csv format
+#     :return:
+#     """
+#     data = np.load('./testing_files/diabetes.npy')
+#     target = np.load('./testing_files/diabetes_target.npy')
+#     target = np.reshape(target, (len(target),1))
+#     data = np.append(data, target, axis=1)
+#     np.savetxt("./testing_files/diabetes.csv", data, delimiter=",")
 
 

@@ -43,3 +43,7 @@ def create_app(test_config=None):
     db.init_app(c_app.app)
 
     return c_app.app
+
+
+
+# scp -r /server cc@129.114.111.143:/home/cc
