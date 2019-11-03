@@ -1,3 +1,8 @@
+"""The analytic functions
+The module include analytic functions, and are also the endpoints of the flask app. Those functions are referred by the
+OpenAPI specification by operationIDs
+"""
+
 import os
 from flask import jsonify, current_app
 import numpy as np
@@ -6,11 +11,17 @@ from werkzeug.utils import secure_filename
 from .file_helpers import *
 
 def linear_regression(file_name, body):
-    """
-    Linear regression operation on two dimension data. The input format should be a list of pairs, e.g. [[1, 2], [3, 4]...]
-    :param file_name: the data source
-    :param body: the request body
-    :return:
+    """Linear regression.
+
+    Args:
+
+        file_name (str): The file name that has the input data.
+        body (dict): The request body, which is a dictionary mapped by the connexion.
+    Return:
+        Return an json objects.
+
+    Warning:
+        The input format should be specified
     """
     # Extract parameters from the request body
     paras = body['paras']

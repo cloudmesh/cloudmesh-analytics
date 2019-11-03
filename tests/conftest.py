@@ -3,10 +3,6 @@ import tempfile
 import pytest
 import sys
 
-
-# Add the path for configuring tests
-# sys.path.append(os.path.join(os.path.dirname(os.getcwd()),'/cloudmesh'))
-
 from cloudmesh.analytics.server.server import create_app
 from cloudmesh.analytics.server.db import get_db, init_db
 

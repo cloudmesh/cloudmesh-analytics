@@ -1,7 +1,5 @@
 import sys
 import os
-# Add the path for configuring tests
-# sys.path.append(os.path.join(os.path.dirname(os.getcwd()),'/cloudmesh'))
 
 from cloudmesh.analytics.server.server import create_app
 from flask import jsonify
@@ -10,7 +8,7 @@ from werkzeug.test import EnvironBuilder
 from io import StringIO, BytesIO
 import numpy as np
 import pytest
-import cloudmesh.analytics.server.cloudmesh.analytics as ai
+import cloudmesh.analytics.analytics as ai
 
 def test_config():
     """

@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>tests.test_cloudmesh &#8212; cloudmesh-analytics  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.test_cloudmesh</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">cloudmesh.analytics.server.server</span> <span class="k">import</span> <span class="n">create_app</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">jsonify</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">werkzeug.test</span> <span class="k">import</span> <span class="n">EnvironBuilder</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">cloudmesh.analytics.analytics</span> <span class="k">as</span> <span class="nn">ai</span>
+
+<div class="viewcode-block" id="test_config"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.test_config">[docs]</a><span class="k">def</span> <span class="nf">test_config</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test if configuration of the app is in the testing mode</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">create_app</span><span class="p">()</span><span class="o">.</span><span class="n">testing</span>
+    <span class="k">assert</span> <span class="n">create_app</span><span class="p">({</span><span class="s1">&#39;TESTING&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span><span class="o">.</span><span class="n">testing</span></div>
+
+<span class="c1"># Mark the file test as first. The file uploaded will be used for other tests</span>
+<div class="viewcode-block" id="TestFileOperations"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestFileOperations">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">first</span>
+<span class="k">class</span> <span class="nc">TestFileOperations</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test file operations. The uploaded file is insulated and saved in the test_files directory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TestFileOperations.post_file"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestFileOperations.post_file">[docs]</a>    <span class="k">def</span> <span class="nf">post_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">client</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+        <span class="c1"># Simulate post request to upload the file</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/cloudmesh-analytics/file/upload&#39;</span><span class="p">,</span>
+                               <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">name</span><span class="p">)})</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span></div>
+
+<div class="viewcode-block" id="TestFileOperations.test_success_upload"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestFileOperations.test_success_upload">[docs]</a>    <span class="k">def</span> <span class="nf">test_success_upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test upload. The file will be uploaded in to the current directory named files</span>
+<span class="sd">        The test sample will use a empty csv file called test upload</span>
+<span class="sd">        :param client:</span>
+<span class="sd">        :return: A binary string that includes a list of uploaded file names</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_file</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;./tests/test_assets/test_upload.csv&#39;</span><span class="p">,</span><span class="s1">&#39;test_upload.csv&#39;</span><span class="p">)</span> \
+               <span class="o">==</span> \
+               <span class="sa">b</span><span class="s1">&#39;{&quot;file_name&quot;:&quot;test_upload.csv&quot;}</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+<div class="viewcode-block" id="TestFileOperations.test_success_upload_1"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestFileOperations.test_success_upload_1">[docs]</a>    <span class="k">def</span> <span class="nf">test_success_upload_1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test upload. The file will be uploaded in to the current directory named files</span>
+<span class="sd">        The test sample will use a empty csv file called test upload</span>
+<span class="sd">        :param client:</span>
+<span class="sd">        :return: A binary string that includes a list of uploaded file names</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_file</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;./tests/test_assets/sample_matrix.csv&#39;</span><span class="p">,</span><span class="s1">&#39;sample_matrix.csv&#39;</span><span class="p">)</span> \
+               <span class="o">==</span> \
+               <span class="sa">b</span><span class="s1">&#39;{&quot;file_name&quot;:&quot;sample_matrix.csv&quot;}</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+<div class="viewcode-block" id="TestFileOperations.test_success_upload_2"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestFileOperations.test_success_upload_2">[docs]</a>    <span class="k">def</span> <span class="nf">test_success_upload_2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test upload. The file will be uploaded in to the current directory named files</span>
+<span class="sd">        The test sample will use a empty csv file called test upload</span>
+<span class="sd">        :param client:</span>
+<span class="sd">        :return: A binary string that includes a list of uploaded file names</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_file</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;./tests/test_assets/diabetes.csv&#39;</span><span class="p">,</span><span class="s1">&#39;diabetes.csv&#39;</span><span class="p">)</span> \
+               <span class="o">==</span> \
+               <span class="sa">b</span><span class="s1">&#39;{&quot;file_name&quot;:&quot;diabetes.csv&quot;}</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+<div class="viewcode-block" id="TestFileOperations.test_format_error"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestFileOperations.test_format_error">[docs]</a>    <span class="k">def</span> <span class="nf">test_format_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The upload will failed due to the txt file format. An error message will return.</span>
+<span class="sd">        :param client:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_file</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s1">&#39;./tests/test_assets/test_upload.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;test_upload.txt&#39;</span><span class="p">)</span> \
+               <span class="o">==</span> \
+               <span class="sa">b</span><span class="s1">&#39;{&quot;error_message&quot;:&quot;Wrong file format&quot;}</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+<div class="viewcode-block" id="TestFileOperations.test_read"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestFileOperations.test_read">[docs]</a>    <span class="k">def</span> <span class="nf">test_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/cloudmesh-analytics/file/read/sample_matrix&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;{&quot;sample_matrix&quot;:[[1,2],[3,4],[5,6],[7,8],[9,10]]}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">==</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span></div></div>
+
+<div class="viewcode-block" id="TestLinearRegression"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestLinearRegression">[docs]</a><span class="k">class</span> <span class="nc">TestLinearRegression</span><span class="p">:</span>
+
+<div class="viewcode-block" id="TestLinearRegression.sample_paras"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestLinearRegression.sample_paras">[docs]</a>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s1">&#39;class&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">sample_paras</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list sample parameters</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;./tests/test_assets/test_paras.npy&#39;</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></div>
+
+    <span class="c1"># def test_generate_sample_parameters(self, client):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     This is for generating the sample parameters</span>
+    <span class="c1">#     :param client:</span>
+    <span class="c1">#     :return:</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     response = client.post(path=&#39;/cloudmesh-ai-services/analytics/linear-regression/test_upload&#39;,</span>
+    <span class="c1">#                            data=json.dumps({</span>
+    <span class="c1">#                                &#39;file_name&#39;: &#39;test_upload&#39;,</span>
+    <span class="c1">#                                &#39;paras&#39;:</span>
+    <span class="c1">#                                    {</span>
+    <span class="c1">#                                        &#39;fit_intercept&#39;: True,</span>
+    <span class="c1">#                                        &#39;normalize&#39;: False,</span>
+    <span class="c1">#                                        &#39;n_jobs&#39;: 1</span>
+    <span class="c1">#                                    }</span>
+    <span class="c1">#                            }),</span>
+    <span class="c1">#                            content_type=&#39;application/json&#39;)</span>
+
+
+<div class="viewcode-block" id="TestLinearRegression.test_parameters_type"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestLinearRegression.test_parameters_type">[docs]</a>    <span class="k">def</span> <span class="nf">test_parameters_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_paras</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test parameter types. The sample was generated by the server when received the body content.</span>
+<span class="sd">        #TODO: The future update should make it dynamic</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">paras</span> <span class="o">=</span> <span class="n">sample_paras</span>
+
+        <span class="k">assert</span>  <span class="nb">int</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">paras</span><span class="p">[</span><span class="s1">&#39;paras&#39;</span><span class="p">][</span><span class="s1">&#39;n_jobs&#39;</span><span class="p">])</span>
+        <span class="k">assert</span>  <span class="nb">bool</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">paras</span><span class="p">[</span><span class="s1">&#39;paras&#39;</span><span class="p">][</span><span class="s1">&#39;normalize&#39;</span><span class="p">])</span>
+        <span class="k">assert</span>  <span class="nb">str</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">paras</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">])</span></div>
+
+    <span class="c1"># def test_wrong_parameters(self):</span>
+
+<div class="viewcode-block" id="TestLinearRegression.test_errors"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestLinearRegression.test_errors">[docs]</a>    <span class="k">def</span> <span class="nf">test_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Testing error arguments. The exception raised by the sci-kit learn will be returned in the error message.</span>
+<span class="sd">        :param client:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/cloudmesh-analytics/analytics/linear-regression/test_upload&#39;</span><span class="p">,</span>
+                               <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                                   <span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="s1">&#39;test_upload&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;paras&#39;</span><span class="p">:</span>
+                                       <span class="p">{</span>
+                                           <span class="s1">&#39;fit_intercept&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                           <span class="s1">&#39;error_para&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                                           <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="mi">1</span>
+                                       <span class="p">}</span>
+                               <span class="p">}),</span>
+                               <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;{&quot;error&quot;:&quot;__init__() got an unexpected keyword argument </span><span class="se">\&#39;</span><span class="s1">error_para</span><span class="se">\&#39;</span><span class="s1">&quot;}</span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="o">==</span> \
+               <span class="n">response</span><span class="o">.</span><span class="n">data</span></div>
+
+<div class="viewcode-block" id="TestLinearRegression.test_linear_regression"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestLinearRegression.test_linear_regression">[docs]</a>    <span class="k">def</span> <span class="nf">test_linear_regression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Testing error arguments. The exception raised by the sci-kit learn will be returned</span>
+<span class="sd">                                   &#39;file_name&#39;: &#39;diabetes&#39;,</span>
+<span class="sd">                                   &#39;paras&#39;: in the error message.</span>
+<span class="sd">        :param client:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/cloudmesh-analytics/analytics/linear-regression/diabetes&#39;</span><span class="p">,</span>
+                               <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                                   <span class="s1">&#39;paras&#39;</span><span class="p">:</span>
+                                       <span class="p">{</span>
+                                           <span class="s1">&#39;fit_intercept&#39;</span><span class="p">:</span> <span class="kc">True</span>
+                                       <span class="p">}</span>
+                               <span class="p">}),</span>
+                               <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;{&quot;coefficient&quot;:[-10.01219781747075,-239.81908936565543,519.8397867901347,324.390427689377&#39;</span> \
+               <span class="sa">b</span><span class="s1">&#39;,-792.1841616283085,476.7458378236647,101.04457032134525,177.06417623225093,751.2793210873953&#39;</span> \
+               <span class="sa">b</span><span class="s1">&#39;,67.62538639104389]}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">==</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span></div></div>
+
+<div class="viewcode-block" id="test_run_pca"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.test_run_pca">[docs]</a><span class="k">def</span> <span class="nf">test_run_pca</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/cloudmesh-ai-services/analytics/pca&#39;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span></div>
+
+<span class="c1"># def generate_file():</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Converting the sci-kit learn built in sample data to the csv format</span>
+<span class="c1">#     :return:</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     data = np.load(&#39;./testing_files/diabetes.npy&#39;)</span>
+<span class="c1">#     target = np.load(&#39;./testing_files/diabetes_target.npy&#39;)</span>
+<span class="c1">#     target = np.reshape(target, (len(target),1))</span>
+<span class="c1">#     data = np.append(data, target, axis=1)</span>
+<span class="c1">#     np.savetxt(&quot;./testing_files/diabetes.csv&quot;, data, delimiter=&quot;,&quot;)</span>
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">cloudmesh-analytics</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cloudmesh.html">cloudmesh package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tests.html">tests package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Qiwei Liu, Yanting Wan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
