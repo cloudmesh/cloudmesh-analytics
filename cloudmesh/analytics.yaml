@@ -112,6 +112,34 @@ paths:
       responses:
         '200':
           description: cpu info
+  
+  /analytics/kmeans-fit/{file_name}:
+    post:
+      summary: output the label of each point using kmeans
+      operationId: cloudmesh.analytics.analytics.kmeans_fit
+      parameters:
+        - in: path
+          name: file_name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                n_clusters:
+                  type: integer
+                n_init:
+                  type: integer
+                max_iter:
+                  type: integer
+                random_state:
+                  type: integer
+      responses:
+        '200':
+          description: cpu info
 
 
   /analytics/pca:
