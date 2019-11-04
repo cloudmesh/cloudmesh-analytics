@@ -1,7 +1,7 @@
-cloudmesh
-=========
+tests
+=====
 
 .. toctree::
    :maxdepth: 4
 
-   cloudmesh
+   tests

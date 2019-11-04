@@ -1,3 +1,13 @@
+"""
+Test the functions in :py:mod:`cloudmesh.analytics.analytics`
+
+    Tip:
+        Running the test under the cloudmesh-analytics directory
+
+        ```> ./cloudmesh-analytics$ pytest```
+
+"""
+
 import sys
 import os
 
@@ -8,23 +18,30 @@ from werkzeug.test import EnvironBuilder
 from io import StringIO, BytesIO
 import numpy as np
 import pytest
-import cloudmesh.analytics.analytics as ai
+import cloudmesh.analytics.analytics as analytics
 
-def test_config():
-    """
-    Test if configuration of the app is in the testing mode
-    :return:
-    """
-    assert not create_app().testing
-    assert create_app({'TESTING': True}).testing
 
-# Mark the file test as first. The file uploaded will be used for other tests
 @pytest.mark.first
 class TestFileOperations:
-    """
-    Test file operations. The uploaded file is insulated and saved in the test_files directory
+    """Test file operations
+
+    Attention:
+        1. The function will be ran first and the files uploaded will be used for other tests
+
+        2. The uploaded file is insulated and saved in the testing_files directory as indicated in
+        :py:mod:`tests.conftest`
     """
     def post_file(self,client, path, name):
+        """A helper function to make post request
+
+        Args:
+            client: The pytest fixture defined in :py:mod:`tests.conftest`
+            path: The rest api defined in the yaml file
+            name: the file name to post
+
+        Return:
+            The data attribute of the flask response object
+        """
         f = open(path, 'rb')
         # Simulate post request to upload the file
         response = client.post(path='/cloudmesh-analytics/file/upload',
@@ -33,102 +50,89 @@ class TestFileOperations:
         return response.data
 
     def test_success_upload(self, client):
-        """
-        Test upload. The file will be uploaded in to the current directory named files
+        """Test upload. The file will be uploaded in to the current directory named files
+
         The test sample will use a empty csv file called test upload
-        :param client:
-        :return: A binary string that includes a list of uploaded file names
+
+        Args:
+            client: The pytest fixture defined in :py:mod:`tests.conftest`
+
+        Return:
+            The data attribute of the flask response object, which is a binary string that includes a list of uploaded
+            file names
         """
         assert self.post_file(client, './tests/test_assets/test_upload.csv','test_upload.csv') \
                == \
                b'{"file_name":"test_upload.csv"}\n'
 
-    def test_success_upload_1(self, client):
-        """
-        Test upload. The file will be uploaded in to the current directory named files
+    def test_success_upload_sample(self, client):
+        """Test upload. The file will be uploaded in to the current directory named files
+
         The test sample will use a empty csv file called test upload
-        :param client:
-        :return: A binary string that includes a list of uploaded file names
+
+        Args:
+            client: The pytest fixture defined in :py:mod:`tests.conftest`
+
+        Return:
+            The data attribute of the flask response object, which is a binary string that includes a list of uploaded
+            file names
         """
         assert self.post_file(client, './tests/test_assets/sample_matrix.csv','sample_matrix.csv') \
                == \
                b'{"file_name":"sample_matrix.csv"}\n'
 
-    def test_success_upload_2(self, client):
+    def test_read(self, client):
+        """Test read uploaded file using the rest api"""
+        response = client.get(path='/cloudmesh-analytics/file/read/sample_matrix')
+        assert b'{"sample_matrix":[[1,2],[3,4],[5,6],[7,8],[9,10]]}\n' == response.data
+
+
+    def test_success_upload_dabetes(self, client):
         """
         Test upload. The file will be uploaded in to the current directory named files
         The test sample will use a empty csv file called test upload
-        :param client:
-        :return: A binary string that includes a list of uploaded file names
+
+        Args:
+            client: The pytest fixture defined in :py:mod:`tests.conftest`
+
+        Return:
+            The data attribute of the flask response object, which is a binary string that includes a list of uploaded
+            file names
         """
         assert self.post_file(client, './tests/test_assets/diabetes.csv','diabetes.csv') \
                == \
                b'{"file_name":"diabetes.csv"}\n'
 
     def test_format_error(self, client):
-        """
-        The upload will failed due to the txt file format. An error message will return.
-        :param client:
-        :return:
+        """The upload will failed due to the txt file format. An error message will return
+
+        Args:
+            client: The pytest fixture defined in :py:mod:`tests.conftest`
+
+        Return:
+            The data attribute of the flask response object, which is a binary string that includes a list of uploaded
+            file names
         """
         assert self.post_file(client, './tests/test_assets/test_upload.csv', 'test_upload.txt') \
                == \
                b'{"error_message":"Wrong file format"}\n'
 
-    def test_read(self, client):
-        response = client.get(path='/cloudmesh-analytics/file/read/sample_matrix')
-        assert b'{"sample_matrix":[[1,2],[3,4],[5,6],[7,8],[9,10]]}\n' == response.data
 
 class TestLinearRegression:
 
-    @pytest.fixture(scope='class')
-    def sample_paras(self):
-        """
-        Return a list sample parameters
-        :return:
-        """
-        print(__name__)
-        print(os.getcwd())
-        return np.load('./tests/test_assets/test_paras.npy', allow_pickle=True).item()
-
-    # def test_generate_sample_parameters(self, client):
-    #     """
-    #     This is for generating the sample parameters
-    #     :param client:
-    #     :return:
-    #     """
-    #     response = client.post(path='/cloudmesh-ai-services/analytics/linear-regression/test_upload',
-    #                            data=json.dumps({
-    #                                'file_name': 'test_upload',
-    #                                'paras':
-    #                                    {
-    #                                        'fit_intercept': True,
-    #                                        'normalize': False,
-    #                                        'n_jobs': 1
-    #                                    }
-    #                            }),
-    #                            content_type='application/json')
-
-
-    def test_parameters_type(self, sample_paras):
-        """
-        Test parameter types. The sample was generated by the server when received the body content.
-        #TODO: The future update should make it dynamic
-        :return:
-        """
-        paras = sample_paras
-
-        assert  int is type(paras['paras']['n_jobs'])
-        assert  bool is type(paras['paras']['normalize'])
-        assert  str is type(paras['file_name'])
-
-    # def test_wrong_parameters(self):
-
     def test_errors(self, client):
-        """
-        Testing error arguments. The exception raised by the sci-kit learn will be returned in the error message.
-        :param client:
-        :return:
+        """Testing error arguments. The exception raised by the sci-kit learn will be returned in the error message
+
+        Args:
+            client: The pytest fixture defined in :py:mod:`tests.conftest`
+
+        Return:
+            The data attribute of the flask response object, which is a binary string that includes a list of uploaded
+            file names
+
+        Note:
+            The server will return the error message raised by the sci-kit learn
+
         """
         response = client.post(path='/cloudmesh-analytics/analytics/linear-regression/test_upload',
                                data=json.dumps({
@@ -146,12 +150,20 @@ class TestLinearRegression:
                response.data
 
     def test_linear_regression(self, client):
-        """
-        Testing error arguments. The exception raised by the sci-kit learn will be returned
-                                   'file_name': 'diabetes',
-                                   'paras': in the error message.
-        :param client:
-        :return:
+        """Testing error arguments. The exception raised by the sci-kit learn will be returned
+
+        The data is taken from the sci-kit learn built in samples.
+
+        Args:
+            client: The pytest fixture defined in :py:mod:`tests.conftest`
+
+        Return:
+            The data attribute of the flask response object, which is a binary string that includes a list of uploaded
+            file names
+
+        Warning:
+            Todo: The assertion may be false due to the floating number representaion in different word-size systems
+
         """
         response = client.post(path='/cloudmesh-analytics/analytics/linear-regression/diabetes',
                                data=json.dumps({
@@ -169,16 +181,4 @@ def test_run_pca(client):
     response = client.get('/cloudmesh-ai-services/analytics/pca')
 
     assert response.data == ''
-
-# def generate_file():
-#     """
-#     Converting the sci-kit learn built in sample data to the csv format
-#     :return:
-#     """
-#     data = np.load('./testing_files/diabetes.npy')
-#     target = np.load('./testing_files/diabetes_target.npy')
-#     target = np.reshape(target, (len(target),1))
-#     data = np.append(data, target, axis=1)
-#     np.savetxt("./testing_files/diabetes.csv", data, delimiter=",")
-
 

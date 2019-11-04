@@ -24,8 +24,9 @@ def linear_regression(file_name, body):
         The input format should be specified
     """
     # Extract parameters from the request body
+
     paras = body['paras']
-    #TODO: Data format is not correct
+
     try:
         data = read_csv(file_name)
         X = data[:,:-1]

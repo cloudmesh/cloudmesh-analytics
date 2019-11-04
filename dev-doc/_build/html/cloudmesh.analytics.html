@@ -1,36 +1,170 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>cloudmesh.analytics package &#8212; cloudmesh-analytics  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>cloudmesh.analytics package &mdash; cloudmesh-analytics  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="cloudmesh.analytics.api package" href="cloudmesh.analytics.api.html" />
-    <link rel="prev" title="cloudmesh package" href="cloudmesh.html" />
+    <link rel="prev" title="cloudmesh package" href="cloudmesh.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> cloudmesh-analytics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cloudmesh.html">cloudmesh package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cloudmesh.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cloudmesh.analytics package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cloudmesh.analytics.analytics">cloudmesh.analytics.analytics module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cloudmesh.analytics.file">cloudmesh.analytics.file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cloudmesh.analytics.file_helpers">cloudmesh.analytics.file_helpers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cloudmesh.analytics">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cloudmesh.html#module-cloudmesh">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tests.html">tests package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="progress.html">Requirements</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cloudmesh-analytics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="cloudmesh.html">cloudmesh package</a> &raquo;</li>
+        
+      <li>cloudmesh.analytics package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/cloudmesh.analytics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="cloudmesh-analytics-package">
 <h1>cloudmesh.analytics package<a class="headerlink" href="#cloudmesh-analytics-package" title="Permalink to this headline">¶</a></h1>
@@ -97,47 +231,96 @@ OpenAPI specification by operationIDs</p>
 </div>
 <div class="section" id="module-cloudmesh.analytics.file">
 <span id="cloudmesh-analytics-file-module"></span><h2>cloudmesh.analytics.file module<a class="headerlink" href="#module-cloudmesh.analytics.file" title="Permalink to this headline">¶</a></h2>
+<p>File operations
+The module include file operations</p>
 <dl class="function">
 <dt id="cloudmesh.analytics.file.list">
 <code class="sig-prename descclassname">cloudmesh.analytics.file.</code><code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cloudmesh/analytics/file.html#list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cloudmesh.analytics.file.list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>List all uploaded files</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="cloudmesh.analytics.file.read">
 <code class="sig-prename descclassname">cloudmesh.analytics.file.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">file_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cloudmesh/analytics/file.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cloudmesh.analytics.file.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read files given a file name
-:param file_name:
-:return: return a json file</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="cloudmesh.analytics.file.save">
-<code class="sig-prename descclassname">cloudmesh.analytics.file.</code><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cloudmesh/analytics/file.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cloudmesh.analytics.file.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save file after securing the file name
-:param file:
-:return:</p>
+<dd><p>Read files given a file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_names</strong> – The input data source.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return a json response.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="cloudmesh.analytics.file.upload">
 <code class="sig-prename descclassname">cloudmesh.analytics.file.</code><code class="sig-name descname">upload</code><span class="sig-paren">(</span><em class="sig-param">file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cloudmesh/analytics/file.html#upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cloudmesh.analytics.file.upload" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Upload files to the server
+:param file: A file stream</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Return the file name if it success</p>
+</dd>
+</dl>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Only support the csv format now.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>Raise an error message if the file format is not supported</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-cloudmesh.analytics.file_helpers">
 <span id="cloudmesh-analytics-file-helpers-module"></span><h2>cloudmesh.analytics.file_helpers module<a class="headerlink" href="#module-cloudmesh.analytics.file_helpers" title="Permalink to this headline">¶</a></h2>
-<p>This module includes the helper functions for the help.py in order to characterize the endpoint functions</p>
+<p>The helper function isolates non-endpoint function from the file module</p>
 <dl class="function">
 <dt id="cloudmesh.analytics.file_helpers.allowed">
 <code class="sig-prename descclassname">cloudmesh.analytics.file_helpers.</code><code class="sig-name descname">allowed</code><span class="sig-paren">(</span><em class="sig-param">file_name</em>, <em class="sig-param">allowed_extentions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cloudmesh/analytics/file_helpers.html#allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cloudmesh.analytics.file_helpers.allowed" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The allowed file extensions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_name</strong> – The file name to check</p></li>
+<li><p><strong>allowed_extensions</strong> – The allowed file extensions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return true or false</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="cloudmesh.analytics.file_helpers.read_csv">
 <code class="sig-prename descclassname">cloudmesh.analytics.file_helpers.</code><code class="sig-name descname">read_csv</code><span class="sig-paren">(</span><em class="sig-param">file_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cloudmesh/analytics/file_helpers.html#read_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cloudmesh.analytics.file_helpers.read_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read csv using panda. The source path is relative and set when initializing flask app.
-:param file_name:
-:return:</p>
+<dd><p>Read csv using panda. The source path is relative and set when initializing flask app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_name</strong> – The file name to read</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="cloudmesh.analytics.file_helpers.save">
+<code class="sig-prename descclassname">cloudmesh.analytics.file_helpers.</code><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cloudmesh/analytics/file_helpers.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cloudmesh.analytics.file_helpers.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save file after securing the file name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file</strong> – the input data source</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return a json response</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -147,79 +330,52 @@ OpenAPI specification by operationIDs</p>
 </div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">cloudmesh-analytics</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="cloudmesh.html">cloudmesh package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="cloudmesh.html#subpackages">Subpackages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cloudmesh.html#module-cloudmesh">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tests.html">tests package</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="cloudmesh.html">cloudmesh package</a><ul>
-      <li>Previous: <a href="cloudmesh.html" title="previous chapter">cloudmesh package</a></li>
-      <li>Next: <a href="cloudmesh.analytics.api.html" title="next chapter">cloudmesh.analytics.api package</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cloudmesh.analytics.api.html" class="btn btn-neutral float-right" title="cloudmesh.analytics.api package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cloudmesh.html" class="btn btn-neutral float-left" title="cloudmesh package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Qiwei Liu, Yanting Wan
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Qiwei Liu, Yanting Wan.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/cloudmesh.analytics.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

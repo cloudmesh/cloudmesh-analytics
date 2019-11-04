@@ -1,3 +1,7 @@
+"""File operations
+The module include file operations
+"""
+
 import sys
 import os
 from flask import jsonify, current_app
@@ -8,10 +12,12 @@ import pandas as pd
 from .file_helpers import *
 
 def read(file_name):
-    """
-    Read files given a file name
-    :param file_name:
-    :return: return a json file
+    """Read files given a file name.
+
+    Args:
+        file_names: The input data source.
+    Return:
+        Return a json response.
     """
     try:
         data = read_csv(file_name)
@@ -19,22 +25,20 @@ def read(file_name):
         return jsonify({'error_message': 'failed to read'})
     return jsonify({file_name: data.tolist()})
 
-def save(file):
-    """
-    Save file after securing the file name
-    :param file:
-    :return:
-    """
-    filename = secure_filename(file.filename)
-    try:
-        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-    except Exception as e:
-        return jsonify({'error_message': str(e)})
-
-
-
-
 def upload(file=None):
+    """Upload files to the server
+    Args:
+        file: A file stream
+
+    Return:
+        Return the file name if it success
+
+    Attention:
+        Only support the csv format now.
+
+    Raises:
+        Raise an error message if the file format is not supported
+    """
     ALLOWED_EXTENSIONS = {'csv'}
     if file and allowed(file.filename, ALLOWED_EXTENSIONS):
         save(file)
@@ -43,5 +47,6 @@ def upload(file=None):
         return jsonify({'error_message': 'Wrong file format'}), 400
 
 def list():
+    """List all uploaded files"""
     files = os.listdir(current_app.config['UPLOAD_FOLDER'])
     return jsonify({'files': files})

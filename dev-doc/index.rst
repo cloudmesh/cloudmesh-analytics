@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Sources and Tests
+Documentaions for Developers
 ===============================================
 .. toctree::
    :maxdepth: 2
@@ -11,6 +11,7 @@ Sources and Tests
 
    cloudmesh
    tests
+   progress
 
 Indices and tables
 ==================
