@@ -177,6 +177,40 @@ class TestLinearRegression:
                b',-792.1841616283085,476.7458378236647,101.04457032134525,177.06417623225093,751.2793210873953' \
                b',67.62538639104389]}\n' == response.data
 
+class TestKMeans:
+    def test_errors(self,client):
+        """
+        Testing error arguments. The exception raised by the sci-kit learn will be returned in the error message.
+        The exception also raised by the filename doesn't exist in app.config['UPLOAD_FOLDER']
+        :param client:
+        :return:
+        """
+        response = client.post(path='/cloudmesh-analytics/analytics/kmeans-fit/test_upload',
+                               data=json.dumps({
+                                   'file_name': 'test_upload',
+                                   'paras':
+                                       {
+                                           'fit_intercept': True,
+                                           'error_para': False,
+                                           'n_jobs': 1
+                                       }
+                               }),
+                               content_type='application/json')
+        assert b'{"error":"__init__() got an unexpected keyword argument \'fit_intercept\'"}\n' \
+               == \
+               response.data
+
+    def test_kmeans_fit(self,client):
+        response = client.post(path='/cloudmesh-analytics/analytics/kmeans-fit/sample_matrix',
+                               data=json.dumps({
+                                   'paras':
+                                       {
+                                           'n_clusters': 2
+                                       }
+                               }),
+                               content_type='application/json')
+        assert response.data == 0
+
 def test_run_pca(client):
     response = client.get('/cloudmesh-ai-services/analytics/pca')
 
