@@ -19,14 +19,17 @@ def app():
     Attention:
         The the database is in progress, and not used. All files are saved in the folder defined in the 'UPLOAD_FOLDER'
         in the app configurations
+
+    Warning:
+        The uploaded folder is relative to where the pytest is called. Calling pytest in other folder will result a mis-
+        placed uploaded folder. The uploaded folder should be kept under test directory
     """
     db_fd, db_path = tempfile.mkstemp()
-
     app = create_app({
         'TESTING': True,
         'DATABASE': db_path,
         # Set the folder path for testing. All uploaded files will be saved here
-        'UPLOAD_FOLDER': './testing_files'
+        'UPLOAD_FOLDER': './tests/test_upload_folder'
     })
 
     with app.app_context():

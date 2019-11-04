@@ -10,6 +10,7 @@ Test the functions in :py:mod:`cloudmesh.analytics.analytics`
 
 import sys
 import os
+import shutil
 
 from cloudmesh.analytics.server.server import create_app
 from flask import jsonify
@@ -217,3 +218,9 @@ def test_run_pca(client):
     assert response.data == ''
 
 
+def teardown_module():
+    """ Teardown any state that was previously setup
+    Remove the test_upload_folder by the end of tests
+    """
+    print('cleancleancleancleancleancleancleancleancleancleanclean')
+    shutil.rmtree('./tests/test_upload_folder')
