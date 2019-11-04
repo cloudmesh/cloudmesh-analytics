@@ -36,6 +36,16 @@ def linear_regression(file_name, body):
     except Exception as e:
         return jsonify({'error': str(e)})
 
+def kmeans_fit(file_name,body):
+    # Extract parameters from the request body
+    paras = body['paras']
+    try:
+        kmeans = KMeans(**paras).fit(read_csv(file_name))
+        return jsonify({'labels': kmeans.labels_.tolist()})
+    except Exception as e:
+        # it will be parameter type error for KMeans or user type a filename that's not in app.config['UPLOAD_FOLDER']
+        return jsonify({'error': str(e)})
+
 def pca():
     return jsonify({"output": 'run_pca_success'})
 
