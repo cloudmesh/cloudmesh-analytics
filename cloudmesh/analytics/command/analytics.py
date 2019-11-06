@@ -13,6 +13,10 @@ import psutil
 import numpy as np
 from pathlib import Path
 
+import requests
+from requests.exceptions import HTTPError
+
+
 class AnalyticsCommand(PluginCommand):
 
     # noinspection PyUnusedLocal
@@ -29,7 +33,7 @@ class AnalyticsCommand(PluginCommand):
           If the cloud is not spified it is run on localhost
 
           Options:
-              --clout=CLOUD  The name of the cloud as specified in the
+              --cloud=CLOUD  The name of the cloud as specified in the
                              cloudmesh.yaml file
 
         """
@@ -40,21 +44,27 @@ class AnalyticsCommand(PluginCommand):
 
         if arguments.server and arguments.start:
             print("start the server")
-            #TODO: Need suppress console log
+            # TODO: Need suppress console log
             # Launch a server and save pid in the current directory
-            np.save(os.path.join(Path(__file__).parent.absolute() ,'server_pid'), np.array([os.getpid()]))
+            np.save(os.path.join(Path(__file__).parent.absolute(), 'server_pid'), np.array([os.getpid()]))
             server.create_app().run(port=8000, debug=True)
 
         if arguments.server and arguments.stop:
             print("stop the server")
 
             # Load the file contains pid and shutdown the server
-            server_pid = np.load(os.path.join(Path(__file__).parent.absolute() ,'server_pid.npy'))[0]
+            server_pid = np.load(os.path.join(Path(__file__).parent.absolute(), 'server_pid.npy'))[0]
             if server_pid in psutil.pids():
                 p = psutil.Process(server_pid)
                 p.terminate()
                 os.remove(os.path.join(Path(__file__).parent.absolute(), 'server_pid.npy'))
             else:
-                os.remove(os.path.join(Path(__file__).parent.absolute() ,'server_pid.npy'))
+                os.remove(os.path.join(Path(__file__).parent.absolute(), 'server_pid.npy'))
 
         return ""
+
+
+def construct_url(module_name, func_name, file_name="", main_page="http://localhost:8000/cloudmesh-analytics"):
+    return main_page + "/" + module_name + "/" + func_name + "/" + file_name
+
+
