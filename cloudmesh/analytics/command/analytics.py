@@ -6,6 +6,7 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.util import path_expand
 from pprint import pprint
 from cloudmesh.common.debug import VERBOSE
+from cloudmesh.common.run.background import run
 
 from ..server import server
 import os
@@ -27,6 +28,7 @@ class AnalyticsCommand(PluginCommand):
 
           Usage:
                 analytics server start [--cloud=CLOUD]
+                analytics server detached start [--cloud=CLOUD]
                 analytics server stop [--cloud=CLOUD]
 
           This command manages the cloudmesh analytics server on the given cloud.
@@ -42,9 +44,14 @@ class AnalyticsCommand(PluginCommand):
 
         Console.error("This is just a sample")
 
-        if arguments.server and arguments.start:
+        # make flask app run background
+        if arguments.server and arguments.start and arguments.detached:
+            background_run = run(['cms', 'analytics', 'server', 'start'])
+            background_run.execute()
+
+        elif arguments.server and arguments.start:
             print("start the server")
-            # TODO: Need suppress console log
+            # TODO: Need suppress console log (Launch the server on background)
             # Launch a server and save pid in the current directory
             np.save(os.path.join(Path(__file__).parent.absolute(), 'server_pid'), np.array([os.getpid()]))
             server.create_app().run(port=8000, debug=True)
@@ -66,5 +73,3 @@ class AnalyticsCommand(PluginCommand):
 
 def construct_url(module_name, func_name, file_name="", main_page="http://localhost:8000/cloudmesh-analytics"):
     return main_page + "/" + module_name + "/" + func_name + "/" + file_name
-
-
