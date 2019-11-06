@@ -17,7 +17,6 @@ from pathlib import Path
 import requests
 from requests.exceptions import HTTPError
 
-
 class AnalyticsCommand(PluginCommand):
 
     # noinspection PyUnusedLocal
@@ -30,6 +29,7 @@ class AnalyticsCommand(PluginCommand):
                 analytics server start [--cloud=CLOUD]
                 analytics server detached start [--cloud=CLOUD]
                 analytics server stop [--cloud=CLOUD]
+                analytics server detached stop [--cloud=CLOUD]
 
           This command manages the cloudmesh analytics server on the given cloud.
           If the cloud is not spified it is run on localhost
@@ -56,9 +56,8 @@ class AnalyticsCommand(PluginCommand):
             np.save(os.path.join(Path(__file__).parent.absolute(), 'server_pid'), np.array([os.getpid()]))
             server.create_app().run(port=8000, debug=True)
 
-        if arguments.server and arguments.stop:
+        elif arguments.server and arguments.stop:
             print("stop the server")
-
             # Load the file contains pid and shutdown the server
             server_pid = np.load(os.path.join(Path(__file__).parent.absolute(), 'server_pid.npy'))[0]
             if server_pid in psutil.pids():
