@@ -1,0 +1,111 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter A
+  \item \spxentry{allowed()}\spxextra{in module cloudmesh.analytics.file\_helpers}, \hyperpage{3}
+  \item \spxentry{AnalyticsCommand}\spxextra{class in cloudmesh.analytics.command.analytics}, 
+		\hyperpage{1}
+  \item \spxentry{app()}\spxextra{in module tests.conftest}, \hyperpage{5}
+
+  \indexspace
+  \bigletter C
+  \item \spxentry{client()}\spxextra{in module tests.conftest}, \hyperpage{5}
+  \item \spxentry{close\_db()}\spxextra{in module cloudmesh.analytics.server.db}, \hyperpage{2}
+  \item \spxentry{cloudmesh}\spxextra{module}, \hyperpage{4}
+  \item \spxentry{cloudmesh.analytics}\spxextra{module}, \hyperpage{4}
+  \item \spxentry{cloudmesh.analytics.analytics}\spxextra{module}, \hyperpage{2}
+  \item \spxentry{cloudmesh.analytics.api}\spxextra{module}, \hyperpage{1}
+  \item \spxentry{cloudmesh.analytics.api.manager}\spxextra{module}, \hyperpage{1}
+  \item \spxentry{cloudmesh.analytics.command}\spxextra{module}, \hyperpage{2}
+  \item \spxentry{cloudmesh.analytics.command.analytics}\spxextra{module}, \hyperpage{1}
+  \item \spxentry{cloudmesh.analytics.file}\spxextra{module}, \hyperpage{3}
+  \item \spxentry{cloudmesh.analytics.file\_helpers}\spxextra{module}, \hyperpage{3}
+  \item \spxentry{cloudmesh.analytics.server}\spxextra{module}, \hyperpage{2}
+  \item \spxentry{cloudmesh.analytics.server.db}\spxextra{module}, \hyperpage{2}
+  \item \spxentry{cloudmesh.analytics.server.server}\spxextra{module}, \hyperpage{2}
+  \item \spxentry{create\_app()}\spxextra{in module cloudmesh.analytics.server.server}, 
+		\hyperpage{2}
+
+  \indexspace
+  \bigletter D
+  \item \spxentry{do\_analytics()}\spxextra{cloudmesh.analytics.command.analytics.AnalyticsCommand method}, 
+		\hyperpage{1}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{get\_db()}\spxextra{in module cloudmesh.analytics.server.db}, \hyperpage{2}
+
+  \indexspace
+  \bigletter I
+  \item \spxentry{init\_app()}\spxextra{in module cloudmesh.analytics.server.db}, \hyperpage{2}
+  \item \spxentry{init\_db()}\spxextra{in module cloudmesh.analytics.server.db}, \hyperpage{2}
+
+  \indexspace
+  \bigletter K
+  \item \spxentry{kmeans\_fit()}\spxextra{in module cloudmesh.analytics.analytics}, \hyperpage{2}
+
+  \indexspace
+  \bigletter L
+  \item \spxentry{linear\_regression()}\spxextra{in module cloudmesh.analytics.analytics}, 
+		\hyperpage{2}
+  \item \spxentry{list()}\spxextra{cloudmesh.analytics.api.manager.Manager method}, \hyperpage{1}
+  \item \spxentry{list()}\spxextra{in module cloudmesh.analytics.file}, \hyperpage{3}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{Manager}\spxextra{class in cloudmesh.analytics.api.manager}, \hyperpage{1}
+
+  \indexspace
+  \bigletter P
+  \item \spxentry{pca()}\spxextra{in module cloudmesh.analytics.analytics}, \hyperpage{3}
+  \item \spxentry{post\_file()}\spxextra{tests.test\_cloudmesh.TestFileOperations method}, 
+		\hyperpage{6}
+  \item \spxentry{pytestmark}\spxextra{tests.test\_cloudmesh.TestFileOperations attribute}, 
+		\hyperpage{6}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{read()}\spxextra{in module cloudmesh.analytics.file}, \hyperpage{3}
+  \item \spxentry{read\_csv()}\spxextra{in module cloudmesh.analytics.file\_helpers}, \hyperpage{3}
+  \item \spxentry{runner()}\spxextra{in module tests.conftest}, \hyperpage{5}
+
+  \indexspace
+  \bigletter S
+  \item \spxentry{save()}\spxextra{in module cloudmesh.analytics.file\_helpers}, \hyperpage{3}
+
+  \indexspace
+  \bigletter T
+  \item \spxentry{teardown\_module()}\spxextra{in module tests.test\_cloudmesh}, \hyperpage{7}
+  \item \spxentry{test\_errors()}\spxextra{tests.test\_cloudmesh.TestKMeans method}, \hyperpage{7}
+  \item \spxentry{test\_errors()}\spxextra{tests.test\_cloudmesh.TestLinearRegression method}, 
+		\hyperpage{7}
+  \item \spxentry{test\_format\_error()}\spxextra{tests.test\_cloudmesh.TestFileOperations method}, 
+		\hyperpage{6}
+  \item \spxentry{test\_kmeans\_fit()}\spxextra{tests.test\_cloudmesh.TestKMeans method}, 
+		\hyperpage{7}
+  \item \spxentry{test\_linear\_regression()}\spxextra{tests.test\_cloudmesh.TestLinearRegression method}, 
+		\hyperpage{7}
+  \item \spxentry{test\_read()}\spxextra{tests.test\_cloudmesh.TestFileOperations method}, 
+		\hyperpage{6}
+  \item \spxentry{test\_run\_pca()}\spxextra{in module tests.test\_cloudmesh}, \hyperpage{7}
+  \item \spxentry{test\_success\_upload()}\spxextra{tests.test\_cloudmesh.TestFileOperations method}, 
+		\hyperpage{6}
+  \item \spxentry{test\_success\_upload\_dabetes()}\spxextra{tests.test\_cloudmesh.TestFileOperations method}, 
+		\hyperpage{6}
+  \item \spxentry{test\_success\_upload\_sample()}\spxextra{tests.test\_cloudmesh.TestFileOperations method}, 
+		\hyperpage{6}
+  \item \spxentry{TestFileOperations}\spxextra{class in tests.test\_cloudmesh}, \hyperpage{5}
+  \item \spxentry{TestKMeans}\spxextra{class in tests.test\_cloudmesh}, \hyperpage{7}
+  \item \spxentry{TestLinearRegression}\spxextra{class in tests.test\_cloudmesh}, \hyperpage{7}
+  \item \spxentry{tests}\spxextra{module}, \hyperpage{7}
+  \item \spxentry{tests.conftest}\spxextra{module}, \hyperpage{5}
+  \item \spxentry{tests.test\_cloudmesh}\spxextra{module}, \hyperpage{5}
+
+  \indexspace
+  \bigletter U
+  \item \spxentry{upload()}\spxextra{in module cloudmesh.analytics.file}, \hyperpage{3}
+
+\end{sphinxtheindex}

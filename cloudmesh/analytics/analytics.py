@@ -23,8 +23,8 @@ def linear_regression(file_name, body):
     Warning:
         The input format should be specified
     """
-    # Extract parameters from the request body
 
+    # Extract parameters from the request body
     paras = body['paras']
 
     try:
@@ -37,6 +37,16 @@ def linear_regression(file_name, body):
         return jsonify({'error': str(e)})
 
 def kmeans_fit(file_name,body):
+    """
+    Kmeans fit.
+
+    i do this and taht
+
+    :param file_name:
+    :type: int
+    :param body:
+    :return:
+    """
     # Extract parameters from the request body
     paras = body['paras']
     try:
