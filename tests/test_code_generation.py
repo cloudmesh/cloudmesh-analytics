@@ -43,7 +43,7 @@ def test_generate_yaml():
 
 
 class TestSignatureScraper:
-    """Test Signature Retrivers
+    """Test Signature Retrievers
 
     In order to automate REST API generate process, the signature retriever would collect the signatures of class, func-
     tions and properties.
