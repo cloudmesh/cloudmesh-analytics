@@ -2,43 +2,43 @@
 """
 
 from jinja2 import Environment, PackageLoader, FileSystemLoader
-from .utilities import signature_retriever
+from utilities import signature_retriever
 from numpydoc import docscrape
-
 import inspect
 import pprint
 import pytest
 import sklearn.linear_model
+from sklearn import svm
+
 
 def test_generate_yaml():
     """Generate yaml file using the python template engine"""
+    # template = env.get_template('component.yaml')
 
-    env = Environment(loader=FileSystemLoader('./test_assets'))
-    template = env.get_template('component.yaml')
-
-    f = {'name':'linear-regression',
+    f = {'name': 'linear-regression',
          'request_method': 'post',
-         'doc_string':'this is a doc string',
-         'operation_id':'cloudmesh.linear_regression',
-         'paras':{
-             'file_name':{'name':'file_name', 'type':'string'},
-             'intercept':{'name':'intercept', 'type':'int'}
+         'doc_string': 'this is a doc string',
+         'operation_id': 'cloudmesh.linear_regression',
+         'paras': {
+             'file_name': {'name': 'file_name', 'type': 'string'},
+             'intercept': {'name': 'intercept', 'type': 'int'}
 
          }}
 
-    g = {'name':'logistic-regression',
+    g = {'name': 'logistic-regression',
          'request_method': 'post',
-         'doc_string':'this is a doc string',
-         'operation_id':'cloudmesh.linear_regression',
-         'paras':{
-             'file_name':{'name':'file_name', 'type':'string'},
-             'intercept':{'name':'intercept', 'type':'int'}
+         'doc_string': 'this is a doc string',
+         'operation_id': 'cloudmesh.linear_regression',
+         'paras': {
+             'file_name': {'name': 'file_name', 'type': 'string'},
+             'intercept': {'name': 'intercept', 'type': 'int'}
          }}
 
     all = {1: g, 2: f}
 
     # print(all)
     # print(template.render(all=all))
+
 
 class TestSignatureRetrievers:
     """Test Signature Retrivers
@@ -60,7 +60,6 @@ class TestSignatureRetrievers:
     def test_exclude_private_members(self):
         pass
 
-
     def test_exclude_functions(self):
         pass
 
@@ -71,7 +70,7 @@ class TestSignatureRetrievers:
 
     def test_get_parameters(self, sample_parameters):
         for p in sample_parameters:
-            print(p.name,':',str(p.type).split(' ')[0])
+            print(p.name, ':', str(p.type).split(' ')[0])
 
     def test_generate_data_type_table(self):
         pass
