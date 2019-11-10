@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tests.utilities package &mdash; cloudmesh-analytics  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="tests.test_assets package" href="tests.test_assets.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cloudmesh-analytics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cloudmesh.html">cloudmesh package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tests.html">tests package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="tests.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tests.test_assets.html">tests.test_assets package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tests.utilities package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-tests.utilities.literal_match_type">tests.utilities.literal_match_type module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-tests.utilities.signature_retriever">tests.utilities.signature_retriever module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-tests.utilities">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tests.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests.html#module-tests.conftest">tests.conftest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests.html#module-tests.test_analytics_client">tests.test_analytics_client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests.html#module-tests.test_cloudmesh">tests.test_cloudmesh module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests.html#module-tests.test_code_generation">tests.test_code_generation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests.html#module-tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cloudmesh-analytics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="tests.html">tests package</a> &raquo;</li>
+        
+      <li>tests.utilities package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tests.utilities.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tests-utilities-package">
+<h1>tests.utilities package<a class="headerlink" href="#tests-utilities-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tests.utilities.literal_match_type">
+<span id="tests-utilities-literal-match-type-module"></span><h2>tests.utilities.literal_match_type module<a class="headerlink" href="#module-tests.utilities.literal_match_type" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tests.utilities.signature_retriever">
+<span id="tests-utilities-signature-retriever-module"></span><h2>tests.utilities.signature_retriever module<a class="headerlink" href="#module-tests.utilities.signature_retriever" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="tests.utilities.signature_retriever.get_parameters">
+<code class="sig-prename descclassname">tests.utilities.signature_retriever.</code><code class="sig-name descname">get_parameters</code><span class="sig-paren">(</span><em class="sig-param">doc</em>, <em class="sig-param">types</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/utilities/signature_retriever.html#get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.utilities.signature_retriever.get_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="tests.utilities.signature_retriever.get_public_members">
+<code class="sig-prename descclassname">tests.utilities.signature_retriever.</code><code class="sig-name descname">get_public_members</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/utilities/signature_retriever.html#get_public_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.utilities.signature_retriever.get_public_members" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<dl class="simple">
+<dt>The type of members</dt><dd><ol class="arabic simple">
+<li><dl class="simple">
+<dt>public</dt><dd><ol class="arabic simple">
+<li><p>properties – How to deal with properties? #TODO</p></li>
+<li><p>functions – only functions should be exposed</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p>private</p></li>
+</ol>
+</dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.utilities.signature_retriever.get_signatures">
+<code class="sig-prename descclassname">tests.utilities.signature_retriever.</code><code class="sig-name descname">get_signatures</code><span class="sig-paren">(</span><em class="sig-param">class_names</em>, <em class="sig-param">types</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/utilities/signature_retriever.html#get_signatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.utilities.signature_retriever.get_signatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getting the signatures of sklean.linear_model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Types</strong> – A accumulator to collection infomrationof types.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Some of the functions are private and only be used by other functions inside which should be excluded.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ol class="arabic simple">
+<li><p>Orderdict: The order is not important if you specified the parameters names</p></li>
+<li><p>filtering the fucntions that are not public</p></li>
+</ol>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests.utilities">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tests.utilities" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="tests.test_assets.html" class="btn btn-neutral float-left" title="tests.test_assets package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Qiwei Liu, Yanting Wan
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
