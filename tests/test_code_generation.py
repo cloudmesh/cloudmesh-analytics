@@ -1,7 +1,7 @@
 """Generate yaml and python code from the target functions
 """
 from jinja2 import Environment, PackageLoader, FileSystemLoader
-from .utilities import signature_retriever
+from .utilities import signature_scraper, type_scraper
 from numpydoc import docscrape
 import inspect
 import pprint
@@ -9,6 +9,7 @@ import pytest
 import sklearn.linear_model
 import os
 import numpy as np
+import re
 
 
 def test_generate_yaml():
@@ -41,7 +42,7 @@ def test_generate_yaml():
     # print(template.render(all=all))
 
 
-class TestSignatureRetrievers:
+class TestSignatureScraper:
     """Test Signature Retrivers
 
     In order to automate REST API generate process, the signature retriever would collect the signatures of class, func-
@@ -56,32 +57,19 @@ class TestSignatureRetrievers:
         6. What if the parameters are optional?
 
     """
-    @pytest.fixture()
-    def sample_parameters(self):
-        res = signature_retriever.get_signatures(['LinearRegression'])
-        doc = inspect.getdoc(sklearn.linear_model.LinearRegression.set_params)
-        r = docscrape.NumpyDocString(doc)
-        return r['Parameters']
+
+    def test_retrive_linear_regression(self):
+        """Only retrive the signature of the linear regression """
+        sample_module = ['LinearRegression']
+        types = []
+        signature_scraper.get_signatures(sample_module, types)
+        np.save('./tests/test_assets/literal_types_lg', types)
 
     def test_exclude_private_members(self):
         pass
 
     def test_exclude_functions(self):
         pass
-
-    def test_retrive_linear_regression(self):
-        """Only retrive the signature of the linear regression """
-        sample_module = ['LinearRegression']
-        types = []
-        signature_retriever.get_signatures(sample_module, types)
-        np.save('./tests/test_assets/literal_types_lg', types)
-
-    def test_retrieve_signatures(self):
-        modules = sklearn.linear_model.__all__
-        sample = ['LinearRegression']
-        types = []
-        signature_retriever.get_signatures(modules, types=types)
-        np.save('./tests/test_assets/literal_types_all', types)
 
     def test_get_parameters(self, sample_parameters):
         for p in sample_parameters:
@@ -91,7 +79,7 @@ class TestSignatureRetrievers:
         pass
 
 
-class TestLiteralTypeMatcher:
+class TestTypeScraper:
     """Match types from text what literally defined.
 
         The types are crucial to generate yaml and endpoint functinos.
@@ -117,8 +105,7 @@ class TestLiteralTypeMatcher:
 
     @pytest.fixture
     def literal_types_lg(self):
-        """A sequence of strings include the parameter types information
-
+        """A sequence of strings include the parameter types informations
             Examples:
                 ['int, optional', 'float, optional', 'float, optional',
                 'float, optional', 'float, optional', 'float, optional',
@@ -133,10 +120,20 @@ class TestLiteralTypeMatcher:
     def type_table(self):
         re_key = {
             'array': 'list',
+            'numpy': 'list',
             'bool': 'bool',
             'int': 'int'
         }
-        return
+        return re_key
 
-    def test_match_types(self, literal_types_lg):
-        pprint.pprint(literal_types_lg)
+    def test_match_types(self, literal_types_lg, type_table):
+        typer_scraper = type_scraper.TypeScraper(type_table=type_table)
+        for type in literal_types_lg:
+            print(typer_scraper.scrap(type))
+    
+    def test_print_types(self, literal_types_lg):
+        print(literal_types_lg)
+
+    def test_re(self):
+        res = re.search('boolean', 'boolean, optional, default True', re.IGNORECASE)
+        print(res)
