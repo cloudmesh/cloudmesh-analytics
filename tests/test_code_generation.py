@@ -8,7 +8,6 @@ import pprint
 import pytest
 import sklearn.linear_model
 import os
-from sklearn import svm
 import numpy as np
 
 
@@ -17,6 +16,7 @@ def test_generate_yaml():
     env = Environment(loader=FileSystemLoader('./tests/test_assets'))
     template = env.get_template('component.yaml')
 
+    # f and g are the functions to generate
     f = {'name': 'linear-regression',
          'request_method': 'post',
          'doc_string': 'this is a doc string',
@@ -48,8 +48,13 @@ class TestSignatureRetrievers:
     tions and properties.
 
     Notes:
-        - Given a list of class, to acquire the signatures of class __init__ attribute, and the members
-        - Some functions are private and should not be exposed. Making a list to ignore those functions or properties
+        1. Given a list of class, to acquire the signatures of class __init__ attribute, and the members.
+        2. Some functions are private and should not be exposed. Making a list to ignore those functions or properties.
+        3. What if the parameter of a function is class instance?
+        4. Some of the functions do not have type information in the docstring.
+        5. How to handle properties of a class? how to constrcut its yaml and corresping rest api?
+        6. What if the parameters are optional?
+
     """
     @pytest.fixture()
     def sample_parameters(self):
@@ -64,10 +69,19 @@ class TestSignatureRetrievers:
     def test_exclude_functions(self):
         pass
 
+    def test_retrive_linear_regression(self):
+        """Only retrive the signature of the linear regression """
+        sample_module = ['LinearRegression']
+        types = []
+        signature_retriever.get_signatures(sample_module, types)
+        np.save('./tests/test_assets/literal_types_lg', types)
+
     def test_retrieve_signatures(self):
         modules = sklearn.linear_model.__all__
         sample = ['LinearRegression']
-        signature_retriever.get_signatures(modules)
+        types = []
+        signature_retriever.get_signatures(modules, types=types)
+        np.save('./tests/test_assets/literal_types_all', types)
 
     def test_get_parameters(self, sample_parameters):
         for p in sample_parameters:
@@ -102,6 +116,20 @@ class TestLiteralTypeMatcher:
         return np.load('./tests/test_assets/literal_types.npy', allow_pickle=True)
 
     @pytest.fixture
+    def literal_types_lg(self):
+        """A sequence of strings include the parameter types information
+
+            Examples:
+                ['int, optional', 'float, optional', 'float, optional',
+                'float, optional', 'float, optional', 'float, optional',
+                'boolean, optional', 'float, optional', 'boolean, optional',
+                'boolean, optional, default False',
+                'boolean, optional, default True.',
+                'boolean, optional, default False']
+        """
+        return np.load('./tests/test_assets/literal_types_lg.npy', allow_pickle=True)
+
+    @pytest.fixture
     def type_table(self):
         re_key = {
             'array': 'list',
@@ -110,6 +138,5 @@ class TestLiteralTypeMatcher:
         }
         return
 
-    def test_match_types(self, literal_types):
-        pprint.pprint(literal_types)
-        pass
+    def test_match_types(self, literal_types_lg):
+        pprint.pprint(literal_types_lg)

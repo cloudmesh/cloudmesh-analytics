@@ -38,14 +38,16 @@ def get_parameters(doc, types):
     r = docscrape.NumpyDocString(doc)
     paras = {}
     for p in r['Parameters']:
-        print(str(p.type))
         types.append(str(p.type))
         paras[p.name] = str(p.type).split(' ')[0].split(',')[0]
     return paras
 
 
-def get_signatures(class_names):
+def get_signatures(class_names, types):
     """Getting the signatures of sklean.linear_model
+
+        Parameters:
+            Types: A accumulator to collection infomrationof types.
 
         Notes:
             Some of the functions are private and only be used by other functions inside which should be excluded.
@@ -54,8 +56,6 @@ def get_signatures(class_names):
             1. Orderdict: The order is not important if you specified the parameters names
             2. filtering the fucntions that are not public
     """
-    types = []
-
     res = {}
     for i, class_name in enumerate(class_names):
         try:
@@ -71,6 +71,4 @@ def get_signatures(class_names):
                     res[i][class_name][member_name] = f
         except ValueError:
             pass
-    pprint.pprint(types)
-    np.save('./tests/test_assets/literal_types', types)
     return res
