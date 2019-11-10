@@ -12,6 +12,7 @@
   "tests/test_cloudmesh.py::test_run_pca",
   "tests/test_code_generation.py::test_generate_yaml",
   "tests/test_code_generation.py::TestSignatureScraper::test_retrive_linear_regression",
+  "tests/test_code_generation.py::TestSignatureScraper::test_get_all_known_types",
   "tests/test_code_generation.py::TestSignatureScraper::test_exclude_private_members",
   "tests/test_code_generation.py::TestSignatureScraper::test_exclude_functions",
   "tests/test_code_generation.py::TestSignatureScraper::test_get_parameters",

@@ -1,7 +1,7 @@
 """Generate yaml and python code from the target functions
 """
 from jinja2 import Environment, PackageLoader, FileSystemLoader
-from .utilities import signature_scraper, type_scraper
+from tests.utilities import signature_scraper, type_scraper
 from numpydoc import docscrape
 import inspect
 import pprint
@@ -55,15 +55,31 @@ class TestSignatureScraper:
         4. Some of the functions do not have type information in the docstring.
         5. How to handle properties of a class? how to constrcut its yaml and corresping rest api?
         6. What if the parameters are optional?
+        7. What is the type of kwarg***?
+        8. what about the functions with side effects?
 
     """
 
-    def test_retrive_linear_regression(self):
-        """Only retrive the signature of the linear regression """
+    @pytest.fixture
+    def type_table(self):
+        re_key = {
+            'array': 'list',
+            'numpy': 'list',
+            'bool': 'bool',
+            'int': 'int'
+        }
+        return re_key
+
+    def test_retrive_linear_regression(self, type_table):
+        """Only retrive the signature of the linear regression"""
         sample_module = ['LinearRegression']
         types = []
-        signature_scraper.get_signatures(sample_module, types)
-        np.save('./tests/test_assets/literal_types_lg', types)
+        sigs = signature_scraper.get_signatures(sample_module, type_table,types)
+        pprint.pprint(sigs)
+        # np.save('./tests/test_assets/literal_types_lg', types)
+
+    def test_get_all_known_types(self):
+        pass
 
     def test_exclude_private_members(self):
         pass
@@ -130,10 +146,11 @@ class TestTypeScraper:
         typer_scraper = type_scraper.TypeScraper(type_table=type_table)
         for type in literal_types_lg:
             print(typer_scraper.scrap(type))
-    
+
     def test_print_types(self, literal_types_lg):
         print(literal_types_lg)
 
     def test_re(self):
-        res = re.search('boolean', 'boolean, optional, default True', re.IGNORECASE)
+        res = re.search(
+            'boolean', 'boolean, optional, default True', re.IGNORECASE)
         print(res)
