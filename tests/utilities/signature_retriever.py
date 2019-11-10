@@ -31,35 +31,46 @@ def get_public_members(obj):
     for k, v in inspect.getmembers(obj):
         if not isprivate(k):
             public_members[k] = v
-    return  public_members
+    return public_members
 
-def get_parameters(doc):
+
+def get_parameters(doc, types):
     r = docscrape.NumpyDocString(doc)
     paras = {}
     for p in r['Parameters']:
-        paras[p.name]=str(p.type).split(' ')[0].split(',')[0]
+        print(str(p.type))
+        types.append(str(p.type))
+        paras[p.name] = str(p.type).split(' ')[0].split(',')[0]
     return paras
 
+
 def get_signatures(class_names):
-    """
+    """Getting the signatures of sklean.linear_model
+
+        Notes:
+            Some of the functions are private and only be used by other functions inside which should be excluded.
 
         Warnings:
             1. Orderdict: The order is not important if you specified the parameters names
             2. filtering the fucntions that are not public
     """
+    types = []
+
     res = {}
     for i, class_name in enumerate(class_names):
         try:
             res[i] = {class_name: {}}
             doc = inspect.getdoc(getattr(sklearn.linear_model, class_name))
-            res[i][class_name]['constructor'] = get_parameters(doc)
+            res[i][class_name]['constructor'] = get_parameters(doc, types)
             for member_name, f in get_public_members(getattr(sklearn.linear_model, class_name)).items():
                 res[i][class_name][member_name] = {}
                 if inspect.isfunction(f):
                     doc = inspect.getdoc(f)
-                    res[i][class_name][member_name] = get_parameters(doc)
+                    res[i][class_name][member_name] = get_parameters(doc, types)
                 else:
                     res[i][class_name][member_name] = f
         except ValueError:
             pass
+    pprint.pprint(types)
+    np.save('./tests/test_assets/literal_types', types)
     return res

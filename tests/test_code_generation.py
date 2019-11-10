@@ -7,12 +7,15 @@ import inspect
 import pprint
 import pytest
 import sklearn.linear_model
+import os
 from sklearn import svm
+import numpy as np
 
 
 def test_generate_yaml():
     """Generate yaml file using the python template engine"""
-    # template = env.get_template('component.yaml')
+    env = Environment(loader=FileSystemLoader('./tests/test_assets'))
+    template = env.get_template('component.yaml')
 
     f = {'name': 'linear-regression',
          'request_method': 'post',
@@ -21,7 +24,6 @@ def test_generate_yaml():
          'paras': {
              'file_name': {'name': 'file_name', 'type': 'string'},
              'intercept': {'name': 'intercept', 'type': 'int'}
-
          }}
 
     g = {'name': 'logistic-regression',
@@ -65,7 +67,7 @@ class TestSignatureRetrievers:
     def test_retrieve_signatures(self):
         modules = sklearn.linear_model.__all__
         sample = ['LinearRegression']
-        pprint.pprint(signature_retriever.get_signatures(modules))
+        signature_retriever.get_signatures(modules)
 
     def test_get_parameters(self, sample_parameters):
         for p in sample_parameters:
@@ -85,9 +87,22 @@ class TestLiteralTypeMatcher:
             reg = LinearRegression(X= x ...)
             The x must be a list when it is passed to the counstructor. When the functions are automatically generated, it must know the type of the x given mapped by connexion from request or errors occur.
     """
+    @pytest.fixture
+    def literal_types(self):
+        """A sequence of strings include the parameter types information
+
+            Examples:
+                ['int, optional', 'float, optional', 'float, optional',
+                'float, optional', 'float, optional', 'float, optional',
+                'boolean, optional', 'float, optional', 'boolean, optional',
+                'boolean, optional, default False',
+                'boolean, optional, default True.',
+                'boolean, optional, default False']
+        """
+        return np.load('./tests/test_assets/literal_types.npy', allow_pickle=True)
 
     @pytest.fixture
-    def type_table():
+    def type_table(self):
         re_key = {
             'array': 'list',
             'bool': 'bool',
@@ -95,6 +110,6 @@ class TestLiteralTypeMatcher:
         }
         return
 
-    def test_match(self):
-        a = 'boolean'
-        assert bool == literal_match_type(a)
+    def test_match_types(self, literal_types):
+        pprint.pprint(literal_types)
+        pass
