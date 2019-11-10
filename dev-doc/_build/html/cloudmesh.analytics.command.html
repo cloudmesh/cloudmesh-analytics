@@ -99,7 +99,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tests.html">tests package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="progress.html">Requirements</a></li>
 </ul>
 
             
@@ -184,19 +183,26 @@
 <code class="sig-name descname">do_analytics</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="headerlink" href="#cloudmesh.analytics.command.analytics.AnalyticsCommand.do_analytics" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span>
       <span class="n">analytics</span> <span class="n">server</span> <span class="n">start</span> <span class="p">[</span><span class="o">--</span><span class="n">cloud</span><span class="o">=</span><span class="n">CLOUD</span><span class="p">]</span>
+      <span class="n">analytics</span> <span class="n">server</span> <span class="n">detached</span> <span class="n">start</span> <span class="p">[</span><span class="o">--</span><span class="n">cloud</span><span class="o">=</span><span class="n">CLOUD</span><span class="p">]</span>
       <span class="n">analytics</span> <span class="n">server</span> <span class="n">stop</span> <span class="p">[</span><span class="o">--</span><span class="n">cloud</span><span class="o">=</span><span class="n">CLOUD</span><span class="p">]</span>
+      <span class="n">analytics</span> <span class="n">server</span> <span class="n">detached</span> <span class="n">stop</span> <span class="p">[</span><span class="o">--</span><span class="n">cloud</span><span class="o">=</span><span class="n">CLOUD</span><span class="p">]</span>
 
 <span class="n">This</span> <span class="n">command</span> <span class="n">manages</span> <span class="n">the</span> <span class="n">cloudmesh</span> <span class="n">analytics</span> <span class="n">server</span> <span class="n">on</span> <span class="n">the</span> <span class="n">given</span> <span class="n">cloud</span><span class="o">.</span>
 <span class="n">If</span> <span class="n">the</span> <span class="n">cloud</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">spified</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">run</span> <span class="n">on</span> <span class="n">localhost</span>
 
 <span class="n">Options</span><span class="p">:</span>
-    <span class="o">--</span><span class="n">clout</span><span class="o">=</span><span class="n">CLOUD</span>  <span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">cloud</span> <span class="k">as</span> <span class="n">specified</span> <span class="ow">in</span> <span class="n">the</span>
+    <span class="o">--</span><span class="n">cloud</span><span class="o">=</span><span class="n">CLOUD</span>  <span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">cloud</span> <span class="k">as</span> <span class="n">specified</span> <span class="ow">in</span> <span class="n">the</span>
                    <span class="n">cloudmesh</span><span class="o">.</span><span class="n">yaml</span> <span class="n">file</span>
 </pre></div>
 </div>
 </dd></dl>
 
 </dd></dl>
+
+<dl class="function">
+<dt id="cloudmesh.analytics.command.analytics.construct_url">
+<code class="sig-prename descclassname">cloudmesh.analytics.command.analytics.</code><code class="sig-name descname">construct_url</code><span class="sig-paren">(</span><em class="sig-param">module_name</em>, <em class="sig-param">func_name</em>, <em class="sig-param">file_name=''</em>, <em class="sig-param">main_page='http://localhost:8000/cloudmesh-analytics'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cloudmesh/analytics/command/analytics.html#construct_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cloudmesh.analytics.command.analytics.construct_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-cloudmesh.analytics.command">

@@ -82,7 +82,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cloudmesh.html">cloudmesh package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tests.html">tests package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../progress.html">Requirements</a></li>
 </ul>
 
             
@@ -171,8 +170,8 @@
 <span class="sd">    Warning:</span>
 <span class="sd">        The input format should be specified</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Extract parameters from the request body</span>
 
+    <span class="c1"># Extract parameters from the request body</span>
     <span class="n">paras</span> <span class="o">=</span> <span class="n">body</span><span class="p">[</span><span class="s1">&#39;paras&#39;</span><span class="p">]</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -182,6 +181,26 @@
         <span class="n">reg</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="o">**</span><span class="n">paras</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;coefficient&#39;</span><span class="p">:</span><span class="n">reg</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="p">})</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)})</span></div>
+
+<div class="viewcode-block" id="kmeans_fit"><a class="viewcode-back" href="../../../cloudmesh.analytics.html#cloudmesh.analytics.analytics.kmeans_fit">[docs]</a><span class="k">def</span> <span class="nf">kmeans_fit</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span><span class="n">body</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Kmeans fit.</span>
+
+<span class="sd">    i do this and taht</span>
+
+<span class="sd">    :param file_name:</span>
+<span class="sd">    :type: int</span>
+<span class="sd">    :param body:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract parameters from the request body</span>
+    <span class="n">paras</span> <span class="o">=</span> <span class="n">body</span><span class="p">[</span><span class="s1">&#39;paras&#39;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="o">**</span><span class="n">paras</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span><span class="o">.</span><span class="n">tolist</span><span class="p">()})</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># it will be parameter type error for KMeans or user type a filename that&#39;s not in app.config[&#39;UPLOAD_FOLDER&#39;]</span>
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)})</span></div>
 
 <div class="viewcode-block" id="pca"><a class="viewcode-back" href="../../../cloudmesh.analytics.html#cloudmesh.analytics.analytics.pca">[docs]</a><span class="k">def</span> <span class="nf">pca</span><span class="p">():</span>

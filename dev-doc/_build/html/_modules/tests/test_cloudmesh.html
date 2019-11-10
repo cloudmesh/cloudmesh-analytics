@@ -82,7 +82,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../cloudmesh.html">cloudmesh package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tests.html">tests package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../progress.html">Requirements</a></li>
 </ul>
 
             
@@ -155,9 +154,10 @@
 <span class="sd">        ```&gt; ./cloudmesh-analytics$ pytest```</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 
 <span class="kn">from</span> <span class="nn">cloudmesh.analytics.server.server</span> <span class="k">import</span> <span class="n">create_app</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">jsonify</span>
@@ -167,7 +167,6 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pytest</span>
 <span class="kn">import</span> <span class="nn">cloudmesh.analytics.analytics</span> <span class="k">as</span> <span class="nn">analytics</span>
-
 
 <div class="viewcode-block" id="TestFileOperations"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestFileOperations">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">first</span>
 <span class="k">class</span> <span class="nc">TestFileOperations</span><span class="p">:</span>
@@ -325,11 +324,52 @@
                <span class="sa">b</span><span class="s1">&#39;,-792.1841616283085,476.7458378236647,101.04457032134525,177.06417623225093,751.2793210873953&#39;</span> \
                <span class="sa">b</span><span class="s1">&#39;,67.62538639104389]}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">==</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span></div></div>
 
+<div class="viewcode-block" id="TestKMeans"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestKMeans">[docs]</a><span class="k">class</span> <span class="nc">TestKMeans</span><span class="p">:</span>
+<div class="viewcode-block" id="TestKMeans.test_errors"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestKMeans.test_errors">[docs]</a>    <span class="k">def</span> <span class="nf">test_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">client</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Testing error arguments. The exception raised by the sci-kit learn will be returned in the error message.</span>
+<span class="sd">        The exception also raised by the filename doesn&#39;t exist in app.config[&#39;UPLOAD_FOLDER&#39;]</span>
+<span class="sd">        :param client:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/cloudmesh-analytics/analytics/kmeans-fit/test_upload&#39;</span><span class="p">,</span>
+                               <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                                   <span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="s1">&#39;test_upload&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;paras&#39;</span><span class="p">:</span>
+                                       <span class="p">{</span>
+                                           <span class="s1">&#39;fit_intercept&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                                           <span class="s1">&#39;error_para&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                                           <span class="s1">&#39;n_jobs&#39;</span><span class="p">:</span> <span class="mi">1</span>
+                                       <span class="p">}</span>
+                               <span class="p">}),</span>
+                               <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;{&quot;error&quot;:&quot;__init__() got an unexpected keyword argument </span><span class="se">\&#39;</span><span class="s1">fit_intercept</span><span class="se">\&#39;</span><span class="s1">&quot;}</span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="o">==</span> \
+               <span class="n">response</span><span class="o">.</span><span class="n">data</span></div>
+
+<div class="viewcode-block" id="TestKMeans.test_kmeans_fit"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.TestKMeans.test_kmeans_fit">[docs]</a>    <span class="k">def</span> <span class="nf">test_kmeans_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">client</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/cloudmesh-analytics/analytics/kmeans-fit/sample_matrix&#39;</span><span class="p">,</span>
+                               <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+                                   <span class="s1">&#39;paras&#39;</span><span class="p">:</span>
+                                       <span class="p">{</span>
+                                           <span class="s1">&#39;n_clusters&#39;</span><span class="p">:</span> <span class="mi">2</span>
+                                       <span class="p">}</span>
+                               <span class="p">}),</span>
+                               <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="mi">0</span></div></div>
+
 <div class="viewcode-block" id="test_run_pca"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.test_run_pca">[docs]</a><span class="k">def</span> <span class="nf">test_run_pca</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/cloudmesh-ai-services/analytics/pca&#39;</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span></div>
 
+
+<div class="viewcode-block" id="teardown_module"><a class="viewcode-back" href="../../tests.html#tests.test_cloudmesh.teardown_module">[docs]</a><span class="k">def</span> <span class="nf">teardown_module</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Teardown any state that was previously setup</span>
+<span class="sd">    Remove the test_upload_folder by the end of tests</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cleancleancleancleancleancleancleancleancleancleanclean&#39;</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;./tests/test_upload_folder&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

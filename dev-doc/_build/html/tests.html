@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Requirements" href="progress.html" />
+    <link rel="next" title="tests.test_assets package" href="tests.test_assets.html" />
     <link rel="prev" title="cloudmesh.analytics.server package" href="cloudmesh.analytics.server.html" /> 
 </head>
 
@@ -84,13 +84,19 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="cloudmesh.html">cloudmesh package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tests.test_assets.html">tests.test_assets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tests.utilities.html">tests.utilities package</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tests.conftest">tests.conftest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tests.test_analytics_client">tests.test_analytics_client module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tests.test_cloudmesh">tests.test_cloudmesh module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tests.test_code_generation">tests.test_code_generation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tests">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="progress.html">Requirements</a></li>
 </ul>
 
             
@@ -157,6 +163,24 @@
             
   <div class="section" id="tests-package">
 <h1>tests package<a class="headerlink" href="#tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tests.test_assets.html">tests.test_assets package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tests.test_assets.html#module-tests.test_assets">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tests.utilities.html">tests.utilities package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tests.utilities.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests.utilities.html#module-tests.utilities.literal_match_type">tests.utilities.literal_match_type module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests.utilities.html#module-tests.utilities.signature_retriever">tests.utilities.signature_retriever module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests.utilities.html#module-tests.utilities">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -173,6 +197,11 @@ The config is required by the pytest. The pytest will run this file at first.</p
 <p class="admonition-title">Attention</p>
 <p>The the database is in progress, and not used. All files are saved in the folder defined in the ‘UPLOAD_FOLDER’
 in the app configurations</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The uploaded folder is relative to where the pytest is called. Calling pytest in other folder will result a mis-
+placed uploaded folder. The uploaded folder should be kept under test directory</p>
 </div>
 </dd></dl>
 
@@ -194,6 +223,31 @@ in the app configurations</p>
 <p class="admonition-title">Attention</p>
 <p>Not used now</p>
 </div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests.test_analytics_client">
+<span id="tests-test-analytics-client-module"></span><h2>tests.test_analytics_client module<a class="headerlink" href="#module-tests.test_analytics_client" title="Permalink to this headline">¶</a></h2>
+<p>Test the analytic clients</p>
+<dl class="class">
+<dt id="tests.test_analytics_client.TestAnalytics">
+<em class="property">class </em><code class="sig-prename descclassname">tests.test_analytics_client.</code><code class="sig-name descname">TestAnalytics</code><a class="reference internal" href="_modules/tests/test_analytics_client.html#TestAnalytics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_analytics_client.TestAnalytics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="tests.test_analytics_client.TestAnalytics.function_names">
+<code class="sig-name descname">function_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_analytics_client.html#TestAnalytics.function_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_analytics_client.TestAnalytics.function_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_analytics_client.TestAnalytics.paras">
+<code class="sig-name descname">paras</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_analytics_client.html#TestAnalytics.paras"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_analytics_client.TestAnalytics.paras" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_analytics_client.TestAnalytics.test_construct_url">
+<code class="sig-name descname">test_construct_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_analytics_client.html#TestAnalytics.test_construct_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_analytics_client.TestAnalytics.test_construct_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -315,6 +369,26 @@ file names</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="tests.test_cloudmesh.TestKMeans">
+<em class="property">class </em><code class="sig-prename descclassname">tests.test_cloudmesh.</code><code class="sig-name descname">TestKMeans</code><a class="reference internal" href="_modules/tests/test_cloudmesh.html#TestKMeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_cloudmesh.TestKMeans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="tests.test_cloudmesh.TestKMeans.test_errors">
+<code class="sig-name descname">test_errors</code><span class="sig-paren">(</span><em class="sig-param">client</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_cloudmesh.html#TestKMeans.test_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_cloudmesh.TestKMeans.test_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Testing error arguments. The exception raised by the sci-kit learn will be returned in the error message.
+The exception also raised by the filename doesn’t exist in app.config[‘UPLOAD_FOLDER’]
+:param client:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_cloudmesh.TestKMeans.test_kmeans_fit">
+<code class="sig-name descname">test_kmeans_fit</code><span class="sig-paren">(</span><em class="sig-param">client</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_cloudmesh.html#TestKMeans.test_kmeans_fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_cloudmesh.TestKMeans.test_kmeans_fit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="tests.test_cloudmesh.TestLinearRegression">
 <em class="property">class </em><code class="sig-prename descclassname">tests.test_cloudmesh.</code><code class="sig-name descname">TestLinearRegression</code><a class="reference internal" href="_modules/tests/test_cloudmesh.html#TestLinearRegression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_cloudmesh.TestLinearRegression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -360,9 +434,128 @@ file names</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="tests.test_cloudmesh.teardown_module">
+<code class="sig-prename descclassname">tests.test_cloudmesh.</code><code class="sig-name descname">teardown_module</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_cloudmesh.html#teardown_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_cloudmesh.teardown_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Teardown any state that was previously setup
+Remove the test_upload_folder by the end of tests</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="tests.test_cloudmesh.test_run_pca">
 <code class="sig-prename descclassname">tests.test_cloudmesh.</code><code class="sig-name descname">test_run_pca</code><span class="sig-paren">(</span><em class="sig-param">client</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_cloudmesh.html#test_run_pca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_cloudmesh.test_run_pca" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</div>
+<div class="section" id="module-tests.test_code_generation">
+<span id="tests-test-code-generation-module"></span><h2>tests.test_code_generation module<a class="headerlink" href="#module-tests.test_code_generation" title="Permalink to this headline">¶</a></h2>
+<p>Generate yaml and python code from the target functions</p>
+<dl class="class">
+<dt id="tests.test_code_generation.TestLiteralTypeMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">tests.test_code_generation.</code><code class="sig-name descname">TestLiteralTypeMatcher</code><a class="reference internal" href="_modules/tests/test_code_generation.html#TestLiteralTypeMatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestLiteralTypeMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Match types from text what literally defined.</p>
+<p>The types are crucial to generate yaml and endpoint functinos.</p>
+<p class="rubric">Examples</p>
+<p>x = [[1,2],[3,4]]
+reg = LinearRegression(X= x …)
+The x must be a list when it is passed to the counstructor. When the functions are automatically generated, it must know the type of the x given mapped by connexion from request or errors occur.</p>
+<dl class="method">
+<dt id="tests.test_code_generation.TestLiteralTypeMatcher.literal_types">
+<code class="sig-name descname">literal_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestLiteralTypeMatcher.literal_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestLiteralTypeMatcher.literal_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>A sequence of strings include the parameter types information</p>
+<p class="rubric">Examples</p>
+<p>[‘int, optional’, ‘float, optional’, ‘float, optional’,
+‘float, optional’, ‘float, optional’, ‘float, optional’,
+‘boolean, optional’, ‘float, optional’, ‘boolean, optional’,
+‘boolean, optional, default False’,
+‘boolean, optional, default True.’,
+‘boolean, optional, default False’]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_code_generation.TestLiteralTypeMatcher.literal_types_lg">
+<code class="sig-name descname">literal_types_lg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestLiteralTypeMatcher.literal_types_lg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestLiteralTypeMatcher.literal_types_lg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A sequence of strings include the parameter types information</p>
+<p class="rubric">Examples</p>
+<p>[‘int, optional’, ‘float, optional’, ‘float, optional’,
+‘float, optional’, ‘float, optional’, ‘float, optional’,
+‘boolean, optional’, ‘float, optional’, ‘boolean, optional’,
+‘boolean, optional, default False’,
+‘boolean, optional, default True.’,
+‘boolean, optional, default False’]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.test_code_generation.TestLiteralTypeMatcher.test_match_types">
+<code class="sig-name descname">test_match_types</code><span class="sig-paren">(</span><em class="sig-param">literal_types_lg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestLiteralTypeMatcher.test_match_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestLiteralTypeMatcher.test_match_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_code_generation.TestLiteralTypeMatcher.type_table">
+<code class="sig-name descname">type_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestLiteralTypeMatcher.type_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestLiteralTypeMatcher.type_table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tests.test_code_generation.TestSignatureRetrievers">
+<em class="property">class </em><code class="sig-prename descclassname">tests.test_code_generation.</code><code class="sig-name descname">TestSignatureRetrievers</code><a class="reference internal" href="_modules/tests/test_code_generation.html#TestSignatureRetrievers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestSignatureRetrievers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Test Signature Retrivers</p>
+<p>In order to automate REST API generate process, the signature retriever would collect the signatures of class, func-
+tions and properties.</p>
+<p class="rubric">Notes</p>
+<ol class="arabic simple">
+<li><p>Given a list of class, to acquire the signatures of class __init__ attribute, and the members.</p></li>
+<li><p>Some functions are private and should not be exposed. Making a list to ignore those functions or properties.</p></li>
+<li><p>What if the parameter of a function is class instance?</p></li>
+<li><p>Some of the functions do not have type information in the docstring.</p></li>
+<li><p>How to handle properties of a class? how to constrcut its yaml and corresping rest api?</p></li>
+<li><p>What if the parameters are optional?</p></li>
+</ol>
+<dl class="method">
+<dt id="tests.test_code_generation.TestSignatureRetrievers.sample_parameters">
+<code class="sig-name descname">sample_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestSignatureRetrievers.sample_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestSignatureRetrievers.sample_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_code_generation.TestSignatureRetrievers.test_exclude_functions">
+<code class="sig-name descname">test_exclude_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestSignatureRetrievers.test_exclude_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestSignatureRetrievers.test_exclude_functions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_code_generation.TestSignatureRetrievers.test_exclude_private_members">
+<code class="sig-name descname">test_exclude_private_members</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestSignatureRetrievers.test_exclude_private_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestSignatureRetrievers.test_exclude_private_members" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_code_generation.TestSignatureRetrievers.test_generate_data_type_table">
+<code class="sig-name descname">test_generate_data_type_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestSignatureRetrievers.test_generate_data_type_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestSignatureRetrievers.test_generate_data_type_table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_code_generation.TestSignatureRetrievers.test_get_parameters">
+<code class="sig-name descname">test_get_parameters</code><span class="sig-paren">(</span><em class="sig-param">sample_parameters</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestSignatureRetrievers.test_get_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestSignatureRetrievers.test_get_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_code_generation.TestSignatureRetrievers.test_retrieve_signatures">
+<code class="sig-name descname">test_retrieve_signatures</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestSignatureRetrievers.test_retrieve_signatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestSignatureRetrievers.test_retrieve_signatures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_code_generation.TestSignatureRetrievers.test_retrive_linear_regression">
+<code class="sig-name descname">test_retrive_linear_regression</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#TestSignatureRetrievers.test_retrive_linear_regression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.TestSignatureRetrievers.test_retrive_linear_regression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only retrive the signature of the linear regression</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tests.test_code_generation.test_generate_yaml">
+<code class="sig-prename descclassname">tests.test_code_generation.</code><code class="sig-name descname">test_generate_yaml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_code_generation.html#test_generate_yaml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_code_generation.test_generate_yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate yaml file using the python template engine</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-tests">
@@ -378,7 +571,7 @@ file names</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="progress.html" class="btn btn-neutral float-right" title="Requirements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tests.test_assets.html" class="btn btn-neutral float-right" title="tests.test_assets package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="cloudmesh.analytics.server.html" class="btn btn-neutral float-left" title="cloudmesh.analytics.server package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -82,7 +82,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../cloudmesh.html">cloudmesh package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tests.html">tests package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../progress.html">Requirements</a></li>
 </ul>
 
             
@@ -167,14 +166,17 @@
 <span class="sd">    Attention:</span>
 <span class="sd">        The the database is in progress, and not used. All files are saved in the folder defined in the &#39;UPLOAD_FOLDER&#39;</span>
 <span class="sd">        in the app configurations</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">        The uploaded folder is relative to where the pytest is called. Calling pytest in other folder will result a mis-</span>
+<span class="sd">        placed uploaded folder. The uploaded folder should be kept under test directory</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">db_fd</span><span class="p">,</span> <span class="n">db_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">()</span>
-
     <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">({</span>
         <span class="s1">&#39;TESTING&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="s1">&#39;DATABASE&#39;</span><span class="p">:</span> <span class="n">db_path</span><span class="p">,</span>
         <span class="c1"># Set the folder path for testing. All uploaded files will be saved here</span>
-        <span class="s1">&#39;UPLOAD_FOLDER&#39;</span><span class="p">:</span> <span class="s1">&#39;./testing_files&#39;</span>
+        <span class="s1">&#39;UPLOAD_FOLDER&#39;</span><span class="p">:</span> <span class="s1">&#39;./tests/test_upload_folder&#39;</span>
     <span class="p">})</span>
 
     <span class="k">with</span> <span class="n">app</span><span class="o">.</span><span class="n">app_context</span><span class="p">():</span>

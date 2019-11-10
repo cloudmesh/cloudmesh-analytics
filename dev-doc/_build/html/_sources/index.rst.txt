@@ -11,7 +11,6 @@ Documentaions for Developers
 
    cloudmesh
    tests
-   progress
 
 Indices and tables
 ==================

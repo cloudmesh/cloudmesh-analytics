@@ -82,7 +82,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../cloudmesh.html">cloudmesh package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tests.html">tests package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../progress.html">Requirements</a></li>
 </ul>
 
             
@@ -154,12 +153,16 @@
 <span class="kn">from</span> <span class="nn">cloudmesh.common.util</span> <span class="k">import</span> <span class="n">path_expand</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="k">import</span> <span class="n">pprint</span>
 <span class="kn">from</span> <span class="nn">cloudmesh.common.debug</span> <span class="k">import</span> <span class="n">VERBOSE</span>
+<span class="kn">from</span> <span class="nn">cloudmesh.common.run.background</span> <span class="k">import</span> <span class="n">run</span>
 
 <span class="kn">from</span> <span class="nn">..server</span> <span class="k">import</span> <span class="n">server</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">psutil</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="k">import</span> <span class="n">HTTPError</span>
 
 <div class="viewcode-block" id="AnalyticsCommand"><a class="viewcode-back" href="../../../../cloudmesh.analytics.command.html#cloudmesh.analytics.command.analytics.AnalyticsCommand">[docs]</a><span class="k">class</span> <span class="nc">AnalyticsCommand</span><span class="p">(</span><span class="n">PluginCommand</span><span class="p">):</span>
 
@@ -171,13 +174,15 @@
 
 <span class="sd">          Usage:</span>
 <span class="sd">                analytics server start [--cloud=CLOUD]</span>
+<span class="sd">                analytics server detached start [--cloud=CLOUD]</span>
 <span class="sd">                analytics server stop [--cloud=CLOUD]</span>
+<span class="sd">                analytics server detached stop [--cloud=CLOUD]</span>
 
 <span class="sd">          This command manages the cloudmesh analytics server on the given cloud.</span>
 <span class="sd">          If the cloud is not spified it is run on localhost</span>
 
 <span class="sd">          Options:</span>
-<span class="sd">              --clout=CLOUD  The name of the cloud as specified in the</span>
+<span class="sd">              --cloud=CLOUD  The name of the cloud as specified in the</span>
 <span class="sd">                             cloudmesh.yaml file</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -186,26 +191,34 @@
 
         <span class="n">Console</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;This is just a sample&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">server</span> <span class="ow">and</span> <span class="n">arguments</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
+        <span class="c1"># make flask app run background</span>
+        <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">server</span> <span class="ow">and</span> <span class="n">arguments</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">arguments</span><span class="o">.</span><span class="n">detached</span><span class="p">:</span>
+            <span class="n">background_run</span> <span class="o">=</span> <span class="n">run</span><span class="p">([</span><span class="s1">&#39;cms&#39;</span><span class="p">,</span> <span class="s1">&#39;analytics&#39;</span><span class="p">,</span> <span class="s1">&#39;server&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">])</span>
+            <span class="n">background_run</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">arguments</span><span class="o">.</span><span class="n">server</span> <span class="ow">and</span> <span class="n">arguments</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start the server&quot;</span><span class="p">)</span>
-            <span class="c1">#TODO: Need suppress console log</span>
+            <span class="c1"># TODO: Need suppress console log (Launch the server on background)</span>
             <span class="c1"># Launch a server and save pid in the current directory</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="p">,</span><span class="s1">&#39;server_pid&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()]))</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">(),</span> <span class="s1">&#39;server_pid&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()]))</span>
             <span class="n">server</span><span class="o">.</span><span class="n">create_app</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">server</span> <span class="ow">and</span> <span class="n">arguments</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">arguments</span><span class="o">.</span><span class="n">server</span> <span class="ow">and</span> <span class="n">arguments</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;stop the server&quot;</span><span class="p">)</span>
-
             <span class="c1"># Load the file contains pid and shutdown the server</span>
-            <span class="n">server_pid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="p">,</span><span class="s1">&#39;server_pid.npy&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">server_pid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">(),</span> <span class="s1">&#39;server_pid.npy&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">server_pid</span> <span class="ow">in</span> <span class="n">psutil</span><span class="o">.</span><span class="n">pids</span><span class="p">():</span>
                 <span class="n">p</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">server_pid</span><span class="p">)</span>
                 <span class="n">p</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">(),</span> <span class="s1">&#39;server_pid.npy&#39;</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span> <span class="p">,</span><span class="s1">&#39;server_pid.npy&#39;</span><span class="p">))</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">absolute</span><span class="p">(),</span> <span class="s1">&#39;server_pid.npy&#39;</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="construct_url"><a class="viewcode-back" href="../../../../cloudmesh.analytics.command.html#cloudmesh.analytics.command.analytics.construct_url">[docs]</a><span class="k">def</span> <span class="nf">construct_url</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">main_page</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000/cloudmesh-analytics&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">main_page</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">module_name</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">func_name</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">file_name</span></div>
 </pre></div>
 
            </div>
