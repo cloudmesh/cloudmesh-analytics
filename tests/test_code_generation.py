@@ -1,8 +1,7 @@
 """Generate yaml and python code from the target functions
 """
-
 from jinja2 import Environment, PackageLoader, FileSystemLoader
-from utilities import signature_retriever
+from .utilities import signature_retriever
 from numpydoc import docscrape
 import inspect
 import pprint
@@ -75,8 +74,26 @@ class TestSignatureRetrievers:
     def test_generate_data_type_table(self):
         pass
 
+
 class TestLiteralTypeMatcher:
-    """Match types from text what literally defined   """
+    """Match types from text what literally defined.
+
+        The types are crucial to generate yaml and endpoint functinos.
+
+        Examples:
+            x = [[1,2],[3,4]]
+            reg = LinearRegression(X= x ...)
+            The x must be a list when it is passed to the counstructor. When the functions are automatically generated, it must know the type of the x given mapped by connexion from request or errors occur.
+    """
+
+    @pytest.fixture
+    def type_table():
+        re_key = {
+            'array': 'list',
+            'bool': 'bool',
+            'int': 'int'
+        }
+        return
 
     def test_match(self):
         a = 'boolean'

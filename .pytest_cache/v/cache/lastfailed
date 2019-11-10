@@ -1,0 +1,9 @@
+{
+  "tests/test_code_generation.py::TestLiteralTypeMatcher": true,
+  "tests/test_code_generation.py::TestSignatureRetrievers::test_exclude_functions": true,
+  "tests/test_code_generation.py::TestSignatureRetrievers::test_exclude_private_members": true,
+  "tests/test_code_generation.py::TestSignatureRetrievers::test_generate_data_type_table": true,
+  "tests/test_code_generation.py::TestSignatureRetrievers::test_get_parameters": true,
+  "tests/test_code_generation.py::TestSignatureRetrievers::test_retrieve_signatures": true,
+  "tests/test_code_generation.py::test_generate_yaml": true
+}
