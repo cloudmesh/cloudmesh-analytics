@@ -71,10 +71,15 @@ class TestSignatureScraper:
         return re_key
 
     def test_retrive_linear_regression(self, type_table):
-        """Only retrive the signature of the linear regression"""
+        """Only retrive the signature of the linear regression
+
+            Attetion:
+                1. the failed attempts to get type of parameters to class or functions are excluded. Set the predicate functions in the signature_scraper to see the failed attempts, i.e., is_valid_function(), is_valid_para().
+        """
         sample_module = ['LinearRegression']
         types = []
-        sigs = signature_scraper.get_signatures(sample_module, type_table,types)
+        sigs = signature_scraper.get_signatures(
+            sample_module, type_table, types)
         pprint.pprint(sigs)
         # np.save('./tests/test_assets/literal_types_lg', types)
 
