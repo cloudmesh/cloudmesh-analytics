@@ -12,6 +12,24 @@ import numpy as np
 import re
 
 
+@pytest.fixture
+def type_table():
+    """
+        Keys are substring of the type definition.
+
+        Attention:
+            The types on the righthand side obey the standrd of openAPI instead of python.
+    """
+    re_key = {
+        'array': 'array',
+        'numpy': 'array',
+        'bool': 'boolean',
+        'int': 'integer',
+        'float': 'number'
+    }
+    return re_key
+
+
 class TestYAMLGenerator:
 
     @pytest.fixture
@@ -93,29 +111,18 @@ class TestSignatureScraper:
         8. what about the functions with side effects?
     """
 
-    @pytest.fixture
-    def type_table(self):
-        re_key = {
-            'array': 'list',
-            'numpy': 'list',
-            'bool': 'bool',
-            'int': 'int'
-        }
-        return re_key
-
     def test_retrive_linear_regression(self, type_table):
         """Only retrive the signature of the linear regression
 
             Attetion:
                 1. the failed attempts to get type of parameters to class or functions are excluded. Set the predicate functions in the signature_scraper to see the failed attempts, i.e., is_valid_function(), is_valid_para().
         """
-        sample_module = ['LinearRegresseion']
+        sample_module = ['LinearRegression']
         types = []
         sigs = signature_scraper.get_signatures(
             sample_module, type_table, types)
         pprint.pprint(sigs)
         # np.save('./tests/test_assets/literal_types_lg', types)
-
 
     def test_retrive_linear_model(self, type_table):
         """This method will return all function signatures of the linear model defined in the __all__ attribute
@@ -183,19 +190,6 @@ class TestTypeScraper:
                 'boolean, optional, default False']
         """
         return np.load('./tests/test_assets/literal_types_lg.npy', allow_pickle=True)
-
-    @pytest.fixture
-    def type_table(self):
-        """
-            Keys are substring of the type definition.
-        """
-        re_key = {
-            'array': 'list',
-            'numpy': 'list',
-            'bool': 'bool',
-            'int': 'int'
-        }
-        return re_key
 
     def test_match_types(self, literal_types_lg, type_table):
         """

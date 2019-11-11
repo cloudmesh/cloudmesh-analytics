@@ -10,6 +10,7 @@ import sys
 from cloudmesh.analytics.server.server import create_app
 from cloudmesh.analytics.server.db import get_db, init_db
 
+
 @pytest.fixture
 def app():
     """Configure the flask app for testing

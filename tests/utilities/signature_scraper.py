@@ -42,12 +42,11 @@ def get_signatures(class_names, type_table, types):
             current_class['constructor'] = get_parameters(
                 doc, type_table, types)
 
-
             # Operate on individual members
             current_members = {}
             current_class['members'] = current_members
             for member_name, f in get_public_members(class_obj).items():
-                
+
                 if inspect.isfunction(f):
                     doc = inspect.getdoc(f)
                     paras_dict = get_parameters(doc, type_table, types)
@@ -118,7 +117,7 @@ def is_valid_para(para_type, type_table):
     """Check if it is a valid parameter type contained in the type table.
     """
     # The values of the table contain all known destination types
-    if para_type not in type_table.values():
+    if para_type in type_table.values():
         return True
     return False
 
@@ -135,6 +134,7 @@ def is_valid_function(paras):
     if len(paras) != 0:
         return True
     return False
+
 
 def if_has_para_doc():
     pass
