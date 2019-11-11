@@ -72,7 +72,7 @@ class TestYAMLGenerator:
 
 
 class TestSignatureScraper:
-    """Test Signature Retrivers
+    """Test Signature Retrievers
 
     In order to automate REST API generate process, the signature retriever would collect the signatures of class, func-
     tions and properties.
@@ -109,7 +109,7 @@ class TestSignatureScraper:
             Attetion:
                 1. the failed attempts to get type of parameters to class or functions are excluded. Set the predicate functions in the signature_scraper to see the failed attempts, i.e., is_valid_function(), is_valid_para().
         """
-        sample_module = ['LinearRegression']
+        sample_module = ['LinearRegresseion']
         types = []
         sigs = signature_scraper.get_signatures(
             sample_module, type_table, types)
