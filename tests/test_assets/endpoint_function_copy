@@ -1,0 +1,59 @@
+# from sklearn.linear_model import LinearRegression
+
+{% for i, class in all.items() %}
+from sklearn.linear_model import {{class.keys[0]}}
+{% endfor %}
+
+import pickle
+import os
+import numpy as np
+
+
+{% for i, class in all.items() %}
+
+def load_obj(path):
+    return np.load(path, allow_pickle=True)
+
+def save_obj(obj, class_name):
+    np.save(os.path.join({{cwd}}, {{class_name}}constructor))
+    # np.save('./cm/cloudmesh-analytics/tests/test_assets/linear_regression_constructor',
+    #         obj, allow_pickle=True)
+    return
+
+
+
+def linear_regression_constructor(body):
+    init = body['init']
+    reg = {{class.class_name}}(**init)
+    save_obj(reg, {{class.class_name}})
+    return reg
+
+{% for member_name, parameter in class.members.items() %}
+
+def {{class_name}}_{{member_name}}(body):
+    #TODO: The quote?
+
+    reg = np.load(os.path.join({{cwd}}, {{class_name}}constructor)).item()
+    
+    {% if parameter != None %}
+    res = reg.{{member_name}}(**body['paras'])
+    {% else %}
+    res = reg.{{member_name}}
+    {% endif%}
+    save_obj(res, {{class.class_name}})
+    return res
+
+# def {{class.class_name}}_coef_(body):
+#     reg = load_obj(
+#         './cm/cloudmesh-analytics/tests/test_assets/linear_regression_constructor.npy').item()
+#     return reg.coef_
+
+
+def linear_regression_predcit(body):
+    paras = body['paras']
+    reg = load_obj(
+        './cm/cloudmesh-analytics/tests/test_assets/linear_regression_constructor.npy').item()
+    return reg.predict(**paras)
+
+{% endfor %}
+{% endfor %}

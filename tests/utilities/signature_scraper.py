@@ -30,30 +30,35 @@ def get_signatures(class_names, type_table, types):
     # Traverse all classes and its members
     for i, class_name in enumerate(class_names):
         try:
-            res[i] = {class_name: {}}
+            current_class = {}
+            res[i] = current_class
+            current_class['class_name'] = class_name
 
             # Get the clas obj and its doc string
             class_obj = getattr(sklearn.linear_model, class_name)
             doc = inspect.getdoc(class_obj)
 
             # Add members of the current class constructor
-            res[i][class_name]['constructor'] = get_parameters(
+            current_class['constructor'] = get_parameters(
                 doc, type_table, types)
 
+
             # Operate on individual members
+            current_members = {}
+            current_class['members'] = current_members
             for member_name, f in get_public_members(class_obj).items():
+                
                 if inspect.isfunction(f):
                     doc = inspect.getdoc(f)
                     paras_dict = get_parameters(doc, type_table, types)
                     if is_valid_function(paras_dict):
                         # The function whose parameters dict is not empy is valid for the conversion
-                        res[i][class_name][member_name] = {}
-                        res[i][class_name][member_name] = paras_dict
+                        current_members[member_name] = paras_dict
                     else:
                         continue
                 else:
                     # TODO: To handle the properties
-                    res[i][class_name][member_name] = f
+                    current_members[member_name] = f
         # Ignore the classes that do not have signatures
         except ValueError:
             pass
@@ -113,7 +118,7 @@ def is_valid_para(para_type, type_table):
     """Check if it is a valid parameter type contained in the type table.
     """
     # The values of the table contain all known destination types
-    if para_type in type_table.values():
+    if para_type not in type_table.values():
         return True
     return False
 

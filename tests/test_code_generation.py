@@ -12,34 +12,63 @@ import numpy as np
 import re
 
 
-def test_generate_yaml():
-    """Generate yaml file using the python template engine"""
-    env = Environment(loader=FileSystemLoader('./tests/test_assets'))
-    template = env.get_template('component.yaml')
+class TestYAMLGenerator:
 
-    # f and g are the functions to generate
-    f = {'name': 'linear-regression',
-         'request_method': 'post',
-         'doc_string': 'this is a doc string',
-         'operation_id': 'cloudmesh.linear_regression',
-         'paras': {
-             'file_name': {'name': 'file_name', 'type': 'string'},
-             'intercept': {'name': 'intercept', 'type': 'int'}
-         }}
+    @pytest.fixture
+    def sigs(self):
+        sigs = {0: {'class_name': 'LinearRegression',
+                    'constructor': {'copy_X': 'bool',
+                                    'fit_intercept': 'bool',
+                                    'n_jobs': 'int',
+                                    'normalize': 'bool'},
+                    'members': {'fit': {'X': 'list', 'y': 'list'},
+                                'property': 'property',
+                                'get_params': {'deep': 'bool'},
+                                'predict': {'X': 'list'},
+                                'score': {'X': 'list', 'sample_weight': 'list', 'y': 'list'}}}}
+        return sigs
 
-    g = {'name': 'logistic-regression',
-         'request_method': 'post',
-         'doc_string': 'this is a doc string',
-         'operation_id': 'cloudmesh.linear_regression',
-         'paras': {
-             'file_name': {'name': 'file_name', 'type': 'string'},
-             'intercept': {'name': 'intercept', 'type': 'int'}
-         }}
+    def test_parse_sigs_to_yaml(self, sigs):
+        """
+        Parse the signatures of functions to a dictionary that is used to generate yaml files.
 
-    all = {1: g, 2: f}
+        f = {0: {'name': 'linear-regression',
+                 'request_method': 'post',
+                 'doc_string': 'this is a doc string',
+                 'operation_id': 'cloudmesh.linear_regression',
+                 'paras': {
+                    'file_name': {'name': 'file_name', 'type': 'string'},
+                    'intercept': {'name': 'intercept', 'type': 'int'}
+                }}}
+        """
 
-    # print(all)
-    # print(template.render(all=all))
+    def test_generate_yaml(self):
+        """Generate yaml file using the python template engine"""
+        env = Environment(loader=FileSystemLoader('./tests/test_assets'))
+        template = env.get_template('component.yaml')
+
+        # f and g are the functions to generate
+        f = {'name': 'linear-regression',
+             'request_method': 'post',
+             'doc_string': 'this is a doc string',
+             'operation_id': 'cloudmesh.linear_regression',
+             'paras': {
+                 'file_name': {'name': 'file_name', 'type': 'string'},
+                 'intercept': {'name': 'intercept', 'type': 'int'}
+             }}
+
+        g = {'name': 'logistic-regression',
+             'request_method': 'post',
+             'doc_string': 'this is a doc string',
+             'operation_id': 'cloudmesh.linear_regression',
+             'paras': {
+                 'file_name': {'name': 'file_name', 'type': 'string'},
+                 'intercept': {'name': 'intercept', 'type': 'int'}
+             }}
+
+        all = {1: g, 2: f}
+
+        print(template.render(all=all))
 
 
 class TestSignatureScraper:
@@ -47,6 +76,11 @@ class TestSignatureScraper:
 
     In order to automate REST API generate process, the signature retriever would collect the signatures of class, func-
     tions and properties.
+
+    Notes:
+        Workflow:
+        1. Using signature scraper to get names, types, and saved in a dictionary
+        2. 
 
     Notes:
         1. Given a list of class, to acquire the signatures of class __init__ attribute, and the members.
@@ -57,7 +91,6 @@ class TestSignatureScraper:
         6. What if the parameters are optional?
         7. What is the type of kwarg***?
         8. what about the functions with side effects?
-
     """
 
     @pytest.fixture
@@ -82,6 +115,20 @@ class TestSignatureScraper:
             sample_module, type_table, types)
         pprint.pprint(sigs)
         # np.save('./tests/test_assets/literal_types_lg', types)
+
+
+    def test_retrive_linear_model(self, type_table):
+        """This method will return all function signatures of the linear model defined in the __all__ attribute
+
+            Attention:
+                1. Priviate members whose name start with a "_" are excluded.
+                2. Failed attempts to get the parameters types are ignore, and will not be added to the output so far.
+        """
+        sample_module = sklearn.linear_model.__all__
+        types = []
+        sigs = signature_scraper.get_signatures(
+            sample_module, type_table, types)
+        pprint.pprint(sigs)
 
     def test_get_all_known_types(self):
         pass
@@ -139,6 +186,9 @@ class TestTypeScraper:
 
     @pytest.fixture
     def type_table(self):
+        """
+            Keys are substring of the type definition.
+        """
         re_key = {
             'array': 'list',
             'numpy': 'list',
@@ -148,6 +198,9 @@ class TestTypeScraper:
         return re_key
 
     def test_match_types(self, literal_types_lg, type_table):
+        """
+        Scraper receives a type table defined by the developer.
+        """
         typer_scraper = type_scraper.TypeScraper(type_table=type_table)
         for type in literal_types_lg:
             print(typer_scraper.scrap(type))
