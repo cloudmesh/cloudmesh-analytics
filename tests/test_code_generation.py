@@ -90,6 +90,8 @@ class TestYAMLGenerator:
                         member_yaml_info['paras'][member_para_name] = {'name':member_para_name, 'type':member_para_type}
                     table_yaml[count] = member_yaml_info
 
+        return table_yaml
+
     def test_generate_yaml(self):
         """Generate yaml file using the python template engine"""
         env = Environment(loader=FileSystemLoader('./tests/test_assets'))
@@ -129,7 +131,7 @@ class TestSignatureScraper:
     Notes:
         Workflow:
         1. Using signature scraper to get names, types, and saved in a dictionary
-        2. 
+        2.
 
     Notes:
         1. Given a list of class, to acquire the signatures of class __init__ attribute, and the members.
