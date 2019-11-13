@@ -72,7 +72,7 @@ class TestYAMLGenerator:
             constructor_yaml_info['doc_string'] = 'this is a doc string'
             constructor_yaml_info['operation_id'] = 'cloudmesh.' + class_i_name + '_constructor'
             constructor_yaml_info['paras'] = {}
-            for init_para_name, init_para_type in class_i['constructor']:
+            for init_para_name, init_para_type in class_i['constructor'].items():
                 constructor_yaml_info['paras'][init_para_name] = {'name':init_para_name, 'type':init_para_type}
             table_yaml[count] = constructor_yaml_info
 
@@ -86,37 +86,38 @@ class TestYAMLGenerator:
                     member_yaml_info['doc_string'] = 'this is a doc string'
                     member_yaml_info['operation_id'] = 'cloudmesh.' + class_i_name + '_' + member_name
                     member_yaml_info['paras'] = {}
-                    for member_para_name, member_para_type in parameters:
+                    for member_para_name, member_para_type in parameters.items():
                         member_yaml_info['paras'][member_para_name] = {'name':member_para_name, 'type':member_para_type}
                     table_yaml[count] = member_yaml_info
 
         return table_yaml
 
-    def test_generate_yaml(self):
+    def test_generate_yaml(self, table_yamlInfo):
         """Generate yaml file using the python template engine"""
         env = Environment(loader=FileSystemLoader('./tests/test_assets'))
         template = env.get_template('component.yaml')
 
-        # f and g are the functions to generate
-        f = {'name': 'linear-regression',
-             'request_method': 'post',
-             'doc_string': 'this is a doc string',
-             'operation_id': 'cloudmesh.linear_regression',
-             'paras': {
-                 'file_name': {'name': 'file_name', 'type': 'string'},
-                 'intercept': {'name': 'intercept', 'type': 'int'}
-             }}
+        # # f and g are the functions to generate
+        # f = {'name': 'linear-regression',
+        #      'request_method': 'post',
+        #      'doc_string': 'this is a doc string',
+        #      'operation_id': 'cloudmesh.linear_regression',
+        #      'paras': {
+        #          'file_name': {'name': 'file_name', 'type': 'string'},
+        #          'intercept': {'name': 'intercept', 'type': 'int'}
+        #      }}
+        #
+        # g = {'name': 'logistic-regression',
+        #      'request_method': 'post',
+        #      'doc_string': 'this is a doc string',
+        #      'operation_id': 'cloudmesh.linear_regression',
+        #      'paras': {
+        #          'file_name': {'name': 'file_name', 'type': 'string'},
+        #          'intercept': {'name': 'intercept', 'type': 'int'}
+        #      }}
 
-        g = {'name': 'logistic-regression',
-             'request_method': 'post',
-             'doc_string': 'this is a doc string',
-             'operation_id': 'cloudmesh.linear_regression',
-             'paras': {
-                 'file_name': {'name': 'file_name', 'type': 'string'},
-                 'intercept': {'name': 'intercept', 'type': 'int'}
-             }}
-
-        all = {1: g, 2: f}
+        # all = {1: g, 2: f}
+        all = table_yamlInfo
         generated_yaml = template.render(all=all)
         with open('./tests/test_assets/generated_yaml.yaml', 'w') as f:
             f.write(generated_yaml)
