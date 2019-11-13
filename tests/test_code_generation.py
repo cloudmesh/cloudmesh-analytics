@@ -60,8 +60,39 @@ class TestYAMLGenerator:
                     'intercept': {'name': 'intercept', 'type': 'int'}
                 }}}
         """
-        table_yaml
+        table_yaml = {}
+        count = 0
         for i, class_i in sigs.items():
+            # build the yaml information table for class constructor
+            count += 1
+            class_i_name = class_i['class_name']
+            constructor_yaml_info = {}
+            constructor_yaml_info['name'] = class_i_name + '-constructor'
+            constructor_yaml_info['request_method'] = 'post'
+            constructor_yaml_info['doc_string'] = 'this is a doc string'
+            constructor_yaml_info['operation_id'] = 'cloudmesh.' + class_i_name + '_constructor'
+            constructor_yaml_info['paras'] = {}
+            for init_para_name, init_para_type in class_i['constructor']:
+                constructor_yaml_info['paras'][init_para_name] = {'name':init_para_name, 'type':init_para_type}
+            table_yaml[count] = constructor_yaml_info
+
+            # build the yaml information table for class members
+            for member_name, parameter in class_i['members'].items():
+                # add yaml info to table member_under_class_i
+                count += 1
+
+                { % if parameter != 'property' %}
+                res = obj.
+                {{member_name}}(**body['paras'])
+                { % else %}
+                res = obj.
+                {{member_name}}
+                { % endif %}
+                save_obj(obj, '{{class.class_name}}')
+                return res
+
+
+            table_yaml[i] = member_under_class_i
 
         env = Environment(loader=FileSystemLoader('./tests/test_assets'))
         template = env.get_template('endpoint_template.j2')
@@ -73,7 +104,7 @@ class TestYAMLGenerator:
         with open('./tests/test_assets/res.py', 'w') as f:
             f.write(res)
 
-    def test_generate_yaml(self, table_yamlInfo):
+    def test_generate_yaml(self):
         """Generate yaml file using the python template engine"""
         env = Environment(loader=FileSystemLoader('./tests/test_assets'))
         template = env.get_template('component.yaml')
@@ -98,8 +129,9 @@ class TestYAMLGenerator:
              }}
 
         all = {1: g, 2: f}
-
-        print(template.render(all=all))
+        generated_yaml = template.render(all=all)
+        with open('./tests/test_assets/generated_yaml.yaml', 'w') as f:
+            f.write(generated_yaml)
 
 
 class TestSignatureScraper:
@@ -159,9 +191,9 @@ class TestSignatureScraper:
     def test_exclude_functions(self):
         pass
 
-    def test_get_parameters(self, sample_parameters):
-        for p in sample_parameters:
-            print(p.name, ':', str(p.type).split(' ')[0])
+    # def test_get_parameters(self, sample_parameters):
+    #     for p in sample_parameters:
+    #         print(p.name, ':', str(p.type).split(' ')[0])
 
     def test_generate_data_type_table(self):
         pass
