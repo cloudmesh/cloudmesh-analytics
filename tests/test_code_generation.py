@@ -77,32 +77,18 @@ class TestYAMLGenerator:
             table_yaml[count] = constructor_yaml_info
 
             # build the yaml information table for class members
-            for member_name, parameter in class_i['members'].items():
-                # add yaml info to table member_under_class_i
+            for member_name, parameters in class_i['members'].items():
                 count += 1
-
-                { % if parameter != 'property' %}
-                res = obj.
-                {{member_name}}(**body['paras'])
-                { % else %}
-                res = obj.
-                {{member_name}}
-                { % endif %}
-                save_obj(obj, '{{class.class_name}}')
-                return res
-
-
-            table_yaml[i] = member_under_class_i
-
-        env = Environment(loader=FileSystemLoader('./tests/test_assets'))
-        template = env.get_template('endpoint_template.j2')
-
-        all = {}
-        all['cwd'] = './cm/cloudmesh-analytics/tests/test_assets/'
-        all['sigs'] = sigs
-        res = template.render(all=all)
-        with open('./tests/test_assets/res.py', 'w') as f:
-            f.write(res)
+                if (member_name != 'property'):
+                    member_yaml_info = {}
+                    member_yaml_info['name'] = class_i_name + '-' + member_name
+                    member_yaml_info['request_method'] = 'post'
+                    member_yaml_info['doc_string'] = 'this is a doc string'
+                    member_yaml_info['operation_id'] = 'cloudmesh.' + class_i_name + '_' + member_name
+                    member_yaml_info['paras'] = {}
+                    for member_para_name, member_para_type in parameters:
+                        member_yaml_info['paras'][member_para_name] = {'name':member_para_name, 'type':member_para_type}
+                    table_yaml[count] = member_yaml_info
 
     def test_generate_yaml(self):
         """Generate yaml file using the python template engine"""
