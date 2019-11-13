@@ -9,10 +9,13 @@
             schema:
               type: object
               properties:
-                {% for k, v in f.paras.items() %}
-                {{k}}:
-                type: {{v.type}}
-                {% endfor %}
+                init:
+                  type: object
+                  additionalProperties:
+                    {% for k, v in f.paras.items() %}
+                      {{k}}:
+                        type: {{v.type}}
+                    {% endfor %}
       responses:
         '200':
           description: success
