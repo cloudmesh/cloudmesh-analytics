@@ -46,7 +46,8 @@ class TestYAMLGenerator:
                                 'score': {'X': 'list', 'sample_weight': 'list', 'y': 'list'}}}}
         return sigs
 
-    def test_parse_sigs_to_yaml(self, sigs):
+    @pytest.fixture
+    def table_yamlInfo(self, sigs):
         """
         Parse the signatures of functions to a dictionary that is used to generate yaml files.
 
@@ -59,8 +60,20 @@ class TestYAMLGenerator:
                     'intercept': {'name': 'intercept', 'type': 'int'}
                 }}}
         """
+        table_yaml
+        for i, class_i in sigs.items():
 
-    def test_generate_yaml(self):
+        env = Environment(loader=FileSystemLoader('./tests/test_assets'))
+        template = env.get_template('endpoint_template.j2')
+
+        all = {}
+        all['cwd'] = './cm/cloudmesh-analytics/tests/test_assets/'
+        all['sigs'] = sigs
+        res = template.render(all=all)
+        with open('./tests/test_assets/res.py', 'w') as f:
+            f.write(res)
+
+    def test_generate_yaml(self, table_yamlInfo):
         """Generate yaml file using the python template engine"""
         env = Environment(loader=FileSystemLoader('./tests/test_assets'))
         template = env.get_template('component.yaml')
