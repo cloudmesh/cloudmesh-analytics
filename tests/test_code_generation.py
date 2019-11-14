@@ -59,7 +59,8 @@ class TestYAMLGenerator:
                                 'score': {'X': 'list', 'sample_weight': 'list', 'y': 'list'}}}}
         return sigs
 
-    def test_parse_sigs_to_yaml(self, sigs):
+    @pytest.fixture
+    def table_yamlInfo(self, sigs):
         """
         Parse the signatures of functions to a dictionary that is used to generate yaml files.
 
@@ -72,34 +73,67 @@ class TestYAMLGenerator:
                     'intercept': {'name': 'intercept', 'type': 'int'}
                 }}}
         """
+        table_yaml = {}
+        count = 0
+        for i, class_i in sigs.items():
+            # build the yaml information table for class constructor
+            count += 1
+            class_i_name = class_i['class_name']
+            constructor_yaml_info = {}
+            constructor_yaml_info['name'] = class_i_name + '-constructor'
+            constructor_yaml_info['request_method'] = 'post'
+            constructor_yaml_info['doc_string'] = 'this is a doc string'
+            constructor_yaml_info['operation_id'] = 'cloudmesh.' + class_i_name + '_constructor'
+            constructor_yaml_info['paras'] = {}
+            for init_para_name, init_para_type in class_i['constructor'].items():
+                constructor_yaml_info['paras'][init_para_name] = {'name':init_para_name, 'type':init_para_type}
+            table_yaml[count] = constructor_yaml_info
 
-    def test_generate_yaml(self):
+            # build the yaml information table for class members
+            for member_name, parameters in class_i['members'].items():
+                count += 1
+                if (member_name != 'property'):
+                    member_yaml_info = {}
+                    member_yaml_info['name'] = class_i_name + '-' + member_name
+                    member_yaml_info['request_method'] = 'post'
+                    member_yaml_info['doc_string'] = 'this is a doc string'
+                    member_yaml_info['operation_id'] = 'cloudmesh.' + class_i_name + '_' + member_name
+                    member_yaml_info['paras'] = {}
+                    for member_para_name, member_para_type in parameters.items():
+                        member_yaml_info['paras'][member_para_name] = {'name':member_para_name, 'type':member_para_type}
+                    table_yaml[count] = member_yaml_info
+
+        return table_yaml
+
+    def test_generate_yaml(self, table_yamlInfo):
         """Generate yaml file using the python template engine"""
         env = Environment(loader=FileSystemLoader('./tests/test_assets'))
         template = env.get_template('component.yaml')
 
-        # f and g are the functions to generate
-        f = {'name': 'linear-regression',
-             'request_method': 'post',
-             'doc_string': 'this is a doc string',
-             'operation_id': 'cloudmesh.linear_regression',
-             'paras': {
-                 'file_name': {'name': 'file_name', 'type': 'string'},
-                 'intercept': {'name': 'intercept', 'type': 'int'}
-             }}
+        # # f and g are the functions to generate
+        # f = {'name': 'linear-regression',
+        #      'request_method': 'post',
+        #      'doc_string': 'this is a doc string',
+        #      'operation_id': 'cloudmesh.linear_regression',
+        #      'paras': {
+        #          'file_name': {'name': 'file_name', 'type': 'string'},
+        #          'intercept': {'name': 'intercept', 'type': 'int'}
+        #      }}
+        #
+        # g = {'name': 'logistic-regression',
+        #      'request_method': 'post',
+        #      'doc_string': 'this is a doc string',
+        #      'operation_id': 'cloudmesh.linear_regression',
+        #      'paras': {
+        #          'file_name': {'name': 'file_name', 'type': 'string'},
+        #          'intercept': {'name': 'intercept', 'type': 'int'}
+        #      }}
 
-        g = {'name': 'logistic-regression',
-             'request_method': 'post',
-             'doc_string': 'this is a doc string',
-             'operation_id': 'cloudmesh.linear_regression',
-             'paras': {
-                 'file_name': {'name': 'file_name', 'type': 'string'},
-                 'intercept': {'name': 'intercept', 'type': 'int'}
-             }}
-
-        all = {1: g, 2: f}
-
-        print(template.render(all=all))
+        # all = {1: g, 2: f}
+        all = table_yamlInfo
+        generated_yaml = template.render(all=all)
+        with open('./tests/test_assets/generated_yaml.yaml', 'w') as f:
+            f.write(generated_yaml)
 
 
 class TestSignatureScraper:
@@ -111,7 +145,7 @@ class TestSignatureScraper:
     Notes:
         Workflow:
         1. Using signature scraper to get names, types, and saved in a dictionary
-        2. 
+        2.
 
     Notes:
         1. Given a list of class, to acquire the signatures of class __init__ attribute, and the members.
