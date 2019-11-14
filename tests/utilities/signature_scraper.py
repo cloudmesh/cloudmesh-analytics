@@ -10,9 +10,26 @@ from sklearn.linear_model import LinearRegression
 from tests.utilities import type_scraper
 
 
-def get_signatures(class_names, type_table, types):
+def get_signatures(class_names, type_table):
     """Getting the signatures of sklean.linear_model
 
+        The Structure of the Output. 
+        1. The first layer of the dictionary is the indicies of classes. 
+           {0: {'class_name': 'LinearRegression'}, 1:{'class_name':'LogisticRegression'}}
+        2. The second layer of the dictionary is include the information of the class including the name of the class,     the parameters of the class __init__ function and the member functinos.
+        3. There are a number of properties or attributes owned by the class. Those attributes will not be exposed as      individual interface such as ```cms analytics lienar-regression coef_```. Those properties will be accessed     from the same interface by specifying the name of the attribute. For example, ```cms analytics                  linear regression properties=coef_/intercep_```. The value of the attributes will be returned
+
+        Examples:
+            {0: {'class_name': 'LinearRegression',
+                    'constructor': {'copy_X': 'bool',
+                                    'fit_intercept': 'bool',
+                                    'n_jobs': 'int',
+                                    'normalize': 'bool'},
+                    'members': {'fit': {'X': 'list', 'y': 'list'},
+                                '__property___': '__property___',
+                                'get_params': {'deep': 'bool'},
+                                'predict': {'X': 'list'},
+                                'score': {'X': 'list', 'sample_weight': 'list', 'y': 'list'}}}}
         Parameters:
             Types: A accumulator to collection infomration of types.
 
@@ -21,10 +38,12 @@ def get_signatures(class_names, type_table, types):
 
         Attention:
             1. So far the attributes will not be included in signatures. Attributes should be considered later.
-
+            2. Users should specify the name of the attributes of a class object to request it. For example, 
+               cms ``` analytics linear-regression property=coef_ ```. This command should return the value of the coef_ of the linear regression class object.
         Warnings:
             1. Orderdict: The order is not important if you specified the parameters names
             2. filtering the fucntions that are not public
+            3. Attributes will not exist before applying fit, e.g., LinearRegression will not have coef_ attribute before applying fit.
     """
     res = {}
     # Traverse all classes and its members
@@ -40,27 +59,30 @@ def get_signatures(class_names, type_table, types):
 
             # Add members of the current class constructor
             current_class['constructor'] = get_parameters(
-                doc, type_table, types)
+                doc, type_table)
 
             # Operate on individual members
             current_members = {}
             current_class['members'] = current_members
-            for member_name, f in get_public_members(class_obj).items():
 
+            for member_name, f in get_public_members(class_obj).items():
                 if inspect.isfunction(f):
                     doc = inspect.getdoc(f)
-                    paras_dict = get_parameters(doc, type_table, types)
-                    if is_valid_function(paras_dict):
-                        # The function whose parameters dict is not empy is valid for the conversion
-                        current_members[member_name] = paras_dict
-                    else:
-                        continue
+                    paras_dict = get_parameters(doc, type_table)
+                    current_members[member_name] = paras_dict
                 else:
-                    # TODO: To handle the properties
-                    current_members[member_name] = f
+                    continue
         # Ignore the classes that do not have signatures
         except ValueError:
             pass
+
+        # Add properties getter funtion
+        current_members['__properties__'] = 'property'
+
+        # Delete the member of set_params()
+        if 'set_params' in current_members.keys():
+            del current_members['set_params']
+       
     return res
 
 
@@ -89,7 +111,7 @@ def get_public_members(obj):
     return public_members
 
 
-def get_parameters(doc, type_table, types):
+def get_parameters(doc, type_table):
     """Get parameters from the doc of a class, function, or property object.
 
     Given the sklean docstring follows the numpy conventions, this function use the numpy docstring parser to read the doc of sklean.
@@ -98,11 +120,6 @@ def get_parameters(doc, type_table, types):
     r = docscrape.NumpyDocString(doc)
     paras = {}
     for p in r['Parameters']:
-        ###################
-        types.append(str(p.type))  # TODO: For testing purpose, to be removed.
-        if p.name == 'set_params':
-            print(p)
-        ###################
 
         para_str = str(p.type)
         para_type = scraper.scrap(para_str)
@@ -119,7 +136,7 @@ def is_valid_para(para_type, type_table):
     # The values of the table contain all known destination types
     if para_type in type_table.values():
         return True
-    return False
+    return True
 
 
 def is_valid_function(paras):
@@ -133,7 +150,7 @@ def is_valid_function(paras):
     """
     if len(paras) != 0:
         return True
-    return False
+    return True
 
 
 def if_has_para_doc():

@@ -21,14 +21,27 @@ def type_table():
             The types on the righthand side obey the standrd of openAPI instead of python.
     """
     re_key = {
+        'matrix': 'array',
         'array': 'array',
-        'numpy': 'array',
+        'array-like': 'array',
+        'numpy array': 'array',
         'bool': 'boolean',
         'int': 'integer',
         'float': 'number'
     }
     return re_key
 
+
+@pytest.fixture
+def linear_regression_signatures(type_table):
+        """Only retrive the signature of the linear regression
+            Attetion:
+                1. the failed attempts to get type of parameters to class or functions are excluded. Set the predicate functions in the signature_scraper to see the failed attempts, i.e., is_valid_function(), is_valid_para().
+        """
+        sample_module = ['LinearRegression']
+        sigs = signature_scraper.get_signatures(
+            sample_module, type_table, )
+        return sigs
 
 class TestYAMLGenerator:
 
@@ -111,19 +124,6 @@ class TestSignatureScraper:
         8. what about the functions with side effects?
     """
 
-    def test_retrive_linear_regression(self, type_table):
-        """Only retrive the signature of the linear regression
-
-            Attetion:
-                1. the failed attempts to get type of parameters to class or functions are excluded. Set the predicate functions in the signature_scraper to see the failed attempts, i.e., is_valid_function(), is_valid_para().
-        """
-        sample_module = ['LinearRegression']
-        types = []
-        sigs = signature_scraper.get_signatures(
-            sample_module, type_table, types)
-        pprint.pprint(sigs)
-        # np.save('./tests/test_assets/literal_types_lg', types)
-
     def test_retrive_linear_model(self, type_table):
         """This method will return all function signatures of the linear model defined in the __all__ attribute
 
@@ -132,26 +132,11 @@ class TestSignatureScraper:
                 2. Failed attempts to get the parameters types are ignore, and will not be added to the output so far.
         """
         sample_module = sklearn.linear_model.__all__
-        types = []
+        # sample_module = ['ARDRegression', 'LinearRegression']
+        # sample_module = ['RidgeClassifier']
         sigs = signature_scraper.get_signatures(
-            sample_module, type_table, types)
+            sample_module, type_table)
         pprint.pprint(sigs)
-
-    def test_get_all_known_types(self):
-        pass
-
-    def test_exclude_private_members(self):
-        pass
-
-    def test_exclude_functions(self):
-        pass
-
-    def test_get_parameters(self, sample_parameters):
-        for p in sample_parameters:
-            print(p.name, ':', str(p.type).split(' ')[0])
-
-    def test_generate_data_type_table(self):
-        pass
 
 
 class TestTypeScraper:
@@ -206,3 +191,19 @@ class TestTypeScraper:
         res = re.search(
             'boolean', 'boolean, optional, default True', re.IGNORECASE)
         print(res)
+
+
+class TestGenerateFunctionApplications:
+
+    def test_generate(self, linear_regression_signatures):
+        """Generate endpoint functions given parameters
+        """
+        env = Environment(loader=FileSystemLoader('./tests/test_assets'))
+        template = env.get_template('endpoint_template.j2')
+
+        all = {}
+        all['cwd'] = './cm/cloudmesh-analytics/tests/test_assets/'
+        all['sigs'] = linear_regression_signatures
+        res = template.render(all=all)
+        with open('./tests/test_assets/res.py', 'w') as f:
+            f.write(res)

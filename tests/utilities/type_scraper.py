@@ -29,15 +29,15 @@ class TypeScraper:
                 literal_type: A string that defines a type
         """
 
-        res = []
+        res = set()
 
         # Traverse all known mappings to check which key of the table matches the string
         for table_key in self.type_table.keys():
             if re.search(table_key, literal_type, re.IGNORECASE):
-                res.append(self.type_table[table_key])
+                res.add(self.type_table[table_key])
 
-        # For testing purpose, if more than one is machted, it should report
+        # For testing purpose, if more than one is machted, it should report error
         if len(res) == 1:
-            return res[0]
+            return res.pop()
         else:
-            return None
+            return 'Error'

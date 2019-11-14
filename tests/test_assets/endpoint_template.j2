@@ -1,19 +1,20 @@
-{% for i, class in all.sigs.items() %}
+{% for i, class in all.sigs.items() -%}
 from sklearn.linear_model import {{class.class_name}}
-{% endfor %}
-
+{%- endfor %}
 import os
 import numpy as np
 
 
-{% for i, class in all.sigs.items() %}
+{% for i, class in all.sigs.items() -%}
 def load_obj(path):
     return np.load(path, allow_pickle=True).item()
+
 
 def save_obj(obj, class_name):
     np.save(os.path.join('{{all.cwd}}', str(class_name) + '_constructor'),
             obj, allow_pickle=True)
     return
+
 
 def {{class.class_name}}_constructor(body):
     init = body['init']
@@ -23,24 +24,19 @@ def {{class.class_name}}_constructor(body):
 
 
 {% for member_name, parameter in class.members.items() %}
-
 def {{class.class_name}}_{{member_name}}(body):
-    #TODO: The quote?
-
     obj =load_obj(os.path.join('{{all.cwd}}', '{{class.class_name}}_constructor.npy'))
-    
     {% if parameter != 'property' %}
     res = obj.{{member_name}}(**body['paras'])
     {% else %}
-    res = obj.{{member_name}}
+    res = getattr(obj,body['attr'])
     {% endif%}
     save_obj(obj, '{{class.class_name}}')
     return res
-
 {% endfor %}
 
 
-{% endfor %}
+{%- endfor %}
 
 X = [[1, 1], [1, 2], [2, 2], [2, 3]]
 y = list(np.dot(X, np.array([1, 2])))
@@ -58,7 +54,12 @@ p_body = {
 }
 
 
+a_body = {
+    'attr':'coef_'
+}
+
 print(LinearRegression_constructor(body))
 print(LinearRegression_fit(body))
 print(LinearRegression_predict(p_body))
 print(LinearRegression_score(body))
+print(LinearRegression___properties__(a_body))
