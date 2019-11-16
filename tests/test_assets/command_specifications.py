@@ -48,7 +48,7 @@ class AnalyticsCommand(PluginCommand):
         """
 
         VERBOSE(arguments)
-        pprint(arguments)
+
         Console.error("This is just a sample")
 
         # make flask app run background

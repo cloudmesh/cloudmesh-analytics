@@ -10,6 +10,8 @@ import sklearn.linear_model
 import os
 import numpy as np
 import re
+import json
+import requests
 
 
 @pytest.fixture
@@ -34,14 +36,15 @@ def type_table():
 
 @pytest.fixture
 def linear_regression_signatures(type_table):
-        """Only retrive the signature of the linear regression
-            Attetion:
-                1. the failed attempts to get type of parameters to class or functions are excluded. Set the predicate functions in the signature_scraper to see the failed attempts, i.e., is_valid_function(), is_valid_para().
-        """
-        sample_module = ['LinearRegression']
-        sigs = signature_scraper.get_signatures(
-            sample_module, type_table, )
-        return sigs
+    """Only retrive the signature of the linear regression
+        Attetion:
+            1. the failed attempts to get type of parameters to class or functions are excluded. Set the predicate functions in the signature_scraper to see the failed attempts, i.e., is_valid_function(), is_valid_para().
+    """
+    sample_module = ['LinearRegression']
+    sigs = signature_scraper.get_signatures(
+        sample_module, type_table, )
+    return sigs
+
 
 class TestYAMLGenerator:
 
@@ -61,6 +64,12 @@ class TestYAMLGenerator:
 
     @pytest.fixture
     def table_yamlInfo(self, sigs):
+        """
+
+        :param sigs:
+        :return:
+        """
+
         """
         Parse the signatures of functions to a dictionary that is used to generate yaml files.
 
@@ -83,10 +92,12 @@ class TestYAMLGenerator:
             constructor_yaml_info['name'] = class_i_name + '-constructor'
             constructor_yaml_info['request_method'] = 'post'
             constructor_yaml_info['doc_string'] = 'this is a doc string'
-            constructor_yaml_info['operation_id'] = 'cloudmesh.' + class_i_name + '_constructor'
+            constructor_yaml_info['operation_id'] = 'cloudmesh.' + \
+                class_i_name + '_constructor'
             constructor_yaml_info['paras'] = {}
             for init_para_name, init_para_type in class_i['constructor'].items():
-                constructor_yaml_info['paras'][init_para_name] = {'name':init_para_name, 'type':init_para_type}
+                constructor_yaml_info['paras'][init_para_name] = {
+                    'name': init_para_name, 'type': init_para_type}
             table_yaml[count] = constructor_yaml_info
 
             # build the yaml information table for class members
@@ -97,10 +108,12 @@ class TestYAMLGenerator:
                     member_yaml_info['name'] = class_i_name + '-' + member_name
                     member_yaml_info['request_method'] = 'post'
                     member_yaml_info['doc_string'] = 'this is a doc string'
-                    member_yaml_info['operation_id'] = 'cloudmesh.' + class_i_name + '_' + member_name
+                    member_yaml_info['operation_id'] = 'cloudmesh.' + \
+                        class_i_name + '_' + member_name
                     member_yaml_info['paras'] = {}
                     for member_para_name, member_para_type in parameters.items():
-                        member_yaml_info['paras'][member_para_name] = {'name':member_para_name, 'type':member_para_type}
+                        member_yaml_info['paras'][member_para_name] = {
+                            'name': member_para_name, 'type': member_para_type}
                     table_yaml[count] = member_yaml_info
 
         return table_yaml
@@ -227,9 +240,9 @@ class TestTypeScraper:
         print(res)
 
 
-class TestGenerateFunctionApplications:
+class TestFunctionApplicationsGenerator:
 
-    def test_generate(self, linear_regression_signatures):
+    def test_generate_endpoint_functions(self, linear_regression_signatures):
         """Generate endpoint functions given parameters
         """
         env = Environment(loader=FileSystemLoader('./tests/test_assets'))
@@ -239,5 +252,125 @@ class TestGenerateFunctionApplications:
         all['cwd'] = './cm/cloudmesh-analytics/tests/test_assets/'
         all['sigs'] = linear_regression_signatures
         res = template.render(all=all)
-        with open('./tests/test_assets/res.py', 'w') as f:
+        with open('./tests/test_assets/endpoint_functions.py', 'w') as f:
             f.write(res)
+
+
+class TestCMLSpecificationsGenerator:
+
+    def test_generate_specifications(self, linear_regression_signatures):
+        env = Environment(loader=FileSystemLoader('./tests/test_assets'))
+        template = env.get_template('command_template.j2')
+        res = template.render(all=linear_regression_signatures)
+        with open('./tests/test_assets/command_specifications.py', 'w') as f:
+            f.write(res)
+
+    def test_test_(self):
+        print()
+
+
+class TestAnalyticRequestConstructor:
+    """
+    The constructor should 
+    """
+    # def request_url(self, client, ):
+    #     response = client.post(path='/cloudmesh-analytics/analytics/linear-regression/test_upload',
+    #                            data=json.dumps({
+    #                                'file_name': 'test_upload',
+    #                                'paras':
+    #                                    {
+    #                                        'fit_intercept': True,
+    #                                        'error_para': False,
+    #                                        'n_jobs': 1
+    #                                    }
+    #                            }),
+    #                            content_type='application/json')
+    #     assert b'{"error":"__init__() got an unexpected keyword argument \'error_para\'"}\n' \
+    #            == \
+    #            response.data
+    @pytest.fixture
+    def arguments_linear_constructor(self):
+        """This is the arguments captured by the octpus. 
+        The client work on these arguments and construct request to the server.
+        """
+        return {'--X': None,
+                '--cloud': None,
+                '--copy_X': 'VALUE',
+                '--deep': None,
+                '--fit_intercept': 'VALUE',
+                '--n_jobs': 'VALUE',
+                '--normalize': 'VALUE',
+                '--property': None,
+                '--sample_weight': None,
+                '--y': None,
+                'LinearRegression': True,
+                'detached': False,
+                'fit': False,
+                'get_params': False,
+                'get_property': False,
+                'predict': False,
+                'score': False,
+                'server': False,
+                'start': False,
+                'stop': False}
+
+    @pytest.fixture
+    def arugment_case_fit(self):
+        return {'--X': '[[1,2,3]]',
+                '--cloud': None,
+                '--copy_X': None,
+                '--deep': None,
+                '--fit_intercept': None,
+                '--n_jobs': None,
+                '--normalize': None,
+                '--property': None,
+                '--sample_weight': '10',
+                '--y': '[[1,2,3]]',
+                'LinearRegression': True,
+                'detached': False,
+                'fit': True,
+                'get_params': False,
+                'get_property': False,
+                'predict': False,
+                'score': False,
+                'server': False,
+                'start': False,
+                'stop': False}
+
+    @pytest.fixture
+    def arguments_case_cloud(self):
+        return {'--X': None,
+                '--cloud': None,
+                '--copy_X': 'VALUE',
+                '--deep': None,
+                '--fit_intercept': 'VALUE',
+                '--n_jobs': 'VALUE',
+                '--normalize': 'VALUE',
+                '--property': None,
+                '--sample_weight': None,
+                '--y': None,
+                'LinearRegression': True,
+                'detached': False,
+                'fit': False,
+                'get_params': False,
+                'get_property': False,
+                'predict': False,
+                'score': False,
+                'server': False,
+                'start': False,
+                'stop': False}
+                
+    def test_generate_request(self, arugment_case_fit, linear_regression_signatures):
+        env = Environment(loader=FileSystemLoader('./tests/test_assets'))
+        template = env.get_template('command_recognize_template.j2')
+        all = linear_regression_signatures
+        res = template.render(all=all)
+        with open('./tests/test_assets/command_runner.py', 'w') as f:
+            f.write(res)
+
+    def test_request_get_url(self):
+        url = 'http://localhost:8000/cloudmesh-analytics/file/upload'
+        files = {'file': ('test_upload.csv', open('./tests/test_assets/test_upload.csv', 'rb'))}
+
+        r = requests.post(url, files=files)
+        print(r.text)

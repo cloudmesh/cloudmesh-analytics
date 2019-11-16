@@ -77,7 +77,7 @@ def get_signatures(class_names, type_table):
             pass
 
         # Add properties getter funtion
-        current_members['__properties__'] = 'property'
+        current_members['get_property'] = {'property':'str'}
 
         # Delete the member of set_params()
         if 'set_params' in current_members.keys():

@@ -1,20 +1,3 @@
 [
-  "tests/test_analytics_client.py::TestAnalytics::test_construct_url",
-  "tests/test_cloudmesh.py::TestFileOperations::test_success_upload",
-  "tests/test_cloudmesh.py::TestFileOperations::test_success_upload_sample",
-  "tests/test_cloudmesh.py::TestFileOperations::test_read",
-  "tests/test_cloudmesh.py::TestFileOperations::test_success_upload_dabetes",
-  "tests/test_cloudmesh.py::TestFileOperations::test_format_error",
-  "tests/test_cloudmesh.py::TestLinearRegression::test_errors",
-  "tests/test_cloudmesh.py::TestLinearRegression::test_linear_regression",
-  "tests/test_cloudmesh.py::TestKMeans::test_errors",
-  "tests/test_cloudmesh.py::TestKMeans::test_kmeans_fit",
-  "tests/test_cloudmesh.py::test_run_pca",
-  "tests/test_code_generation.py::TestYAMLGenerator::test_parse_sigs_to_yaml",
-  "tests/test_code_generation.py::TestYAMLGenerator::test_generate_yaml",
-  "tests/test_code_generation.py::TestSignatureScraper::test_retrive_linear_model",
-  "tests/test_code_generation.py::TestTypeScraper::test_match_types",
-  "tests/test_code_generation.py::TestTypeScraper::test_print_types",
-  "tests/test_code_generation.py::TestTypeScraper::test_re",
-  "tests/test_code_generation.py::TestGenerateFunctionApplications::test_generate"
+  "tests/test_code_generation.py::TestAnalyticRequestConstructor::test_generate_request"
 ]
