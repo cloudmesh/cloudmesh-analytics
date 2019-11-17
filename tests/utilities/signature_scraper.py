@@ -76,10 +76,7 @@ def get_signatures(class_names, type_table):
         except ValueError:
             pass
 
-        # Add properties getter funtion
-        current_members['get_property'] = {'property':'str'}
-
-        # Delete the member of set_params()
+        # Delete the setter functions
         if 'set_params' in current_members.keys():
             del current_members['set_params']
        

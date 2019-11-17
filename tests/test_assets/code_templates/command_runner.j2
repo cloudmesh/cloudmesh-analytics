@@ -3,9 +3,9 @@ import requests
 
 def run_command(arguments, root_url):
     {%- for i, class in all.items()%}
-    if arguments.{{class.class_name}} and ({% for p, type in class.constructor.items() %} arguments.{{p}} or {% endfor %} True):
+    if arguments.{{class.class_name}} and ({% for p, type in class.constructor.items() %} arguments.{{p}} or {% endfor %} False):
         url = root_url + '/{{class.class_name}}'
-        payload = {'paras': {}}
+        payload = {'init': {}}
         {% for p, type in class.constructor.items() %}
         if arguments.{{p}} is not None:
             payload['{{p}}']= arguments.{{p}}
@@ -14,7 +14,7 @@ def run_command(arguments, root_url):
         return r.text
     
     {% for m, paras in class.members.items() %}
-    if arguments.{{class.class_name}} and ({% for p, type in paras.items()%} arguments.{{p}} or {% endfor %}True):
+    if arguments.{{class.class_name}} and ({% for p, type in paras.items()%} arguments.{{p}} or {% endfor %}False):
         url = root_url + '/{{class.class_name}}' + '/{{m}}'
         payload = {'paras': {}}
         {% for p, type in paras.items()%}

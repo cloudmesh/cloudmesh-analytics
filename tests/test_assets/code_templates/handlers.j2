@@ -26,11 +26,7 @@ def {{class.class_name}}_constructor(body):
 {% for member_name, parameter in class.members.items() %}
 def {{class.class_name}}_{{member_name}}(body):
     obj =load_obj(os.path.join('{{all.cwd}}', '{{class.class_name}}_constructor.npy'))
-    {% if parameter != 'property' %}
     res = obj.{{member_name}}(**body['paras'])
-    {% else %}
-    res = getattr(obj,body['attr'])
-    {% endif%}
     save_obj(obj, '{{class.class_name}}')
     return res
 {% endfor %}
@@ -38,28 +34,27 @@ def {{class.class_name}}_{{member_name}}(body):
 
 {%- endfor %}
 
-X = [[1, 1], [1, 2], [2, 2], [2, 3]]
-y = list(np.dot(X, np.array([1, 2])))
+# X = [[1, 1], [1, 2], [2, 2], [2, 3]]
+# y = list(np.dot(X, np.array([1, 2])))
 
-body = {
-    'init': {},
-    'paras': {
-        'X': X,
-        'y': y
-    }
-}
+# body = {
+#     'init': {},
+#     'paras': {
+#         'X': X,
+#         'y': y
+#     }
+# }
 
-p_body = {
-    'paras': {'X': [[3, 5]]}
-}
+# p_body = {
+#     'paras': {'X': [[3, 5]]}
+# }
 
 
-a_body = {
-    'attr':'coef_'
-}
+# a_body = {
+#     'attr':'coef_'
+# }
 
-print(LinearRegression_constructor(body))
-print(LinearRegression_fit(body))
-print(LinearRegression_predict(p_body))
-print(LinearRegression_score(body))
-print(LinearRegression___properties__(a_body))
+# print(LinearRegression_constructor(body))
+# print(LinearRegression_fit(body))
+# print(LinearRegression_predict(p_body))
+# print(LinearRegression_score(body))

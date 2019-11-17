@@ -1,7 +1,8 @@
 """Generate yaml and python code from the target functions
+    Providing functino signarues, code template, paths then run the code generator to generate codes for an REST API application
 """
 from jinja2 import Environment, PackageLoader, FileSystemLoader
-from tests.utilities import signature_scraper, type_scraper
+from tests.utilities import signature_scraper, type_scraper, code_generators
 from numpydoc import docscrape
 import inspect
 import pprint
@@ -45,7 +46,26 @@ def linear_regression_signatures(type_table):
         sample_module, type_table, )
     return sigs
 
+def test_integrated_code_generator(linear_regression_signatures):
+    """Generate functions 
+        Generate .py files which include
+            1. Command docstring used by docopt
+            2. The moudule to recogonize and run command
+            3. Handlers functions on the server-side
+    """
+    pprint.pprint(linear_regression_signatures)
+    code_gen = code_generators.CodeGenerators(
+        func_signatures=linear_regression_signatures,
+        cwd='./cm/cloudmesh-analytics',
+        template_folder='./tests/test_assets/code_templates',
+        output_folder='./tests/test_assets/build'
+    )
+    code_gen.generate_command_runner('command_runner', 'command_runner')
+    code_gen.generate_handlers('handlers', 'handlers')
+    code_gen.generate_command_definitions('command_docstring', 'command_docstring')
 
+
+#==============================================Tests for moduels of code generator==============================================#
 class TestYAMLGenerator:
 
     @pytest.fixture
@@ -239,55 +259,11 @@ class TestTypeScraper:
             'boolean', 'boolean, optional, default True', re.IGNORECASE)
         print(res)
 
-
-class TestFunctionApplicationsGenerator:
-
-    def test_generate_endpoint_functions(self, linear_regression_signatures):
-        """Generate endpoint functions given parameters
-        """
-        env = Environment(loader=FileSystemLoader('./tests/test_assets'))
-        template = env.get_template('endpoint_template.j2')
-
-        all = {}
-        all['cwd'] = './cm/cloudmesh-analytics/tests/test_assets/'
-        all['sigs'] = linear_regression_signatures
-        res = template.render(all=all)
-        with open('./tests/test_assets/endpoint_functions.py', 'w') as f:
-            f.write(res)
-
-
-class TestCMLSpecificationsGenerator:
-
-    def test_generate_specifications(self, linear_regression_signatures):
-        env = Environment(loader=FileSystemLoader('./tests/test_assets'))
-        template = env.get_template('command_template.j2')
-        res = template.render(all=linear_regression_signatures)
-        with open('./tests/test_assets/command_specifications.py', 'w') as f:
-            f.write(res)
-
-    def test_test_(self):
-        print()
-
-
 class TestAnalyticRequestConstructor:
     """
     The constructor should 
     """
-    # def request_url(self, client, ):
-    #     response = client.post(path='/cloudmesh-analytics/analytics/linear-regression/test_upload',
-    #                            data=json.dumps({
-    #                                'file_name': 'test_upload',
-    #                                'paras':
-    #                                    {
-    #                                        'fit_intercept': True,
-    #                                        'error_para': False,
-    #                                        'n_jobs': 1
-    #                                    }
-    #                            }),
-    #                            content_type='application/json')
-    #     assert b'{"error":"__init__() got an unexpected keyword argument \'error_para\'"}\n' \
-    #            == \
-    #            response.data
+
     @pytest.fixture
     def arguments_linear_constructor(self):
         """This is the arguments captured by the octpus. 
@@ -367,6 +343,9 @@ class TestAnalyticRequestConstructor:
         res = template.render(all=all)
         with open('./tests/test_assets/command_runner.py', 'w') as f:
             f.write(res)
+
+    def test_command_runner(self):
+        pass
 
     def test_request_get_url(self):
         url = 'http://localhost:8000/cloudmesh-analytics/file/upload'
