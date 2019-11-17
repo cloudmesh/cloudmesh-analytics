@@ -53,7 +53,6 @@ def test_integrated_code_generator(linear_regression_signatures):
             2. The moudule to recogonize and run command
             3. Handlers functions on the server-side
     """
-    pprint.pprint(linear_regression_signatures)
     code_gen = code_generators.CodeGenerators(
         func_signatures=linear_regression_signatures,
         cwd='./cm/cloudmesh-analytics',

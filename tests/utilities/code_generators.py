@@ -1,9 +1,8 @@
 from jinja2 import Environment, PackageLoader, FileSystemLoader
 import os
 
-
 class CodeGenerators:
-    """Generate code for RES API applications
+    """Generate code for REST API applications
     """
 
     def __init__(self, func_signatures, cwd, template_folder, output_folder):

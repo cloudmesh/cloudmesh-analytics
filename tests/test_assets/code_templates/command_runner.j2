@@ -18,8 +18,8 @@ def run_command(arguments, root_url):
         url = root_url + '/{{class.class_name}}' + '/{{m}}'
         payload = {'paras': {}}
         {% for p, type in paras.items()%}
-        if arguments.{{m}} is not None:
-            payload['{{m}}']= arguments.{{m}}
+        if arguments.{{p}} is not None:
+            payload['{{p}}']= arguments.{{p}}
         {% endfor %}
         r = requests.post(url, data=json.dumps(payload))
         return r.text
