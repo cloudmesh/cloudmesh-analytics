@@ -1,61 +1,46 @@
-"""The analytic functions
-The module include analytic functions, and are also the endpoints of the flask app. Those functions are referred by the
-OpenAPI specification by operationIDs
-"""
-
-import os
-from flask import jsonify, current_app
-import numpy as np
 from sklearn.linear_model import LinearRegression
-from werkzeug.utils import secure_filename
-from .file_helpers import *
+import os
+import numpy as np
 
-def linear_regression(file_name, body):
-    """Linear regression.
 
-    Args:
+def load_obj(path):
+    return np.load(path, allow_pickle=True).item()
 
-        file_name (str): The file name that has the input data.
-        body (dict): The request body, which is a dictionary mapped by the connexion.
-    Return:
-        Return an json objects.
 
-    Warning:
-        The input format should be specified
-    """
+def save_obj(obj, class_name):
+    np.save(os.path.join('.', str(class_name) + '_constructor'),
+            obj, allow_pickle=True)
+    return
 
-    # Extract parameters from the request body
-    paras = body['paras']
 
-    try:
-        data = read_csv(file_name)
-        X = data[:,:-1]
-        Y = data[:,-1]
-        reg = LinearRegression(**paras).fit(X, Y)
-        return jsonify({'coefficient':reg.coef_.tolist() })
-    except Exception as e:
-        return jsonify({'error': str(e)})
+def LinearRegression_constructor(body):
+    init = body['init']
+    res = LinearRegression(**init)
+    save_obj(res, 'LinearRegression')
+    return res
 
-def kmeans_fit(file_name,body):
-    """
-    Kmeans fit.
 
-    i do this and taht
 
-    :param file_name:
-    :type: int
-    :param body:
-    :return:
-    """
-    # Extract parameters from the request body
-    paras = body['paras']
-    try:
-        kmeans = KMeans(**paras).fit(read_csv(file_name))
-        return jsonify({'labels': kmeans.labels_.tolist()})
-    except Exception as e:
-        # it will be parameter type error for KMeans or user type a filename that's not in app.config['UPLOAD_FOLDER']
-        return jsonify({'error': str(e)})
+def LinearRegression_fit(body):
+    obj =load_obj(os.path.join('.', 'LinearRegression_constructor.npy'))
+    res = obj.fit(**body['paras'])
+    save_obj(obj, 'LinearRegression')
+    return res
 
-def pca():
-    return jsonify({"output": 'run_pca_success'})
+def LinearRegression_get_params(body):
+    obj =load_obj(os.path.join('.', 'LinearRegression_constructor.npy'))
+    res = obj.get_params(**body['paras'])
+    save_obj(obj, 'LinearRegression')
+    return res
 
+def LinearRegression_predict(body):
+    obj =load_obj(os.path.join('.', 'LinearRegression_constructor.npy'))
+    res = obj.predict(**body['paras'])
+    save_obj(obj, 'LinearRegression')
+    return res
+
+def LinearRegression_score(body):
+    obj =load_obj(os.path.join('.', 'LinearRegression_constructor.npy'))
+    res = obj.score(**body['paras'])
+    save_obj(obj, 'LinearRegression')
+    return res

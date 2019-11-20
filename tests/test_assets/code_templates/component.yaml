@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: Cloudmesh AI Analytics  Services
+  description: Cloudmesh Scikit-Learn AI Analytics Services
+  license:
+    name: Apache 2.0
+  version: 0.0.2
+
+servers:
+  - url: http://localhost:8000/cloudmesh-analytics
+
+paths:
+{%- for i, f in all.items() %}
+  /{{f.name}}/:
+      {{f.request_method}}: # The method should be decided at running. It depends on the type bound to this name.
+        summary: {{f.doc_string}} # This is the doc retrieved from signatures
+        operationId: {{f.operation_id}} # how to generate this?
+        requestBody: # Request body depends on the signature of the class
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  init:
+                    type: object
+                    additionalProperties:
+                      {}
+        responses:
+          '200':
+            description: success
+{% endfor %}

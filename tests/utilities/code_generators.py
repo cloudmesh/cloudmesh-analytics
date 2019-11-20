@@ -1,6 +1,7 @@
 from jinja2 import Environment, PackageLoader, FileSystemLoader
 import os
 
+
 class CodeGenerators:
     """Generate code for REST API applications
     """
@@ -13,10 +14,10 @@ class CodeGenerators:
 
     def _generate_from_template(self, all, role_name, template_name):
         env = Environment(loader=FileSystemLoader(self.template_folder))
-        template = env.get_template(template_name+'.j2')
+        template = env.get_template(template_name)
 
         res = template.render(all=all)
-        with open(os.path.join(self.output_folder, role_name+'.py'), 'w') as f:
+        with open(os.path.join(self.output_folder, role_name), 'w') as f:
             f.write(res)
 
     def generate_handlers(self, output_name, template_name):
@@ -26,7 +27,74 @@ class CodeGenerators:
         self._generate_from_template(all, output_name, template_name)
 
     def generate_command_runner(self, output_name, template_name):
-        self._generate_from_template(self.func_signatures, output_name, template_name)
+        self._generate_from_template(
+            self.func_signatures, output_name, template_name)
 
     def generate_command_definitions(self, output_name, template_name):
-        self._generate_from_template(self.func_signatures, output_name, template_name)
+        self._generate_from_template(
+            self.func_signatures, output_name, template_name)
+
+    def generate_api_specification(self, output_name, template_name):
+        all = construct_yaml_fields(self.func_signatures)
+        self._generate_from_template(all, output_name, template_name)
+
+
+def construct_yaml_fields(signatures):
+    """
+    Parse the signatures of functions to a dictionary that is used to generate yaml files.
+
+    f = {0: {'name': 'linear-regression',
+             'request_method': 'post',
+             'doc_string': 'this is a doc string',
+             'operation_id': 'cloudmesh.linear_regression',
+             'paras': {
+                'file_name': {'name': 'file_name', 'type': 'string'},
+                'intercept': {'name': 'intercept', 'type': 'int'}
+            }}}
+    """
+    table_yaml = {}
+    count = 0
+    for i, class_i in signatures.items():
+            # build the yaml information table for class constructor
+        count += 1
+        class_i_name = class_i['class_name']
+        constructor_yaml_info = {}
+        constructor_yaml_info['name'] = class_i_name + '_constructor'
+        constructor_yaml_info['request_method'] = 'post'
+        constructor_yaml_info['doc_string'] = 'this is a doc string'
+        constructor_yaml_info['operation_id'] = 'analytics.' +\
+            class_i_name + '_constructor'
+        constructor_yaml_info['paras'] = {}
+        for init_para_name, init_para_type in class_i['constructor'].items():
+            constructor_yaml_info['paras'][init_para_name] = {
+                'name': init_para_name, 'type': init_para_type}
+        table_yaml[count] = constructor_yaml_info
+
+        # build the yaml information table for class members
+        for member_name, parameters in class_i['members'].items():
+            count += 1
+            if (member_name != 'property'):
+                member_yaml_info = {}
+                member_yaml_info['name'] = class_i_name + '_' + member_name
+                member_yaml_info['request_method'] = 'post'
+                member_yaml_info['doc_string'] = 'this is a doc string'
+                member_yaml_info['operation_id'] = 'analytics.' +\
+                    class_i_name + '_' + member_name
+                member_yaml_info['paras'] = {}
+                for member_para_name, member_para_type in parameters.items():
+                    member_yaml_info['paras'][member_para_name] = {
+                        'name': member_para_name, 'type': member_para_type}
+                table_yaml[count] = member_yaml_info
+
+    return table_yaml
+
+
+"""
+Code generation configurations
+    1. The naming rules
+    2. The working directory that makses it works
+    3. Add a way to configure the generator
+    4. The configurations
+        1. type table
+    5. configure url in the yaml 
+"""

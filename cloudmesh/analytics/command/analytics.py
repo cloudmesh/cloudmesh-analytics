@@ -48,14 +48,13 @@ class AnalyticsCommand(PluginCommand):
         """
 
         VERBOSE(arguments)
-        pprint(arguments)
         Console.error("This is just a sample")
 
         # make flask app run background
         if arguments.server and arguments.start and arguments.detached:
             background_run = run(['cms', 'analytics', 'server', 'start'])
             background_run.execute()
-
+        
         elif arguments.server and arguments.start:
             print("start the server")
             # TODO: Need suppress console log (Launch the server on background)

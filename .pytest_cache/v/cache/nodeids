@@ -1,3 +1,11 @@
 [
-  "tests/test_code_generation.py::test_integrated_code_generator"
+  "tests/test_code_generation.py::test_integrated_code_generator",
+  "tests/test_code_generation.py::TestYAMLGenerator::test_generate_yaml",
+  "tests/test_code_generation.py::TestSignatureScraper::test_retrive_linear_model",
+  "tests/test_code_generation.py::TestTypeScraper::test_match_types",
+  "tests/test_code_generation.py::TestTypeScraper::test_print_types",
+  "tests/test_code_generation.py::TestTypeScraper::test_re",
+  "tests/test_code_generation.py::TestAnalyticRequestConstructor::test_generate_request",
+  "tests/test_code_generation.py::TestAnalyticRequestConstructor::test_command_runner",
+  "tests/test_code_generation.py::TestAnalyticRequestConstructor::test_request_get_url"
 ]

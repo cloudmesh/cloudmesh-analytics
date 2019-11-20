@@ -8,7 +8,6 @@ The method definition to create a flask app by call ing the create_app function
 import os
 import connexion
 import sys
-from . import db
 
 def create_app(config=None):
     """To create a flask app
@@ -23,8 +22,6 @@ def create_app(config=None):
     c_app.add_api('analytics.yaml')
     c_app.app.config.from_mapping(
         SECRET_KEY='dev',
-        #TODO: Instance path requires fix
-        DATABASE=os.path.join(c_app.app.instance_path, 'ai_service.sqlite'),
         #TODO: The os.getcwd is changed. the default path need fix
         UPLOAD_FOLDER='../files'
     )
@@ -43,17 +40,11 @@ def create_app(config=None):
         pass
 
     # ensure the file folder exists
-    try:
+    try:    
         os.makedirs(c_app.app.config['UPLOAD_FOLDER'])
     except OSError:
         pass
 
-    # a simple page that says hello
-    @c_app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-
-    # Register init-db an so on.
-    db.init_app(c_app.app)
-
     return c_app.app
+
+create_app().run(port=8000, debug=True)

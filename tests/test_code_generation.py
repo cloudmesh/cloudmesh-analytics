@@ -48,27 +48,29 @@ def linear_regression_signatures(type_table):
 
 def test_integrated_code_generator(linear_regression_signatures):
     """Generate functions 
-        Generate .py files which include
+        Generate files which include
             1. Command docstring used by docopt
             2. The moudule to recogonize and run command
             3. Handlers functions on the server-side
     """
     code_gen = code_generators.CodeGenerators(
         func_signatures=linear_regression_signatures,
-        cwd='./cm/cloudmesh-analytics',
+        cwd='.',
         template_folder='./tests/test_assets/code_templates',
         output_folder='./tests/test_assets/build'
     )
-    code_gen.generate_command_runner('command_runner', 'command_runner')
-    code_gen.generate_handlers('handlers', 'handlers')
-    code_gen.generate_command_definitions('command_docstring', 'command_docstring')
+    code_gen.generate_command_runner(output_name='command_runner.py', template_name='command_runner.j2')
+    code_gen.generate_handlers(output_name='analytics.py', template_name='handlers.j2')
+    code_gen.generate_command_definitions(output_name='command_docstring.py', template_name='command_docstring.j2')
+    code_gen.generate_api_specification(output_name='analytics.yaml',template_name='component.yaml')
+
 
 
 #==============================================Tests for moduels of code generator==============================================#
 class TestYAMLGenerator:
 
     @pytest.fixture
-    def sigs(self):
+    def sigs(self, linear_regression_signatures):
         sigs = {0: {'class_name': 'LinearRegression',
                     'constructor': {'copy_X': 'bool',
                                     'fit_intercept': 'bool',
@@ -79,7 +81,7 @@ class TestYAMLGenerator:
                                 'get_params': {'deep': 'bool'},
                                 'predict': {'X': 'list'},
                                 'score': {'X': 'list', 'sample_weight': 'list', 'y': 'list'}}}}
-        return sigs
+        return linear_regression_signatures
 
     @pytest.fixture
     def table_yamlInfo(self, sigs):
@@ -139,32 +141,12 @@ class TestYAMLGenerator:
 
     def test_generate_yaml(self, table_yamlInfo):
         """Generate yaml file using the python template engine"""
-        env = Environment(loader=FileSystemLoader('./tests/test_assets'))
+        env = Environment(loader=FileSystemLoader('./tests/test_assets/code_templates'))
         template = env.get_template('component.yaml')
 
-        # # f and g are the functions to generate
-        # f = {'name': 'linear-regression',
-        #      'request_method': 'post',
-        #      'doc_string': 'this is a doc string',
-        #      'operation_id': 'cloudmesh.linear_regression',
-        #      'paras': {
-        #          'file_name': {'name': 'file_name', 'type': 'string'},
-        #          'intercept': {'name': 'intercept', 'type': 'int'}
-        #      }}
-        #
-        # g = {'name': 'logistic-regression',
-        #      'request_method': 'post',
-        #      'doc_string': 'this is a doc string',
-        #      'operation_id': 'cloudmesh.linear_regression',
-        #      'paras': {
-        #          'file_name': {'name': 'file_name', 'type': 'string'},
-        #          'intercept': {'name': 'intercept', 'type': 'int'}
-        #      }}
-
-        # all = {1: g, 2: f}
         all = table_yamlInfo
         generated_yaml = template.render(all=all)
-        with open('./tests/test_assets/generated_yaml.yaml', 'w') as f:
+        with open('./tests/test_assets/build/generated_yaml.yaml', 'w') as f:
             f.write(generated_yaml)
 
 

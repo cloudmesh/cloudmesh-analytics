@@ -10,142 +10,27 @@ servers:
   - url: http://localhost:8000/cloudmesh-analytics
 
 paths:
-  /file/upload:
-    post:
-      summary: uploading file to the server
-      operationId: cloudmesh.analytics.file.upload
-      requestBody:
-        description: the file uploaded by the user
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-      responses:
-        '200':
-          description: upload succeed
-          content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    file_name:
-                      type: string
-        default:
-          description: incompatible file format
-          content:
-            application/json:
-              schema:
-                  type: object
-                  properties:
-                    error_message:
-                      type: string
-  /file/list:
-    get:
-      summary: list all uploaded files
-      operationId:  cloudmesh.analytics.file.list
-      responses:
-        '200':
-          description: upload succeed
-        default:
-          description: incompatible file format
-          content:
-            application/json:
-              schema:
-                  type: object
-                  properties:
-                    error_message:
-                      type: string
-
-  /file/read/{file_name}:
-    get:
-      summary: read file content
-      operationId: cloudmesh.analytics.file.read
-      parameters:
-        - in: path
-          name: file_name   # Note the name is the same as in the path
-          required: true
-          schema:
-            type: string
-          description: The file name to be read
-      responses:
-        '200':
-          description: succeed
-        default:
-          description: incompatible file format
-          content:
-            application/json:
-              schema:
-                  type: object
-                  properties:
-                    error_message:
-                      type: string
-
-  /analytics/linear-regression/{file_name}:
-    post:
-      summary: doing linear regression
-      operationId: cloudmesh.analytics.analytics.linear_regression
-      parameters:
-        - in: path
-          name: file_name   # Note the name is the same as in the path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                file_name:
-                  type: string
-                fit_intercept:
-                  type: boolean
-                normalize:
-                  type: boolean
-                n_jobs:
-                  type: integer
-      responses:
-        '200':
-          description: cpu info
-  
-  /analytics/kmeans-fit/{file_name}:
-    post:
-      summary: output the label of each point using kmeans
-      operationId: cloudmesh.analytics.analytics.kmeans_fit
-      parameters:
-        - in: path
-          name: file_name
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                n_clusters:
-                  type: integer
-                n_init:
-                  type: integer
-                max_iter:
-                  type: integer
-                random_state:
-                  type: integer
-      responses:
-        '200':
-          description: cpu info
-
-
-  /analytics/pca:
-    get:
-      summary: principle components analysis
-      operationId: cloudmesh.analytics.analytics.pca # working directory
-      responses:
-        '200':
-          description: cpu info
+  /LinearRegression_constructor/:
+      post: # The method should be decided at running. It depends on the type bound to this name.
+        summary: this is a doc string # This is the doc retrieved from signatures
+        operationId: analytics.LinearRegression_constructor # how to generate this?
+        # requestBody: # Request body depends on the signature of the class
+        #   content:
+        #     application/json:
+        #       schema:
+        #         type: object
+        #         properties:
+        #           paras:
+        #             type: object
+        #             additionalProperties:
+        #                 fit_intercept:
+        #                   type: boolean
+        #                 normalize:
+        #                   type: boolean
+        #                 copy_X:
+        #                   type: boolean
+        #                 n_jobs:
+        #                   type: integer
+        responses:
+          '200':
+            description: success
