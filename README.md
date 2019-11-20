@@ -37,8 +37,9 @@ The architecture primarily contains four objects:
 
 ### Operating System
 * Mac OS
+* Vitural Box: Ubuntu 19.04
 
-### Databae
+### Database
 
 * Mongodb
 
@@ -99,6 +100,40 @@ on Flask
 4. Create venv and install requirements in migrated project folder.
 
 - [ ] Problem1: cannot ssh into VM
+
+### Week 9
+[Yanting Wan](https://github.com/cloudmesh/cloudmesh-analytics/graphs/contributors)
+
+1. Write pytest scripts that test the result of kmeans
+
+When writing pytest scripts, come across "Module Not Found Error", to debug, start a new repository 
+[yanting-516-partial-project](https://github.com/YantingWan/yanting-516-partial-project/graphs/contributors).
+
+The reasons that cause "Module Not Found Error":
+The "cloudmesh" directory in project has namespace conflict with "cloudmesh" directory in cloudmesh-cloud. Solution:
+Run command "pip install ." or "python setup.py install". Then use command "python -m pytest" to run pytest.
+
+### Week 10
+[Yanting Wan](https://github.com/cloudmesh/cloudmesh-analytics/graphs/contributors)
+
+1. Install Docker, run a simple REST service in container
+([yanting-516-partial-project](https://github.com/YantingWan/yanting-516-partial-project/graphs/contributors))
+2. Use cms command to start server in background(from cloudmesh.common.run.background import run)
+3. Use cms command to make post/get request (python requests module)
+4. Use sphinx-apidoc to generate documentation.
+
+### Week 11
+[Yanting Wan](https://github.com/cloudmesh/cloudmesh-analytics/graphs/contributors)
+
+1. Generate yaml file automatically:
+    1. Use post/get decorator to read docstring inside endpoint functions, based on the docstring, output
+    corresponding yaml file.
+    2. Use jinja module, write a template file, based on the template file, generating corresponding endpoint 
+    functions and yaml file.
+2. Add code to 
+[yanting-516-partial-project](https://github.com/YantingWan/yanting-516-partial-project/graphs/contributors) 
+to use functions in cloudmesh-cloud, then containerlize the project that requires cloudmesh-cloud.
+
 
 ### Code Explanation
 
