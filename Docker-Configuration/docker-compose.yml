@@ -3,16 +3,7 @@ services:
   ai_services:
     build:
       context: .
-      dockerfile: Dockerfile_app
-    depends_on:
-      - cloudmesh
-    ports:
-      - '8000:8000'
-      
-  cloudmesh:
-    build:
-      context: .
-      dockerfile: Dockerfile_cloudmesh
+      dockerfile: Dockerfile
     volumes:
       - .:/code
       - ~/.cloudmesh:/root/.cloudmesh
@@ -21,13 +12,16 @@ services:
       - mongo
     links:
       - mongo
+    ports:
+      - '8000:8000'
+  
   mongo:
     image: mongo:latest
     container_name: mongodb
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: <your-username>
-      MONGO_INITDB_ROOT_PASSWORD: <your-password>
+      MONGO_INITDB_ROOT_USERNAME: yanwan
+      MONGO_INITDB_ROOT_PASSWORD: <user-password>
       MONGO_INITDB_DATABASE: cloudmesh
     ports:
       - "27017-27019:27017-27019"
