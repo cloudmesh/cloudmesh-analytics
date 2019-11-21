@@ -122,6 +122,17 @@ Run command "pip install ." or "python setup.py install". Then use command "pyth
 3. Use cms command to make post/get request (python requests module)
 4. Use sphinx-apidoc to generate documentation.
 
+Use docker without typing sudo
+```sh
+# add docker group
+$ sudo group add docker
+# add user to docker group
+$ sudo gpasswd -a myusername docker
+# restart docker
+$ sudo service docker restart
+$ exit
+```
+
 ### Week 11
 [Yanting Wan](https://github.com/cloudmesh/cloudmesh-analytics/graphs/contributors)
 
