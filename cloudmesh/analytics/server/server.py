@@ -4,7 +4,6 @@ The method definition to create a flask app by call ing the create_app function
     Example:
         create_app(test_config)
 """
-
 import os
 import connexion
 import sys
@@ -18,12 +17,12 @@ def create_app(config=None):
     Return:
         A flask app object
     """
-    c_app = connexion.App(__name__, specification_dir="../..")
+    c_app = connexion.App(__name__, specification_dir=".")
     c_app.add_api('analytics.yaml')
     c_app.app.config.from_mapping(
         SECRET_KEY='dev',
         #TODO: The os.getcwd is changed. the default path need fix
-        UPLOAD_FOLDER='../files'
+        UPLOAD_FOLDER='.'
     )
 
     if config is None:
@@ -44,5 +43,7 @@ def create_app(config=None):
         os.makedirs(c_app.app.config['UPLOAD_FOLDER'])
     except OSError:
         pass
-
     return c_app.app
+
+if __name__ == "__main__":
+    create_app().run(host='0.0.0.0')
