@@ -1,14 +1,18 @@
 from jinja2 import Environment, PackageLoader, FileSystemLoader
 import os
 
-
 class CodeGenerators:
     """Generate code for REST API applications
     """
 
-    def __init__(self, func_signatures, cwd, template_folder, output_folder):
+    def __init__(self, func_signatures, cwd, function_operation_id_root,
+                 file_operation_id_root, server_url, template_folder,
+                 output_folder):
         self.func_signatures = func_signatures
         self.cwd = cwd
+        self.function_operation_id_root = function_operation_id_root
+        self.file_operation_id_root = file_operation_id_root
+        self.server_url = server_url
         self.template_folder = template_folder
         self.output_folder = output_folder
 
@@ -35,11 +39,18 @@ class CodeGenerators:
             self.func_signatures, output_name, template_name)
 
     def generate_api_specification(self, output_name, template_name):
-        all = construct_yaml_fields(self.func_signatures)
+        all = construct_yaml_fields(signatures=self.func_signatures,
+                                    function_operation_id_root=self.function_operation_id_root,
+                                    file_operation_id_root=self.file_operation_id_root,
+                                    server_root_url=self.server_url)
+        self._generate_from_template(all, output_name, template_name)
+
+    def generate_file_operations(self, output_name, template_name):
         self._generate_from_template(all, output_name, template_name)
 
 
-def construct_yaml_fields(signatures):
+def construct_yaml_fields(signatures, function_operation_id_root,
+                          file_operation_id_root, server_root_url):
     """
     Parse the signatures of functions to a dictionary that is used to generate yaml files.
 
@@ -62,7 +73,7 @@ def construct_yaml_fields(signatures):
         constructor_yaml_info['name'] = class_i_name + '_constructor'
         constructor_yaml_info['request_method'] = 'post'
         constructor_yaml_info['doc_string'] = 'this is a doc string'
-        constructor_yaml_info['operation_id'] = 'analytics.' +\
+        constructor_yaml_info['operation_id'] = function_operation_id_root + '.' + \
             class_i_name + '_constructor'
         constructor_yaml_info['paras'] = {}
         for init_para_name, init_para_type in class_i['constructor'].items():
@@ -78,15 +89,18 @@ def construct_yaml_fields(signatures):
                 member_yaml_info['name'] = class_i_name + '_' + member_name
                 member_yaml_info['request_method'] = 'post'
                 member_yaml_info['doc_string'] = 'this is a doc string'
-                member_yaml_info['operation_id'] = 'analytics.' +\
+                member_yaml_info['operation_id'] = function_operation_id_root + '.' + \
                     class_i_name + '_' + member_name
                 member_yaml_info['paras'] = {}
                 for member_para_name, member_para_type in parameters.items():
                     member_yaml_info['paras'][member_para_name] = {
                         'name': member_para_name, 'type': member_para_type}
                 table_yaml[count] = member_yaml_info
-
-    return table_yaml
+    res = {'header': {'server_url': server_root_url},
+           'functions': table_yaml,
+           'files':{'operation_id':file_operation_id_root}
+           }
+    return res
 
 
 """
@@ -97,4 +111,6 @@ Code generation configurations
     4. The configurations
         1. type table
     5. configure url in the yaml 
+    6. load X, y from file
+    7. Add a new field to get all propertyies
 """

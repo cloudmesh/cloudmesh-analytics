@@ -9,7 +9,6 @@ from numpydoc import docscrape
 from sklearn.linear_model import LinearRegression
 from tests.utilities import type_scraper
 
-
 def get_signatures(class_names, type_table):
     """Getting the signatures of sklean.linear_model
 
@@ -79,7 +78,10 @@ def get_signatures(class_names, type_table):
         # Delete the setter functions
         if 'set_params' in current_members.keys():
             del current_members['set_params']
-       
+        
+        current_members['get_properties'] = {'name':'str'}
+
+        # current_members['get_properties'] = {'name':'str'}
     return res
 
 

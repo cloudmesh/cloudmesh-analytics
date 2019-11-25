@@ -7,10 +7,85 @@ info:
   version: 0.0.2
 
 servers:
-  - url: http://localhost:8000/cloudmesh-analytics
+  - url: {{all.header.server_url}}
 
 paths:
-{%- for i, f in all.items() %}
+  /file/upload:
+    post:
+      summary: uploading file to the server
+      operationId: {{all.files.operation_id}}.upload
+      requestBody:
+        description: the file uploaded by the user
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: upload succeed
+          content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    file_name:
+                      type: string
+        default:
+          description: incompatible file format
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    error_message:
+                      type: string
+  /file/list:
+    get:
+      summary: list all uploaded files
+      operationId:  {{all.files.operation_id}}.list
+      responses:
+        '200':
+          description: upload succeed
+        default:
+          description: incompatible file format
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    error_message:
+                      type: string
+
+  /file/read/{file_name}:
+    get:
+      summary: read file content
+      operationId: {{all.files.operation_id}}.read
+      parameters:
+        - in: path
+          name: file_name   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The file name to be read
+      responses:
+        '200':
+          description: succeed
+        default:
+          description: incompatible file format
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    error_message:
+                      type: string
+
+{%- for i, f in all.functions.items() %}
   /{{f.name}}/:
       {{f.request_method}}: # The method should be decided at running. It depends on the type bound to this name.
         summary: {{f.doc_string}} # This is the doc retrieved from signatures
@@ -21,7 +96,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  init:
+                  paras:
                     type: object
                     additionalProperties:
                       {}

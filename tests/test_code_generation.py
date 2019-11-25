@@ -43,8 +43,9 @@ def linear_regression_signatures(type_table):
     """
     sample_module = ['LinearRegression']
     sigs = signature_scraper.get_signatures(
-        sample_module, type_table, )
+        sample_module, type_table)
     return sigs
+
 
 def test_integrated_code_generator(linear_regression_signatures):
     """Generate functions 
@@ -56,16 +57,24 @@ def test_integrated_code_generator(linear_regression_signatures):
     code_gen = code_generators.CodeGenerators(
         func_signatures=linear_regression_signatures,
         cwd='.',
+        function_operation_id_root='analytics',
+        file_operation_id_root='file',
+        server_url='http://localhost:8000/cloudmesh-analytics',
         template_folder='./tests/test_assets/code_templates',
         output_folder='./tests/test_assets/build'
     )
-    code_gen.generate_command_runner(output_name='command_runner.py', template_name='command_runner.j2')
-    code_gen.generate_handlers(output_name='analytics.py', template_name='handlers.j2')
-    code_gen.generate_command_definitions(output_name='command_docstring.py', template_name='command_docstring.j2')
-    code_gen.generate_api_specification(output_name='analytics.yaml',template_name='component.yaml')
-
-
-
+    code_gen.generate_command_runner(
+        output_name='command_runner.py', template_name='command_runner.j2')
+    code_gen.generate_handlers(
+        output_name='analytics.py', template_name='handlers.j2')
+    code_gen.generate_command_definitions(
+        output_name='command_docstring.py', template_name='command_docstring.j2')
+    code_gen.generate_api_specification(
+        output_name='analytics.yaml', template_name='component.yaml')
+    code_gen.generate_file_operations(
+        output_name='file.py', template_name='file.py')
+    code_gen.generate_server(
+        output_name='server.py', template_name='server.py')
 #==============================================Tests for moduels of code generator==============================================#
 class TestYAMLGenerator:
 
@@ -136,18 +145,21 @@ class TestYAMLGenerator:
                         member_yaml_info['paras'][member_para_name] = {
                             'name': member_para_name, 'type': member_para_type}
                     table_yaml[count] = member_yaml_info
-
-        return table_yaml
+        res = {'header': {'server_url': 'localhost'},
+               'functions': table_yaml
+               }
+        return res
 
     def test_generate_yaml(self, table_yamlInfo):
         """Generate yaml file using the python template engine"""
-        env = Environment(loader=FileSystemLoader('./tests/test_assets/code_templates'))
+        env = Environment(loader=FileSystemLoader(
+            './tests/test_assets/code_templates'))
         template = env.get_template('component.yaml')
 
         all = table_yamlInfo
-        generated_yaml = template.render(all=all)
-        with open('./tests/test_assets/build/generated_yaml.yaml', 'w') as f:
-            f.write(generated_yaml)
+        # generated_yaml = template.render(all=all)
+        # pprint.pprint(generated_yaml)
+        pprint.pprint(all)
 
 
 class TestSignatureScraper:
@@ -240,6 +252,7 @@ class TestTypeScraper:
             'boolean', 'boolean, optional, default True', re.IGNORECASE)
         print(res)
 
+
 class TestAnalyticRequestConstructor:
     """
     The constructor should 
@@ -316,7 +329,7 @@ class TestAnalyticRequestConstructor:
                 'server': False,
                 'start': False,
                 'stop': False}
-                
+
     def test_generate_request(self, arugment_case_fit, linear_regression_signatures):
         env = Environment(loader=FileSystemLoader('./tests/test_assets'))
         template = env.get_template('command_recognize_template.j2')
@@ -330,7 +343,12 @@ class TestAnalyticRequestConstructor:
 
     def test_request_get_url(self):
         url = 'http://localhost:8000/cloudmesh-analytics/file/upload'
-        files = {'file': ('test_upload.csv', open('./tests/test_assets/test_upload.csv', 'rb'))}
+        files = {'file': ('test_upload.csv', open(
+            './tests/test_assets/test_upload.csv', 'rb'))}
 
         r = requests.post(url, files=files)
         print(r.text)
+
+def test_json():
+    data = json.loads('[1,2,3,4,5]')
+    print(type(data))

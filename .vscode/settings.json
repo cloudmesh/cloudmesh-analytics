@@ -1,6 +1,7 @@
 {
     "python.testing.pytestArgs": [
-        "tests"
+        "tests",
+        "-s"
     ],
     "python.pythonPath": "../ENV3/bin/python",
     "python.testing.unittestEnabled": false,
