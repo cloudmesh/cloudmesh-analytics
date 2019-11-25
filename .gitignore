@@ -94,3 +94,6 @@ ENV/
 
 # Ignoring the notes
 progress.md
+
+# Ignoringitg pytest cache
+.pytest_cache
