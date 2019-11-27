@@ -18,46 +18,44 @@ class TestBenchmark:
 
     def test_file_upload_benchmark(self, generated_data_file, ip_of_server):
         StopWatch.start()
-
+        run_command("cms","analytics",...)
         StopWatch.stop()
-        pass
 
     def test_list_file_benchmark(self, ip_of_server):
         StopWatch.start()
+        run_command("cms", "analytics", ...)
         StopWatch.stop()
-        pass
 
     def test_read_file_benchmark(self, generated_data_file, ip_of_server):
         StopWatch.start()
+        run_command("cms", "analytics", ...)
         StopWatch.stop()
-        pass
 
     def test_linear_consturctor_benchmark(self, ip_of_server):
         StopWatch.start()
+        run_command("cms", "analytics", ...)
         StopWatch.stop()
-        pass
 
     def test_linear_fit_benchmark(self, ip_of_server):
         StopWatch.start()
+        run_command("cms", "analytics", ...)
         StopWatch.stop()
-        pass
 
     def test_linear_get_params_benchmark(self, ip_of_server):
         StopWatch.start()
+        run_command("cms", "analytics", ...)
         StopWatch.stop()
-        pass
 
     def test_linear_predict_benchmark(self, ip_of_server):
         StopWatch.start()
+        run_command("cms", "analytics", ...)
         StopWatch.stop()
-        pass
 
     def test_linear_score_benchmark(self, ip_of_server):
         StopWatch.start()
+        run_command("cms", "analytics", ...)
         StopWatch.stop()
-        pass
 
     def test_print_benchmark(self):
         StopWatch.benchmark()
         StopWatch.clear()
-        pass
