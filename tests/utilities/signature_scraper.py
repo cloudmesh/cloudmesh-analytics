@@ -9,7 +9,7 @@ from numpydoc import docscrape
 from sklearn.linear_model import LinearRegression
 from tests.utilities import type_scraper
 
-def get_signatures(class_names, type_table):
+def get_signatures(module,class_names, type_table):
     """Getting the signatures of sklean.linear_model
 
         The Structure of the Output. 
@@ -53,7 +53,7 @@ def get_signatures(class_names, type_table):
             current_class['class_name'] = class_name
 
             # Get the clas obj and its doc string
-            class_obj = getattr(sklearn.linear_model, class_name)
+            class_obj = getattr(module, class_name)
             doc = inspect.getdoc(class_obj)
 
             # Add members of the current class constructor

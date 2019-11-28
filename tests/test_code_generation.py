@@ -41,11 +41,15 @@ def linear_regression_signatures(type_table):
         Attetion:
             1. the failed attempts to get type of parameters to class or functions are excluded. Set the predicate functions in the signature_scraper to see the failed attempts, i.e., is_valid_function(), is_valid_para().
     """
-    sample_module = ['LinearRegression']
+    modules = sklearn.linear_model
+    classes = ['LinearRegression']
     sigs = signature_scraper.get_signatures(
-        sample_module, type_table)
+        modules,
+        classes, type_table)
     return sigs
 
+def test_print_sigs(linear_regression_signatures):
+    print(linear_regression_signatures)
 
 def test_integrated_code_generator(linear_regression_signatures):
     """Generate functions 
@@ -76,6 +80,8 @@ def test_integrated_code_generator(linear_regression_signatures):
     code_gen.generate_server(
         output_name='server.py', template_name='server.py')
 #==============================================Tests for moduels of code generator==============================================#
+
+
 class TestYAMLGenerator:
 
     @pytest.fixture
@@ -348,7 +354,3 @@ class TestAnalyticRequestConstructor:
 
         r = requests.post(url, files=files)
         print(r.text)
-
-def test_json():
-    data = json.loads('[1,2,3,4,5]')
-    print(type(data))
