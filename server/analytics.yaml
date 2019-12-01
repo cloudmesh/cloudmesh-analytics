@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  title: Cloudmesh AI Analytics  Services
+  description: Cloudmesh Scikit-Learn AI Analytics Services
+  license:
+    name: Apache 2.0
+  version: 0.0.2
+
+servers:
+  - url: http://localhost:8000/cloudmesh-analytics
+
+paths:
+  /file/upload:
+    post:
+      summary: uploading file to the server
+      operationId: file.upload
+      requestBody:
+        description: the file uploaded by the user
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: upload succeed
+          content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    file_name:
+                      type: string
+        default:
+          description: incompatible file format
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    error_message:
+                      type: string
+  /file/list:
+    get:
+      summary: list all uploaded files
+      operationId:  file.list
+      responses:
+        '200':
+          description: upload succeed
+        default:
+          description: incompatible file format
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    error_message:
+                      type: string
+
+  /file/read/{file_name}:
+    get:
+      summary: read file content
+      operationId: file.read
+      parameters:
+        - in: path
+          name: file_name   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The file name to be read
+      responses:
+        '200':
+          description: succeed
+        default:
+          description: incompatible file format
+          content:
+            application/json:
+              schema:
+                  type: object
+                  properties:
+                    error_message:
+                      type: string
+  /LinearRegression_constructor/:
+      post: # The method should be decided at running. It depends on the type bound to this name.
+        summary: this is a doc string # This is the doc retrieved from signatures
+        operationId: analytics.LinearRegression_constructor # how to generate this?
+        requestBody: # Request body depends on the signature of the class
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paras:
+                    type: object
+                    additionalProperties:
+                      {}
+        responses:
+          '200':
+            description: success
+
+  /LinearRegression_fit/:
+      post: # The method should be decided at running. It depends on the type bound to this name.
+        summary: this is a doc string # This is the doc retrieved from signatures
+        operationId: analytics.LinearRegression_fit # how to generate this?
+        requestBody: # Request body depends on the signature of the class
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paras:
+                    type: object
+                    additionalProperties:
+                      {}
+        responses:
+          '200':
+            description: success
+
+  /LinearRegression_get_params/:
+      post: # The method should be decided at running. It depends on the type bound to this name.
+        summary: this is a doc string # This is the doc retrieved from signatures
+        operationId: analytics.LinearRegression_get_params # how to generate this?
+        requestBody: # Request body depends on the signature of the class
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paras:
+                    type: object
+                    additionalProperties:
+                      {}
+        responses:
+          '200':
+            description: success
+
+  /LinearRegression_predict/:
+      post: # The method should be decided at running. It depends on the type bound to this name.
+        summary: this is a doc string # This is the doc retrieved from signatures
+        operationId: analytics.LinearRegression_predict # how to generate this?
+        requestBody: # Request body depends on the signature of the class
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paras:
+                    type: object
+                    additionalProperties:
+                      {}
+        responses:
+          '200':
+            description: success
+
+  /LinearRegression_score/:
+      post: # The method should be decided at running. It depends on the type bound to this name.
+        summary: this is a doc string # This is the doc retrieved from signatures
+        operationId: analytics.LinearRegression_score # how to generate this?
+        requestBody: # Request body depends on the signature of the class
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paras:
+                    type: object
+                    additionalProperties:
+                      {}
+        responses:
+          '200':
+            description: success
