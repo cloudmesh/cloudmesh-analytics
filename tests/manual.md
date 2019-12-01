@@ -30,7 +30,7 @@ paths:
 # analytics.py
 def LinearRegression_constructor(body):
     try:
-        paras = body['paras']
+        paras = body['paras'] 
         res = LinearRegression(**paras)
     except Exception as e:
         return jsonify({'Error': str(e)})
@@ -127,7 +127,7 @@ code_gen = code_generators.CodeGenerators(
     func_signatures=sigs,
     # The output directory
     output_folder='./tests/test_assets/build')
-# Generate the anlaytics.py which includes
+# Generate the analytics.py which includes
 # endpoint functions
 code_gen.generate_handlers(
     output_name='analytics.py)
