@@ -1,10 +1,38 @@
-# Scikit-Learn REST API Generation Manual
+# Cloudmesh Analytics Manual
 
-## Introduction
+## How to Run This Project
+
+Swtich the directory under the server where contains Dockerfile
+```
+> username@ cloudmesh-analytics % cd server
+```
+Build the docker image
+```
+> username@ server %  docker build -t analytics .
+Sending build context to Docker daemon  35.84kB
+...
+Successfully built cea0ebdf4c85
+Successfully tagged analytics:latest
+```
+Run the project.
+```
+> username@ server %  docker run -p 8000:5000 analytics
+ * Serving Flask app "server" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+```
+
+## Scikit-Learn REST API Generation
+
+### Introduction
 
 Scikit-Learn offers various functionalities related to the machine learning, i.e., the classification model and linear regression model. When it comes to expose its AI functionalities, then repetitively work occurs. 
 
 ### A Laborious Example
+
 For example, making two regression methods from the linear model of Scikit-learn, which are the liner regression and logistic regression, involves writing the code in the similar pattern. The examples are based Flask, which is a python web application framework. 
 ```python
 # server.py
@@ -74,9 +102,9 @@ In order to expose a function as a REST API, there are limited types of function
 
 From the table, the function can be a constructor to initialize a new class instance without return value, or getter and setter functions. Some classes have public properties, i.e., LinearRegression.coef_. Therefore, the ways to handle the same types of functions are almost identical, which makes it easier to just write a template for each type of function, and others can be automatically generated.
 
-## Generate the APIs
+### Generate the APIs
 
-### Get Function Signatures
+####  Get Function Signatures
 
 The code generator reads a python module that contains classes, and generate a web application that exposes the functions from the module as REST APIs. 
 
@@ -183,7 +211,7 @@ curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_predict
 
 The predicate result is [[3, 4]] by applying the fitted model
 
-## Generate the Command-Line Interface
+### Generate the Command-Line Interface
 
 To develop the command-line interface working under the existing cms. The code generator is able to generate definitions recognized by docopt. 
 
