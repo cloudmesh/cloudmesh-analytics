@@ -23,6 +23,7 @@ def read(file_name):
         return jsonify({'error_message': 'failed to read'})
     return jsonify({file_name: data.tolist()})
 
+
 def upload(file=None):
     """Upload files to the server
     Args:
@@ -44,6 +45,7 @@ def upload(file=None):
     else:
         return jsonify({'error_message': 'Wrong file format'}), 400
 
+
 def list():
     """List all uploaded files"""
     files = os.listdir(current_app.config['UPLOAD_FOLDER'])
@@ -62,6 +64,7 @@ def read_csv(file_name):
     data = pd.read_csv(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name + '.csv', ), header=None)
     return data.values
 
+
 def allowed(file_name, allowed_extentions):
     """The allowed file extensions
 
@@ -74,6 +77,7 @@ def allowed(file_name, allowed_extentions):
     """
     return '.' in file_name and \
            file_name.rsplit('.', 1)[1].lower() in allowed_extentions
+
 
 def save(file):
     """ Save file after securing the file name
