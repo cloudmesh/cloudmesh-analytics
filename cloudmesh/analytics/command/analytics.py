@@ -11,7 +11,7 @@ import os
 import json
 import requests
 
-FILE_UPLOAD_DIR = os.path.join(os.path.dirname(os.getcwd()), 'tests/test_uploaded_files')
+FILE_UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'tests/test_uploaded_files')
 
 class AnalyticsCommand(PluginCommand):
 
@@ -29,7 +29,7 @@ class AnalyticsCommand(PluginCommand):
                 analytics file upload [--filename=FILENAME]
                 analytics file list
                 analytics file read [--filename=FILENAME]
-                analytics LinearRegression[--fit_intercept=VALUE] [--normalize=VALUE] [--copy_X=VALUE] [--n_jobs=VALUE]
+                analytics LinearRegression [--fit_intercept=VALUE] [--normalize=VALUE] [--copy_X=VALUE] [--n_jobs=VALUE]
                 analytics LinearRegression fit [--X=VALUE] [--y=VALUE]  [--sample_weight=VALUE] 
                 analytics LinearRegression get_params [--deep=VALUE] 
                 analytics LinearRegression predict [--X=VALUE] 
@@ -95,10 +95,16 @@ def run_command(arguments, root_url):
         payload = {'paras': {}}
 
         if arguments['--X'] is not None:
-            payload['paras']['X'] = json.loads(arguments['--X'])
+            if isinstance(arguments['--X'], str):
+                payload['paras']['X'] = arguments['--X']
+            else:
+                payload['paras']['X'] = json.loads(arguments['--X'])
 
         if arguments['--y'] is not None:
-            payload['paras']['y'] = json.loads(arguments['--y'])
+            if isinstance(arguments['--y'], str):
+                payload['paras']['y'] = arguments['--y']
+            else:
+                payload['paras']['y'] = json.loads(arguments['--y'])
 
         if arguments['--sample_weight'] is not None:
             payload['paras']['sample_weight'] = json.loads(arguments['--sample_weight'])
@@ -121,7 +127,10 @@ def run_command(arguments, root_url):
         payload = {'paras': {}}
 
         if arguments['--X'] is not None:
-            payload['paras']['X'] = json.loads(arguments['--X'])
+            if isinstance(arguments['--X'], str):
+                payload['paras']['X'] = arguments['--X']
+            else:
+                payload['paras']['X'] = json.loads(arguments['--X'])
 
         r = requests.post(url, json=payload)
         return r.text
@@ -132,10 +141,16 @@ def run_command(arguments, root_url):
         payload = {'paras': {}}
 
         if arguments['--X'] is not None:
-            payload['paras']['X'] = json.loads(arguments['--X'])
+            if isinstance(arguments['--X'], str):
+                payload['paras']['X'] = arguments['--X']
+            else:
+                payload['paras']['X'] = json.loads(arguments['--X'])
 
         if arguments['--y'] is not None:
-            payload['paras']['y'] = json.loads(arguments['--y'])
+            if isinstance(arguments['--y'], str):
+                payload['paras']['y'] = arguments['--y']
+            else:
+                payload['paras']['y'] = json.loads(arguments['--y'])
 
         if arguments['--sample_weight'] is not None:
             payload['paras']['sample_weight'] = json.loads(arguments['--sample_weight'])
@@ -160,16 +175,16 @@ def run_command(arguments, root_url):
         payload = {'paras': {}}
 
         if arguments['--fit_intercept'] is not None:
-            payload['paras'] = json.loads(arguments['--fit_intercept'])
+            payload['paras']['fit_intercept'] = json.loads(arguments['--fit_intercept'])
 
         if arguments['--normalize'] is not None:
-            payload['paras'] = json.loads(arguments['--normalize'])
+            payload['paras']['normalize'] = json.loads(arguments['--normalize'])
 
         if arguments['--copy_X'] is not None:
-            payload['paras'] = json.loads(arguments['--copy_X'])
+            payload['paras']['copy_X'] = json.loads(arguments['--copy_X'])
 
         if arguments['--n_jobs'] is not None:
-            payload['paras'] = json.loads(arguments['--n_jobs'])
+            payload['paras']['n_jobs'] = json.loads(arguments['--n_jobs'])
 
         r = requests.post(url, json=payload)
         return r.text
