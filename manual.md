@@ -2,7 +2,8 @@
 
 ## How to Run This Project
 
-Swtich the directory under the server where contains Dockerfile
+Switch to the directory under the server where contains Dockerfile
+
 ```
 > username@ cloudmesh-analytics % cd server
 ```
@@ -121,7 +122,7 @@ classes = ['LinearRegression']
 # If type table is specified, it will read all classes in the module
 sigs = SignaturesScraper.get_signatures(
     module,
-    classes, type_table)
+    classes)
 
 # The example output of sigs
 {0: {'class_name': 'LinearRegression',
@@ -215,7 +216,7 @@ The predicate result is [[3, 4]] by applying the fitted model
 
 To develop the command-line interface working under the existing cms. The code generator is able to generate definitions recognized by docopt. 
 
-```
+```python
 from cms_autoapi import CodeGenerator
 
 code_gen = code_generator.CodeGenerator(
@@ -225,21 +226,21 @@ code_gen = code_generator.CodeGenerator(
     output_folder='./command')
 # The command definitions
 code_gen.generate_command_interfaces(
-        output_name='analytics.py', template_name='command_interfaces')
+        output_name='command.py')
 ```
 
 The current folder structure is, 
 
 ```
 command
-├── analytics.py
+├── command.py
 └── command_setting.json
 ```
 
 A glance of the generated definition,
 
 ```
-# analytics.py
+# command.py
 ...
 analytics LinearRegression[--fit_intercept=VALUE] [--normalize=VALUE] [--copy_X=VALUE] [--n_jobs=VALUE] 
 analytics LinearRegression fit [--X=VALUE] [--y=VALUE]  [--sample_weight=VALUE] 
@@ -257,7 +258,7 @@ cloudmesh/analytics
 │   └── manager.py
 └── command
     ├── __init__.py
-    ├── analytics.py
+    ├── command.py
     └── command_setting.json
 ```
 
@@ -281,34 +282,54 @@ Doing predication is much simpler by typing the commands below,
 To run this file, put the cms_autoapi.py under the same directory as the main.py
 
 """
-from cms_autoapi import SignaturesScraper
+import sklearn.linear_model
+from cms_autoapi import SignatureScraper
 from cms_autoapi import CodeGenerator
+
+# Type table
+type_table = {
+    'matrix': 'array',
+    'array': 'array',
+    'array-like': 'array',
+    'numpy array': 'array',
+    'bool': 'boolean',
+    'int': 'integer',
+    'float': 'number'
+}
 
 # The module to read
 module = sklearn.linear_model
 # The classes to read from the module
 classes = ['LinearRegression']
 # If type table is specified, it will read all classes in the module
-sigs = SignaturesScraper.get_signatures(
-    module,
-    classes, type_table)
+sigs = SignatureScraper().get_signatures(
+    module=module,
+    classes=classes,
+    type_table=type_table)
 
-
-# Initialize the code generator
-code_gen = code_generator.CodeGenerator(
-  	# The functions to expose
-    func_signatures=sigs,
-    # The output directory
-    output_folder='./build')
-
-# Generate the analytics.py which includes endpoint functions
+code_gen = CodeGenerator(
+        func_signatures=sigs,
+        cwd='.',
+        function_operation_id_root='analytics',
+        file_operation_id_root='file',
+        server_url='http://localhost:5000/cloudmesh-analytics',
+        template_folder='./code_templates',
+        output_folder='./build'
+    )
+code_gen.generate_command_runner(
+    output_name='command_runner.py', template_name='command_runner.j2')
+code_gen.generate_command_setting(
+    output_name='command_setting.json', template_name='command_setting.j2')
 code_gen.generate_handlers(
-    output_name='analytics.py)
-code_gen.generate_yaml(
-    output_name='analytics.ymal')
+    output_name='analytics.py', template_name='handlers.j2')
+code_gen.generate_command_definitions(
+    output_name='command_docstring.py', template_name='command_docstring.j2')
+code_gen.generate_api_specification(
+    output_name='analytics.yaml', template_name='component.j2')
+code_gen.generate_file_operations(
+    output_name='file.py', template_name='file.j2')
 code_gen.generate_server(
-    output_name='server.py)
-code_gen.generate_command_interfaces(
-        output_name='analytics.py', template_name='command_interfaces')
+    output_name='server.py', template_name='server.j2')
+
 ```
 

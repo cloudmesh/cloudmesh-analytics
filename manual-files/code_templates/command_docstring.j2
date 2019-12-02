@@ -1,0 +1,23 @@
+"""
+::
+
+    Usage:
+        analytics server start [--cloud=CLOUD]
+        analytics server detached start [--cloud=CLOUD]
+        analytics server stop [--cloud=CLOUD]
+        analytics server detached stop [--cloud=CLOUD]
+        {%- for i, class in all.items()%}
+        analytics {{class.class_name}} {%- for p, type in class.constructor.items() %}[--{{p}}=VALUE] {% endfor %}
+        {%- for m, paras in class.members.items() %}
+        analytics {{class.class_name}} {{m}} {%- for p, type in paras.items()%} [--{{p}}=VALUE] {% endfor %}
+        {%- endfor %}
+        {% endfor %}
+
+    This command manages the cloudmesh analytics server on the given cloud.
+    If the cloud is not spified it is run on localhost
+
+    Options:
+        --cloud=CLOUD  The name of the cloud as specified in the
+                        cloudmesh.yaml file
+
+"""

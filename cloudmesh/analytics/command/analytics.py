@@ -4,7 +4,6 @@ from cloudmesh.shell.command import PluginCommand
 from cloudmesh.analytics.api.manager import Manager
 from cloudmesh.common.console import Console
 from cloudmesh.common.util import path_expand
-from pprint import pprint
 from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.run.background import run
 
