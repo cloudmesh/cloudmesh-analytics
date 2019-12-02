@@ -17,11 +17,15 @@ see cloudmesh.cmd5
 
 # Cloudmesh Cloud AI Service
 
-The cloudmesh Cloud Ai service will provide AI capabilities that are running on the different cloud, e.g. chamelon, asure. For the example functions, linear regression, principle components analysis and so on will be provided so that users can utilize the computing power of the clouds to train their models. The cloudmesh cloud AI service will administrate  multiple clouds and determine which cloud to use for scheduled tasks. 
+The cloudmesh Cloud Ai service will provide AI capabilities that are running on the different cloud, e.g. chamelon, azure. For the example functions, linear regression, principle components analysis and so on will be provided so that users can utilize the computing power of the clouds to train their models. The cloudmesh cloud AI service will administrate  multiple clouds and determine which cloud to use for scheduled tasks. 
+
+Team Members: 
+[Qiwei Liu, hid 151](https://github.com/cloudmesh-community/fa19-516-151/graphs/contributors), 
+[Yanting Wan, hid 170](https://github.com/cloudmesh-community/fa19-516-151/graphs/contributors)
 
 Link to the project: <https://github.com/cloudmesh/cloudmesh-analytics>
-Link to the project: <https://github.com/cloudmesh/cloudmesh-analytics/manual.md>
-Link to the manual: 
+
+Link to the manual: <https://github.com/cloudmesh/cloudmesh-analytics/manual.md>
 
 ## Architecture Design
 
@@ -47,12 +51,6 @@ The architecture primarily contains four objects:
 | **Pytest**           | will be the testing framework                                |
 
 ## Progress Report
-
-### Team Members
-
-* [Qiwei Liu](https://github.com/cloudmesh-community/fa19-516-151/graphs/contributors)
-* [Yanting Wan](https://github.com/cloudmesh-community/fa19-516-151/graphs/contributors)
-* Gregor von Laszewski, as modifications were substential, he also already set up cloudmesh-analytics, where this code will be migrated to.
 
 ### Work Breakdown
 
