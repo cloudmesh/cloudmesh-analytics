@@ -6,6 +6,9 @@
         },
         "chameleon": {
             "ip": ""
+        },
+        "localhost": {
+            "ip": "localhost:8000/cloudmesh-analytics"
         }
     }
 }
