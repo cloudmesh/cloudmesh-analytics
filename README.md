@@ -25,7 +25,7 @@ Team Members:
 
 Link to the project: <https://github.com/cloudmesh/cloudmesh-analytics>
 
-Link to the manual: <https://github.com/cloudmesh/cloudmesh-analytics/manual.md>
+Link to the manual: <https://github.com/cloudmesh/cloudmesh-analytics/blob/master/manual.md>
 
 ## Architecture Design
 
