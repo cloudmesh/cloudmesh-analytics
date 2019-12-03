@@ -36,15 +36,13 @@ code_gen = CodeGenerator(
         template_folder='./code_templates',
         output_folder='./build'
     )
-    
-code_gen.generate_command_runner(
-    output_name='command_runner.py', template_name='command_runner.j2')
+
+code_gen.generate_command_interfaces(
+    output_name='analytics_commands.py', template_name='command_interfaces.j2')
 code_gen.generate_command_setting(
     output_name='command_setting.json', template_name='command_setting.j2')
 code_gen.generate_handlers(
     output_name='analytics.py', template_name='handlers.j2')
-code_gen.generate_command_definitions(
-    output_name='command_docstring.py', template_name='command_docstring.j2')
 code_gen.generate_api_specification(
     output_name='analytics.yaml', template_name='component.j2')
 code_gen.generate_file_operations(

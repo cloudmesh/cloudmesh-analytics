@@ -44,7 +44,7 @@ class CodeGenerator:
         all['sigs'] = self.func_signatures
         self._generate_from_template(all, output_name, template_name)
 
-    def generate_command_runner(self, output_name, template_name):
+    def generate_command_interfaces(self, output_name, template_name):
         self._generate_from_template(
             self.func_signatures, output_name, template_name)
 
@@ -52,9 +52,6 @@ class CodeGenerator:
         self._generate_from_template(
             self.func_signatures, output_name, template_name)
 
-    def generate_command_definitions(self, output_name, template_name):
-        self._generate_from_template(
-            self.func_signatures, output_name, template_name)
 
     def generate_api_specification(self, output_name, template_name):
         all = self.construct_yaml_fields(signatures=self.func_signatures,
