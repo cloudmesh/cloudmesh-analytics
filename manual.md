@@ -2,7 +2,9 @@
 
 ## How to Run This Project
 
-Switch to the directory under the server where contains Dockerfile
+The project uses a code generator to generate the web application that exposes the APIs. The generated example is put under the ./manual-files/server.
+
+To launch the server, switch to the directory under the server where contains Dockerfile
 
 ```
 > username@ cloudmesh-analytics % cd server
@@ -70,7 +72,7 @@ Also, in order to expose the linear regression class as a RESTful interface, one
 The example implies that each request to a specific function requires a corresponding definition under the path field in the yaml file. So it is not surprising that will take a large amount of time to write hundreds of functions.
 
 ### Automating the Process
-Similarly, when adding a the logistic regression, the new endpoint function and corresponding yaml field follow the same pattern, which is shown below.
+Similarly, when adding a the logistic regression, the new endpoint function and corresponding yaml field follow the same pattern, which is shown as,
 ```
 # analytics.yaml
 ...
@@ -109,20 +111,33 @@ From the table, the function can be a constructor to initialize a new class inst
 
 The code generator reads a python module that contains classes, and generate a web application that exposes the functions from the module as REST APIs. 
 
-Function signatures need to be captured before the generation. The signature_scraper class will scrape the functions from a module, and return re-organize signature into a python dict. The shown example reads the signatures of the linear regression class.
+Function signatures need to be captured before the generation. The signature_scraper class will scrape the functions from a module, and return re-organize signature into a python dict. The shown example reads the signatures of the linear regression class. Note that the complete code example can be found in the Appendix. 
 
 ```python
 # main.py
 from cms_autoapi import SignaturesScraper
+import sklearn.linear_model
+
+# The type table
+type_table = {
+    'matrix': 'array',
+    'array': 'array',
+    'array-like': 'array',
+    'numpy array': 'array',
+    'bool': 'boolean',
+    'int': 'integer',
+    'float': 'number'
+}
 
 # The module to read
 module = sklearn.linear_model
 # The classes to read from the module
 classes = ['LinearRegression']
 # If type table is specified, it will read all classes in the module
-sigs = SignaturesScraper.get_signatures(
-    module,
-    classes)
+sigs = SignatureScraper().get_signatures(
+    module=module,
+    classes=classes,
+    type_table=type_table)
 
 # The example output of sigs
 {0: {'class_name': 'LinearRegression',
@@ -138,7 +153,17 @@ sigs = SignaturesScraper.get_signatures(
                 'sample_weight': 'list', 'y': 'list'}}}}
 ```
 
->Note: the **type table** is required for the signature scraper to search the doc string of functions or classes to match and retrieve the types of parameters due to lacking of types definitions in the signatures. However, the type doesn't affect the code generation but for generating more accurate definitions for request bodies in the yaml file.
+The signature scraper is optional for constructing the signature dictionary. This scraper is designed to parse the signatures from doc strings of sciki-learn classes. The **type table** is required for the signature scraper to search the doc string of functions or classes to match and retrieve the types of parameters due to lacking of types definitions in the signatures. 
+
+However, the type doesn't affect the code generation but for generating more accurate definitions for request bodies in the yaml file. One can write the signature dictionary manually by following the format:
+```
+{INDEX_NUMBER: {'CLASS_NAME': '',
+                'CONSTRUCTOR': {'PARAMETER': 'TYPE'},
+                'METHODS': {'PARAMETER': 'TYPE'}}}
+```
+* The index number refers the class to include
+* Constructor refers to the __init__ method of the class
+* Defining the formal parameter names as keys and corresponding values as type. **The type is optional but would be used to validate the data from request bodies before passing them to the endpoint functions.**
 
 ### Generate Endpoint Functions
 
@@ -146,31 +171,48 @@ sigs = SignaturesScraper.get_signatures(
 # main.py
 ...
 from cms_autoapi import CodeGenerator
+
 # Initialize the code generator
-code_gen = code_generator.CodeGenerator(
-  	# The functions to expose
-    func_signatures=sigs,
-    # The output directory
-    output_folder='./build')
+code_gen = CodeGenerator(
+        # function signatures
+        func_signatures=sigs,
+        # the currenting working directory for 
+        # the generated web application
+        cwd='.',
+        # The operation id for paths in the yaml file
+        # The function name would follow this prefix
+        # such as analytics.LinearRegression
+        function_operation_id_root='analytics',
+        # The seperated endpoint to file operations
+        file_operation_id_root='file',
+        # The server url for defining the yaml
+        server_url='http://localhost:5000/cloudmesh-analytics',
+        # There are built in code template for 
+        # generating code
+        template_folder='./code_templates',
+        # The foler to save the generated file
+        output_folder='./build')
+
 # Generate the analytics.py which includes endpoint functions
 code_gen.generate_handlers(
-    output_name='analytics.py)
+    output_name='analytics.py', template_name='handlers.j2')
 ```
 
-The example demonstrates how to generate the endpoint functions, exported to the *analytics.py* file. In order to run a flask application. The analytics.yaml file and server.py are required as well.  
+The example demonstrates how to generate the endpoint functions, exported to the *analytics.py* file. For running a flask application. The analytics.yaml file and server.py are required as well.  
+
 ```python
 ...
-code_gen.generate_yaml(
-    output_name='analytics.ymal')
 code_gen.generate_server(
-    output_name='server.py)
+    output_name='server.py', template_name='server.j2')
+code_gen.generate_api_specification(
+    output_name='analytics.yaml', template_name='component.j2')
 ```
 
-The series steps will generate a minimal runnable flask web application, which expose the function defined in the signature dictionary as REST APIs. The settings such as host, or port, routing paths of the server is set by default or automatically generated using the function and parameter names in the signature dictionary.
+The series steps will generate a minimal runnable flask web application, which expose the functions defined in the signature dictionary as REST APIs. The settings such as host, or port, routing paths of the server is set by default or automatically generated using the functions and parameters names in the signature dictionary.
 
 ### Example Usage
 
-By far the folder tree is as below, and the example will demonstrate how to fit a linear model and predict the result using the current exposed REST APIs.
+By far the folder tree is shown as, and the example will demonstrate how to fit a linear model and predict the result using the current exposed REST APIs.
 
 ```
 build
@@ -179,7 +221,7 @@ build
 └── server.py
 ```
 
-1. Launch the server by running the command below
+1. Launch the server by running the following command
 
 ```
 > python ./server.py
@@ -212,21 +254,31 @@ curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_predict
 
 The predicate result is [[3, 4]] by applying the fitted model
 
+The value of X and y can be a file name that was uploaded before, for example,
+
+```
+curl -X POST "http://localhost:8000/cloudmesh-analytics/file/upload" -H "accept: application/json" -H "Content-Type: multipart/form-data"
+```
+
+Then predict by specifying the file name which is the data source
+
+```
+curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_predict/" -H "accept: /" -H "Content-Type: application/json" -d "{"paras":{"X":\"test_upload\"}}" 
+{"return":"[[3. 4.]]"}
+```
+
+
 ### Generate the Command-Line Interface
 
-To develop the command-line interface working under the existing cms. The code generator is able to generate definitions recognized by docopt. 
+To develop the command-line interface working under the existing cloudmesh commands. The code generator is able to generate definitions recognized by docopt. 
 
 ```python
-from cms_autoapi import CodeGenerator
-
-code_gen = code_generator.CodeGenerator(
-  	# The functions to expose
-    func_signatures=sigs,
-    # The output directory
-    output_folder='./command')
-# The command definitions
-code_gen.generate_command_interfaces(
-        output_name='command.py')
+# main.py
+...
+code_gen.generate_command_runner(
+    output_name='command.py', template_name='command_runner.j2')
+code_gen.generate_command_setting(
+    output_name='command_setting.json', template_name='command_setting.j2')
 ```
 
 The current folder structure is, 
@@ -248,7 +300,7 @@ analytics LinearRegression predict [--X=VALUE]
 ...
 ```
 
-Copy and paste the *analytics.py* and *command_setting.json* to the cloudmesh/command, then the current folder structure for cloud cloudmesh-analytics is,
+Copy and paste the command.py and *command_setting.json* to the cloudmesh/command, then the current folder structure for cloud cloudmesh-analytics is,
 
 ```
 cloudmesh/analytics
@@ -262,7 +314,7 @@ cloudmesh/analytics
     └── command_setting.json
 ```
 
-Doing predication is much simpler by typing the commands below,
+Doing predication is much simpler by typing the following commands,
 
 ```
 > cms analytics LinearRegression --n_jobs=1 
@@ -270,6 +322,7 @@ Doing predication is much simpler by typing the commands below,
 > cms analytics LinearRegression fit --X=[[1,2]] --y=[[3,4]]
 {"return":"LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)"}
 > cms analytics LinearRegression predict --X=[[1,2]]
+# or cms analytics LinearRegression predict --X=test_upload
 {"return":"[[3. 4.]]"}
 ```
 
@@ -330,6 +383,5 @@ code_gen.generate_file_operations(
     output_name='file.py', template_name='file.j2')
 code_gen.generate_server(
     output_name='server.py', template_name='server.j2')
-
 ```
 

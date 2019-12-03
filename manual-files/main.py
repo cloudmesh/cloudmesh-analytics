@@ -27,7 +27,6 @@ sigs = SignatureScraper().get_signatures(
     classes=classes,
     type_table=type_table)
 
-print(sigs)
 code_gen = CodeGenerator(
         func_signatures=sigs,
         cwd='.',
@@ -37,6 +36,7 @@ code_gen = CodeGenerator(
         template_folder='./code_templates',
         output_folder='./build'
     )
+    
 code_gen.generate_command_runner(
     output_name='command_runner.py', template_name='command_runner.j2')
 code_gen.generate_command_setting(
