@@ -1,0 +1,50 @@
+{% for i, class in all.sigs.items() -%}
+from sklearn.linear_model import {{class.class_name}}
+{%- endfor %}
+import os
+import numpy as np
+from cloudmesh.analytics.build import file
+from flask import jsonify
+
+{% for i, class in all.sigs.items() -%}
+def load_obj(path):
+    return np.load(path, allow_pickle=True).item()
+
+
+def save_obj(obj, class_name):
+    np.save(os.path.join('{{all.cwd}}', str(class_name) + '_constructor'),
+            obj, allow_pickle=True)
+    return
+
+
+def {{class.class_name}}_constructor(body):
+    try:
+        paras = body['paras']
+        res = {{class.class_name}}(**paras)
+        save_obj(res, '{{class.class_name}}')
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+    return jsonify({'return': 'successfully constructed'})
+
+{% for member_name, parameter in class.members.items() %}
+def {{class.class_name}}_{{member_name}}(body):
+    if 'X' in body['paras'].keys() and isinstance(body['paras']['X'], str):
+        file_name = body['paras']['X']
+        body['paras']['X'] = file.read_csv(file_name)
+
+    if 'y' in body['paras'].keys() and isinstance(body['paras']['y'], str):
+        file_name = body['paras']['y']
+        body['paras']['y'] = file.read_csv(file_name)
+
+    try:
+        obj =load_obj(os.path.join('{{all.cwd}}', '{{class.class_name}}_constructor.npy'))
+        res = obj.{{member_name}}(**body['paras'])
+        save_obj(obj, '{{class.class_name}}')
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+
+    return jsonify({'return': str(res)})
+{% endfor %}
+
+
+{%- endfor %}

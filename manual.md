@@ -2,30 +2,28 @@
 
 ## How to Run This Project
 
-The project uses a code generator to generate the web application that exposes the APIs. The generated example is put under the ./manual-files/server.
-
-To launch the server, switch to the directory under the server where contains Dockerfile
+Generate a flask server exposing the *class_name*, e.g.,LinearRegression first. This command will generate a server under flask directory
 
 ```
-> username@ cloudmesh-analytics % cd server
+cms analytics codegen sklearn linearmodel [--class_name=VALUE]
 ```
-Build the docker image
+
+Launch the server
+
 ```
-> username@ server %  docker build -t analytics .
-Sending build context to Docker daemon  35.84kB
-...
-Successfully built cea0ebdf4c85
-Successfully tagged analytics:latest
+cms analytics server start
 ```
-Run the project.
+
+Now the server is running,
+Doing predication is much simpler by typing the following commands,
+
 ```
-> username@ server %  docker run -p 8000:5000 analytics
- * Serving Flask app "server" (lazy loading)
- * Environment: production
-   WARNING: This is a development server. Do not use it in a production deployment.
-   Use a production WSGI server instead.
- * Debug mode: off
- * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+> cms analytics LinearRegression
+{"return":"successfully constructed"}
+> cms analytics LinearRegression fit --X="[[1,2]]" --y="[[3,4]]"
+{"return":"LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)"}
+> cms analytics LinearRegression predict --X="[[1,2]]"
+{"return":"[[3. 4.]]"}
 ```
 
 ## Scikit-Learn REST API Generation

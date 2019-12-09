@@ -9,7 +9,8 @@ from numpydoc import docscrape
 from sklearn.linear_model import LinearRegression
 from tests.utilities import type_scraper
 
-def get_signatures(module,class_names, type_table):
+
+def get_signatures(module, class_names, type_table):
     """Getting the signatures of sklean.linear_model
 
         The Structure of the Output. 
@@ -78,10 +79,67 @@ def get_signatures(module,class_names, type_table):
         # Delete the setter functions
         if 'set_params' in current_members.keys():
             del current_members['set_params']
-        
-        current_members['get_properties'] = {'name':'str'}
+
+        current_members['get_properties'] = {'name': 'str'}
 
         # current_members['get_properties'] = {'name':'str'}
+    return res
+
+
+def get_ab_class_sig(class_obj, current):
+    current['constructor'] = get_ab_func_sig(
+        dict(inspect.getmembers(class_obj))['__init__']
+    )
+    members = {}
+    current['members'] = members
+    for name, obj in get_public_members(dict(inspect.getmembers(class_obj))):
+        members[name] = get_ab_func_sig(obj, current)
+    return current
+
+
+def get_ab_func_sig(func_obj):
+    paras_dict = dict(inspect.signature(func_obj).parameters)
+    simple_paras = {}
+
+    for name in paras_dict.keys():
+        if name != 'self':
+            simple_paras[name] = ''
+    return simple_paras
+
+
+def get_ab_signatures(module):
+    module_members = get_public_members(module)
+
+    res = {}
+    # Traverse all classes and its members
+    for i, name in enumerate(module_members.keys()):
+        try:
+            current = {}
+            res[i] = current
+
+            if inspect.isclass(module_members[name]):
+                current['type'] = 'class'
+                current['name'] = name
+                class_obj = module_members[name]
+
+                current['constructor'] = get_ab_func_sig(
+                    dict(inspect.getmembers(class_obj))['__init__']
+                )
+                members = {}
+                current['members'] = members
+                class_members = get_public_members(class_obj)
+                for class_member_name, class_member_obj in class_members.items():
+                    members[class_member_name] = get_ab_func_sig(class_member_obj)
+
+            if inspect.isfunction(module_members[name]):
+                current['type'] = 'function'
+                current['name'] = name
+                func_obj = module_members[name]
+
+                current['paras'] = get_ab_func_sig(func_obj)
+
+        except ValueError:
+            pass
     return res
 
 

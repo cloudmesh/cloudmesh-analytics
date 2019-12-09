@@ -7,6 +7,8 @@ from cloudmesh.common.util import path_expand
 from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.run.background import run
 
+from cloudmesh.analytics import cms_autoapi
+from cloudmesh.analytics.build import server
 import json
 import requests
 import os
@@ -20,10 +22,9 @@ class AnalyticsCommand(PluginCommand):
         ::
 
             Usage:
+                analytics codegen sklearn linearmodel [--class_name=VALUE]
                 analytics server start [--cloud=CLOUD]
-                analytics server detached start [--cloud=CLOUD]
                 analytics server stop [--cloud=CLOUD]
-                analytics server detached stop [--cloud=CLOUD]
                 analytics LinearRegression[--fit_intercept=VALUE] [--normalize=VALUE] [--copy_X=VALUE] [--n_jobs=VALUE] 
                 analytics LinearRegression fit [--X=VALUE]  [--y=VALUE]  [--sample_weight=VALUE] 
                 analytics LinearRegression get_params [--deep=VALUE] 
@@ -45,6 +46,9 @@ class AnalyticsCommand(PluginCommand):
         setting_path = os.path.join(
             (os.path.dirname(__file__)), 'command_setting.json')
 
+        if arguments.codegen:
+            cms_autoapi.main_generate(arguments['--class_name'])
+
         # Configure current working server
         if arguments.server and arguments.start and arguments['--cloud']:
             settings = None
@@ -55,6 +59,8 @@ class AnalyticsCommand(PluginCommand):
 
             with open(setting_path, 'w') as new_settings:
                 json.dump(settings, new_settings)
+            
+            server.run_app()
         else:
             with open(setting_path, 'r') as settings:
                 settings = json.load(settings)
@@ -146,3 +152,4 @@ def run_command(arguments, root_url):
         
         r = requests.post(url, json=payload)
         return r.text
+     

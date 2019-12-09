@@ -1,0 +1,26 @@
+import json
+import requests
+import os
+def run_command(arguments, root_url):
+    {%- for i, class in all.items()%}
+    {% for m, paras in class.members.items() %}
+    if arguments.{{class.class_name}} and arguments.{{m}} and ({% for p, type in paras.items()%} arguments['--{{p}}'] or {% endfor %} True):
+        url = 'http://' + root_url + '/{{class.class_name}}_{{m}}'
+        payload = {'paras': {}}
+        {% for p, type in paras.items()%}
+        if arguments['--{{p}}'] is not None:
+            payload['paras']['{{p}}']= json.loads(arguments['--{{p}}'])
+        {% endfor %}
+        r = requests.post(url, json=payload)
+        return r.text
+    {% endfor %}
+    if arguments.{{class.class_name}} and ({% for p, type in class.constructor.items() %} arguments['--{{p}}'] or {% endfor %} True):
+        url = 'http://'+ root_url + '/{{class.class_name}}_constructor'
+        payload = {'paras': {}}
+        {% for p, type in class.constructor.items() %}
+        if arguments['--{{p}}'] is not None:
+            payload['paras'] = json.loads(arguments['--{{p}}'])
+        {% endfor %}
+        r = requests.post(url, json=payload)
+        return r.text
+    {% endfor %} 

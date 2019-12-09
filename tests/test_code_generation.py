@@ -204,6 +204,13 @@ class TestSignatureScraper:
             sample_module, type_table)
         pprint.pprint(sigs)
 
+    def test_inspect(self):
+        from tests.test_assets import sample_module
+        # print(signature_scraper.get_ab_func_sig(sample_module.sample_func))
+        # print(signature_scraper.get_ab_class_sig(sample_module.SampleClass, {}))
+        print(signature_scraper.get_ab_signatures(sample_module))
+        # print(signature_scraper.get_ab_signatures(sklearn.linear_model))
+
 
 class TestTypeScraper:
     """Match types from text what literally defined.

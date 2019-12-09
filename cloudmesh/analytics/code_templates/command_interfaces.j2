@@ -1,0 +1,94 @@
+from __future__ import print_function
+from cloudmesh.shell.command import command
+from cloudmesh.shell.command import PluginCommand
+from cloudmesh.analytics.api.manager import Manager
+from cloudmesh.common.console import Console
+from cloudmesh.common.util import path_expand
+from cloudmesh.common.debug import VERBOSE
+from cloudmesh.common.run.background import run
+
+from cloudmesh.analytics import cms_autoapi
+from cloudmesh.analytics.build import server
+import json
+import requests
+import os
+
+class AnalyticsCommand(PluginCommand):
+
+    # noinspection PyUnusedLocal
+    @command
+    def do_analytics(self, args, arguments):
+        """
+        ::
+
+            Usage:
+                analytics codegen sklearn linearmodel [--class_name=VALUE]
+                analytics server start [--cloud=CLOUD]
+                analytics server stop [--cloud=CLOUD]
+                {%- for i, class in all.items()%}
+                analytics {{class.class_name}} {%- for p, type in class.constructor.items() %}[--{{p}}=VALUE] {% endfor %}
+                {%- for m, paras in class.members.items() %}
+                analytics {{class.class_name}} {{m}} {%- for p, type in paras.items()%} [--{{p}}=VALUE] {% endfor %}
+                {%- endfor %}
+                {% endfor %}
+
+            This command manages the cloudmesh analytics server on the given cloud.
+            If the cloud is not spified it is run on localhost
+
+            Options:
+                --cloud=CLOUD  The name of the cloud as specified in the
+                                cloudmesh.yaml file
+
+        """
+        VERBOSE(arguments)
+
+        setting_path = os.path.join(
+            (os.path.dirname(__file__)), 'command_setting.json')
+
+        if arguments.codegen:
+            cms_autoapi.main_generate(arguments['--class_name'])
+
+        # Configure current working server
+        if arguments.server and arguments.start and arguments['--cloud']:
+            settings = None
+            with open(setting_path, 'r') as settings:
+                settings = json.load(settings)
+
+            settings['cwd.cloud'] = arguments['--cloud']
+
+            with open(setting_path, 'w') as new_settings:
+                json.dump(settings, new_settings)
+            
+            server.run_app()
+        else:
+            with open(setting_path, 'r') as settings:
+                settings = json.load(settings)
+                # ip = os.path.join(settings['cloud'][settings['cwd.cloud']]['ip'])
+                ip = os.path.join(settings['cloud']["localhost"]['ip'])
+                print(run_command(arguments, ip))
+
+        return ""
+
+def run_command(arguments, root_url):
+    {%- for i, class in all.items()%}
+    {% for m, paras in class.members.items() %}
+    if arguments.{{class.class_name}} and arguments.{{m}} and ({% for p, type in paras.items()%} arguments['--{{p}}'] or {% endfor %} True):
+        url = 'http://' + root_url + '/{{class.class_name}}_{{m}}'
+        payload = {'paras': {}}
+        {% for p, type in paras.items()%}
+        if arguments['--{{p}}'] is not None:
+            payload['paras']['{{p}}']= json.loads(arguments['--{{p}}'])
+        {% endfor %}
+        r = requests.post(url, json=payload)
+        return r.text
+    {% endfor %}
+    if arguments.{{class.class_name}} and ({% for p, type in class.constructor.items() %} arguments['--{{p}}'] or {% endfor %} True):
+        url = 'http://'+ root_url + '/{{class.class_name}}_constructor'
+        payload = {'paras': {}}
+        {% for p, type in class.constructor.items() %}
+        if arguments['--{{p}}'] is not None:
+            payload['paras'] = json.loads(arguments['--{{p}}'])
+        {% endfor %}
+        r = requests.post(url, json=payload)
+        return r.text
+    {% endfor %} 
