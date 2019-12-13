@@ -1,13 +1,42 @@
 # Cloudmesh Analytics Manual
 
+## Instalation
+
+```bash
+mkdir cm
+cd cm
+pip install cloudmesh-installer
+cloudmesh-installer git clone cms
+cloudmesh-installer install cms
+
+git clone https://github.com/cloudmesh/cloudmesh-analytics.git
+cd cloudmesh-analytics
+
+
+```
+
+or as developer you can simply do 
+
+```bash
+mkdir cm
+cd cm
+pip install cloudmesh-installer
+cloudmesh-installer git clone analytics
+cloudmesh-installer install analytics
+```
+
+
 ## How to Run This Project
 
-Generate a flask server exposing the *class_name*, e.g.,LinearRegression first. This command will generate a server
+Generate a flask server exposing the *class_name*, e.g.,LinearRegression
+first. This command will generate a server
 
 ```
 > cms analytics codegen sklearn linearmodel --class_name=LinearRegression
-# The class can be other classes among the linear model, e.g., LogisticRegression
 ```
+
+The class can be other classes among the linear model, e.g., LogisticRegression
+
 
 Launch the server
 
@@ -33,7 +62,8 @@ fit_intercept=True, n_jobs=1, normalize=False)"}
 {"return":"[[3. 4.]]"}
 ```
 
-When the input data is large, users can upload csv files that provide the data. The value of X or y can be replaced with the file name.
+When the input data is large, users can upload csv files that provide
+the data. The value of X or y can be replaced with the file name.
 
 ```
 > cms analytics file upload --filename=user_input_data.csv
@@ -60,11 +90,18 @@ To kill the server,
 
 ### Introduction
 
-Scikit-Learn offers various functionalities related to the machine learning, i.e., the classification model and linear regression model. When it comes to expose its AI functionalities, then repetitively work occurs. 
+Scikit-Learn offers various functionalities related to the machine
+learning, i.e., the classification model and linear regression model.
+When it comes to expose its AI functionalities, then repetitively work
+occurs.
 
 ### A Laborious Example
 
-For example, making two regression methods from the linear model of Scikit-learn, which are the liner regression and logistic regression, involves writing the code in the similar pattern. The examples are based Flask, which is a python web application framework. 
+For example, making two regression methods from the linear model of
+Scikit-learn, which are the liner regression and logistic regression,
+involves writing the code in the similar pattern. The examples are based
+Flask, which is a python web application framework.
+
 ```python
 # server.py
 from flask import Flask
@@ -95,12 +132,22 @@ def LinearRegression_constructor(body):
         return jsonify({'Error': str(e)})
     return jsonify({'return': 'successfully constructed'})
 ```
-Also, in order to expose the linear regression class as a RESTful interface, one should write the yaml file which defines the routing, and the endpoint function to handle this request.
 
-The example implies that each request to a specific function requires a corresponding definition under the path field in the yaml file. So it is not surprising that will take a large amount of time to write hundreds of functions.
+Also, in order to expose the linear regression class as a RESTful
+interface, one should write the yaml file which defines the routing, and
+the endpoint function to handle this request.
+
+The example implies that each request to a specific function requires a
+corresponding definition under the path field in the yaml file. So it is
+not surprising that will take a large amount of time to write hundreds
+of functions.
 
 ### Automating the Process
-Similarly, when adding a the logistic regression, the new endpoint function and corresponding yaml field follow the same pattern, which is shown as,
+
+Similarly, when adding a the logistic regression, the new endpoint
+function and corresponding yaml field follow the same pattern, which is
+shown as,
+
 ```
 # analytics.yaml
 ...
@@ -123,7 +170,9 @@ def LogisticRegression_constructor(body):
         return jsonify({'Error': str(e)})
     return jsonify({'return': 'successfully constructed'})
 ```
-In order to expose a function as a REST API, there are limited types of functions in the Scikit-learn. Those can be summarized as,
+
+In order to expose a function as a REST API, there are limited types of
+functions in the Scikit-learn. Those can be summarized as,
 
 |Function Type/Return|  Yes | No |
 |:-----------:|:-------------:|:------:|
@@ -131,15 +180,26 @@ In order to expose a function as a REST API, there are limited types of function
 |Methods    | getters|setter|
 |Property   | attributes|\|
 
-From the table, the function can be a constructor to initialize a new class instance without return value, or getter and setter functions. Some classes have public properties, i.e., LinearRegression.coef_. Therefore, the ways to handle the same types of functions are almost identical, which makes it easier to just write a template for each type of function, and others can be automatically generated.
+From the table, the function can be a constructor to initialize a new
+class instance without return value, or getter and setter functions.
+Some classes have public properties, i.e., LinearRegression.coef_.
+Therefore, the ways to handle the same types of functions are almost
+identical, which makes it easier to just write a template for each type
+of function, and others can be automatically generated.
 
 ### Generate the APIs
 
 ####  Get Function Signatures
 
-The code generator reads a python module that contains classes, and generate a web application that exposes the functions from the module as REST APIs. 
+The code generator reads a python module that contains classes, and
+generate a web application that exposes the functions from the module as
+REST APIs.
 
-Function signatures need to be captured before the generation. The signature_scraper class will scrape the functions from a module, and return re-organize signature into a python dict. The shown example reads the signatures of the linear regression class. Note that the complete code example can be found in the Appendix. 
+Function signatures need to be captured before the generation. The
+signature_scraper class will scrape the functions from a module, and
+return re-organize signature into a python dict. The shown example reads
+the signatures of the linear regression class. Note that the complete
+code example can be found in the Appendix.
 
 ```python
 # main.py
@@ -181,17 +241,30 @@ sigs = SignatureScraper().get_signatures(
                 'sample_weight': 'list', 'y': 'list'}}}}
 ```
 
-The signature scraper is optional for constructing the signature dictionary. This scraper is designed to parse the signatures from doc strings of sciki-learn classes. The **type table** is required for the signature scraper to search the doc string of functions or classes to match and retrieve the types of parameters due to lacking of types definitions in the signatures. 
+The signature scraper is optional for constructing the signature
+dictionary. This scraper is designed to parse the signatures from doc
+strings of sciki-learn classes. The **type table** is required for the
+signature scraper to search the doc string of functions or classes to
+match and retrieve the types of parameters due to lacking of types
+definitions in the signatures.
 
-However, the type doesn't affect the code generation but for generating more accurate definitions for request bodies in the yaml file. One can write the signature dictionary manually by following the format:
+However, the type doesn't affect the code generation but for generating
+more accurate definitions for request bodies in the yaml file. One can
+write the signature dictionary manually by following the format:
+
 ```
 {INDEX_NUMBER: {'CLASS_NAME': '',
                 'CONSTRUCTOR': {'PARAMETER': 'TYPE'},
                 'METHODS': {'PARAMETER': 'TYPE'}}}
 ```
+
 * The index number refers the class to include
+
 * Constructor refers to the __init__ method of the class
-* Defining the formal parameter names as keys and corresponding values as type. **The type is optional but would be used to validate the data from request bodies before passing them to the endpoint functions.**
+
+* Defining the formal parameter names as keys and corresponding values
+  as type. **The type is optional but would be used to validate the data
+  from request bodies before passing them to the endpoint functions.**
 
 ### Generate Endpoint Functions
 
@@ -226,7 +299,9 @@ code_gen.generate_handlers(
     output_name='analytics.py', template_name='handlers.j2')
 ```
 
-The example demonstrates how to generate the endpoint functions, exported to the *analytics.py* file. For running a flask application. The analytics.yaml file and server.py are required as well.  
+The example demonstrates how to generate the endpoint functions,
+exported to the *analytics.py* file. For running a flask application.
+The analytics.yaml file and server.py are required as well.
 
 ```python
 ...
@@ -236,11 +311,17 @@ code_gen.generate_api_specification(
     output_name='analytics.yaml', template_name='component.j2')
 ```
 
-The series steps will generate a minimal runnable flask web application, which expose the functions defined in the signature dictionary as REST APIs. The settings such as host, or port, routing paths of the server is set by default or automatically generated using the functions and parameters names in the signature dictionary.
+The series steps will generate a minimal runnable flask web application,
+which expose the functions defined in the signature dictionary as REST
+APIs. The settings such as host, or port, routing paths of the server is
+set by default or automatically generated using the functions and
+parameters names in the signature dictionary.
 
 ### Example Usage
 
-By far the folder tree is shown as, and the example will demonstrate how to fit a linear model and predict the result using the current exposed REST APIs.
+By far the folder tree is shown as, and the example will demonstrate how
+to fit a linear model and predict the result using the current exposed
+REST APIs.
 
 ```
 build
@@ -258,20 +339,27 @@ build
 2. Send a request to test whether the server works
 
 ```
-curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_constructor/" -H "accept: */*" -H "Content-Type: application/json" -d "{\"paras\":{\"n_jobs\":1}}"
+curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_constructor/" \
+     -H "accept: */*" -H "Content-Type: application/json" \
+     -d "{\"paras\":{\"n_jobs\":1}}"
 {"return":"successfully constructed"}
 ```
 
-This example sends a request to construct a linear regression object by specifying  parameters in the json string. It returns the message to indicate the instance is successfully created. 
+This example sends a request to construct a linear regression object by
+specifying  parameters in the json string. It returns the message to
+indicate the instance is successfully created.
 
 3. Fit a model
 
 ```
-curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_fit/" -H "accept: */*" -H "Content-Type: application/json" -d "{\"paras\":{\"X\":[[1,2]], \"y\":[[3,4]]}}"
+curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_fit/" \
+     -H "accept: */*" -H "Content-Type: application/json" \
+     -d "{\"paras\":{\"X\":[[1,2]], \"y\":[[3,4]]}}"
 {"return":"LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)"}
 ```
 
-Fit a model specifying X as [[1,2]] and y as [[3, 4]], the server would response with the signatures of the fitted model
+Fit a model specifying X as [[1,2]] and y as [[3, 4]], the server would
+response with the signatures of the fitted model
 
 4. Predict
 
@@ -282,7 +370,8 @@ curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_predict
 
 The predicate result is [[3, 4]] by applying the fitted model
 
-The value of X and y can be a file name that was uploaded before, for example,
+The value of X and y can be a file name that was uploaded before, for
+example,
 
 ```
 curl -X POST "http://localhost:8000/cloudmesh-analytics/file/upload" -H "accept: application/json" -H "Content-Type: multipart/form-data"
@@ -298,7 +387,9 @@ curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_predict
 
 ### Generate the Command-Line Interface
 
-To develop the command-line interface working under the existing cloudmesh commands. The code generator is able to generate definitions recognized by docopt. 
+To develop the command-line interface working under the existing
+cloudmesh commands. The code generator is able to generate definitions
+recognized by docopt.
 
 ```python
 # main.py
@@ -326,7 +417,9 @@ analytics LinearRegression predict [--X=VALUE]
 ...
 ```
 
-Copy and paste the command.py and *command_setting.json* to the cloudmesh/command, then the current folder structure for cloud cloudmesh-analytics is,
+Copy and paste the command.py and *command_setting.json* to the
+cloudmesh/command, then the current folder structure for cloud
+cloudmesh-analytics is,
 
 ```
 cloudmesh/analytics
@@ -357,9 +450,10 @@ Doing predication is much simpler by typing the following commands,
 ### main.py
 
 ```python
-"""The main.py generates a web application that exposes the LinearRegression class of Scikit-Learn as REST APIs.
-To run this file, put the cms_autoapi.py under the same directory as the main.py
 
+"""The main.py generates a web application that exposes the
+LinearRegression class of Scikit-Learn as REST APIs. To run this file,
+put the cms_autoapi.py under the same directory as the main.py
 """
 import sklearn.linear_model
 from cms_autoapi import SignatureScraper
