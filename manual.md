@@ -1,5 +1,13 @@
 # Cloudmesh Analytics Manual
 
+## Introduction
+
+LOGIC IS MISSING E>G> WHAT DOES THIS DO AND WHY ITS USEFUL AND WHAT STEPS ARE NEEDED
+
+GREGOR MAY HELP HER IF HE FINDS TIOME ;-) WHICH HE DOES NOT ;-)
+
+
+
 ## Instalation
 
 ```bash
@@ -12,7 +20,7 @@ $ cloudmesh-installer install cms
 $ git clone https://github.com/cloudmesh/cloudmesh-analytics.git
 $ cd cloudmesh-analytics
 
-
+pip install -e .
 ```
 
 or as developer you can simply do 
@@ -23,8 +31,9 @@ $ cd cm
 $ pip install cloudmesh-installer
 $ cloudmesh-installer git clone analytics
 $ cloudmesh-installer install analytics
-```
 
+pip install -e .
+```
 
 ## How to Run This Project
 
@@ -35,14 +44,42 @@ first. This command will generate a server
 $ cms analytics codegen sklearn linearmodel --class_name=LinearRegression
 ```
 
-The class can be other classes among the linear model, e.g., LogisticRegression
+This will put the code for the server in teh directory 
+`./cloudmesh/analytics/build/`
 
 
-Launch the server
+
+.. todo:: It should do 
+
+            ```bash
+            $ cms analytics codegen sklearn linearmodel --class_name=LinearRegression --port=8001
+            ```
+            
+            todo and write it to  `./cloudmesh/analytics/build/LinearRegression`
+
+
+In addition to this example, we are providing other examples such as 
+
+* LogisticRegression
+* ????
+* ????
+
+... TODO: add some other examples
+
+
+Next we need to launch the server with the command
 
 ```bash
 $ cms analytics server start detached --cloud=local
 ```
+
+.. todo:: it should be 
+
+            cms analytics server start detached --cloud=local --class_name=LinearRegression
+
+
+The keyword `detached` means the service is runnig in the background.
+
 
 Now the server is running,
 Doing predication is much simpler by typing the following commands,
@@ -66,8 +103,10 @@ $ cms analytics LinearRegression predict --X="[[1,2]]"
 When the input data is large, users can upload csv files that provide
 the data. The value of X or y can be replaced with the file name.
 
+.. todo:: This does not yet work
+
 ```bash
-$ cms analytics file upload --filename=user_input_data.csv
+$ cms analytics file upload --filename=tests/test_uploaded_files/user_input_data.csv
 ```
 
 ```bash
@@ -87,16 +126,56 @@ To kill the server,
 $ cms analytics server stop
 ```
 
+## Quickstart
+
+Here we just show you all the commands we execute without explanation so
+you can quickly see how it works
+
+
+```bash
+$ cms analytics codegen sklearn linearmodel --class_name=LinearRegression
+$ cms analytics server start detached --cloud=local
+$ cms analytics LinearRegression
+$ cms analytics LinearRegression fit --X="[[1,2]]" --y="[[3,4]]"
+$ cms analytics LinearRegression predict --X="[[1,2]]"
+$ cms analytics file upload --filename=tests/test_uploaded_files/user_input_data.csv
+$ cms analytics LinearRegression predict --X=user_input_data
+$ cms analytics file list
+$ cms analytics file read --filename=user_input_data
+$ cms analytics server stop
+```
+
+## Pytest
+
+This quickstart is build into a python pytest at ???
+
+YOu can simply run it with 
+
+pytest -v --capture=no tests/test_example.py
+
+Other tests including benchmarks are in 
+
+
+* `tests/test_benchmark.py`
+
 ## Scikit-Learn REST API Generation
 
 ### Introduction
+
+.. todo:: Gregor will help here if he finds time
 
 Scikit-Learn offers various functionalities related to the machine
 learning, i.e., the classification model and linear regression model.
 When it comes to expose its AI functionalities, then repetitively work
 occurs.
 
+.. todo:: Gregor will help here if he finds time. He wille xplain why we
+          use OpenAPI.
+
+
 ### A Laborious Example
+
+.. todo:: Gregor will help here if he finds time
 
 For example, making two regression methods from the linear model of
 Scikit-learn, which are the liner regression and logistic regression,
@@ -455,6 +534,13 @@ $ cms analytics LinearRegression predict --X=[[1,2]]
 # or cms analytics LinearRegression predict --X=test_upload
 {"return":"[[3. 4.]]"}
 ```
+
+
+### Limitations
+
+At this time we have not worked on providing security rules such as
+setting up firewalls and alike. This is out of the scope of his project
+at this time. Please be carful while using our demonstrations.
 
 ## Appendix
 
