@@ -29,7 +29,11 @@ def readfile(filename):
 #
 requiers = """
 connexion
+flask
 scikit-learn
+numpy
+numpydoc
+pandas
 """.split("\n")
 
 # dependency_links = ['http://github.com/nicolaiarocci/eve.git@develop']
