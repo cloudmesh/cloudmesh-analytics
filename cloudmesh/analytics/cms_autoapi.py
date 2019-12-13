@@ -210,9 +210,6 @@ class SignatureScraper:
             if 'set_params' in current_members.keys():
                 del current_members['set_params']
 
-            current_members['get_properties'] = {'name': 'str'}
-
-            # current_members['get_properties'] = {'name':'str'}
         return res
 
     def get_public_members(self, obj):

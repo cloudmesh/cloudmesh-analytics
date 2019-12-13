@@ -70,11 +70,6 @@ class TestBenchmark:
         StopWatch.stop("LinearRegression_score")
         assert 1 == 1
 
-    def test_linear_property_benchmark(self):
-        StopWatch.start("LinearRegression_get_property")
-        subprocess.call(['cms', 'analytics', 'LinearRegression', 'get_property'])
-        StopWatch.stop("LinearRegression_get_property")
-        assert 1 == 1
 
     def test_print_benchmark(self):
         StopWatch.benchmark()

@@ -17,12 +17,14 @@ def create_app(config=None):
     Return:
         A flask app object
     """
-    c_app = connexion.App(__name__, specification_dir=".")
+    parent_folder = os.path.dirname(__file__)
+
+    c_app = connexion.App(__name__, specification_dir=parent_folder)
     c_app.add_api('analytics.yaml')
     c_app.app.config.from_mapping(
         SECRET_KEY='dev',
         #TODO: The os.getcwd is changed. the default path need fix
-        UPLOAD_FOLDER='.'
+        UPLOAD_FOLDER=parent_folder
     )
 
     if config is None:
@@ -39,5 +41,5 @@ def create_app(config=None):
         pass
     return c_app.app
 
-if __name__ == "__main__":
+def run_app():
     create_app().run(host='0.0.0.0',port=8000)

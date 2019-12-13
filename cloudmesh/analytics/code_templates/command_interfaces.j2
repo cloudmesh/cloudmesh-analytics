@@ -12,8 +12,8 @@ from cloudmesh.analytics import cms_autoapi
 import json
 import requests
 import os
-
-LOCAL_UPLOAD_FOLDER = "D:/IUBLife/2019Fall/cloudM/cloudmesh-analytics/tests/test_uploaded_files"
+import subprocess
+import signal
 
 class AnalyticsCommand(PluginCommand):
 
@@ -26,6 +26,7 @@ class AnalyticsCommand(PluginCommand):
             Usage:
                 analytics codegen sklearn linearmodel [--class_name=VALUE]
                 analytics server start [--cloud=CLOUD]
+                analytics server start detached [--cloud=CLOUD]
                 analytics server stop [--cloud=CLOUD]
                 analytics file upload [--filename=FILENAME]
                 analytics file list
@@ -45,16 +46,39 @@ class AnalyticsCommand(PluginCommand):
                                 cloudmesh.yaml file
 
         """
-        VERBOSE(arguments)
-
         setting_path = os.path.join(
             (os.path.dirname(__file__)), 'command_setting.json')
 
         if arguments.codegen:
             cms_autoapi.main_generate(arguments['--class_name'])
 
+        if arguments.server and arguments.stop:
+            with open(setting_path, 'r') as settings:
+                settings = json.load(settings)
+
+            print('killing the server')
+            server_pid = settings['server_id']
+            os.kill(server_pid, signal.SIGKILL)
+            settings['server_id']=""
+            
+            with open(setting_path, 'w') as new_settings:
+                json.dump(settings, new_settings)
+
+        if arguments.server and arguments.start and arguments.detached and arguments['--cloud']:
+            p = subprocess.Popen(
+                args=['cms', 'analytics', 'server', 'start', '--cloud='+arguments['--cloud']],
+                stdout=False)
+            
+            with open(setting_path, 'r') as settings:
+                settings = json.load(settings)
+
+            settings['server_id'] = p.pid
+
+            with open(setting_path, 'w') as new_settings:
+                json.dump(settings, new_settings)
+
         # Configure current working server
-        if arguments.server and arguments.start and arguments['--cloud']:
+        if arguments.server and arguments.start and not arguments.detached and arguments['--cloud']:
             settings = None
             with open(setting_path, 'r') as settings:
                 settings = json.load(settings)
