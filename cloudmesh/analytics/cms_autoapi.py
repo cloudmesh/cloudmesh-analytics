@@ -15,7 +15,7 @@ class CodeGenerator:
 
     def __init__(self, func_signatures, cwd, function_operation_id_root,
                  file_operation_id_root, server_url, template_folder,
-                 output_folder):
+                 output_folder, port=8000):
         self.func_signatures = func_signatures
         self.cwd = cwd
         self.function_operation_id_root = function_operation_id_root
@@ -23,6 +23,7 @@ class CodeGenerator:
         self.server_url = server_url
         self.template_folder = template_folder
         self.output_folder = output_folder
+        self.port = port
 
     def _generate_from_template(self, all, role_name, template_name):
         env = Environment(loader=FileSystemLoader(self.template_folder))
@@ -35,8 +36,10 @@ class CodeGenerator:
             f.write(res)
 
     def generate_server(self, output_name, template_name):
-        self._generate_from_template(
-            self.func_signatures, output_name, template_name)
+        all = {
+            'PORT': self.port
+        }
+        self._generate_from_template(all, output_name, template_name)
 
     def generate_handlers(self, output_name, template_name):
         all = {}
@@ -276,7 +279,7 @@ class SignatureScraper:
         return True
 
 
-def main_generate(class_name):
+def main_generate(class_name, port=8000):
     # Type table
     type_table = {
         'matrix': 'array',
@@ -313,7 +316,8 @@ def main_generate(class_name):
         file_operation_id_root='cloudmesh.analytics.build.file',
         server_url='http://localhost:5000/cloudmesh-analytics',
         template_folder=template_folder,
-        output_folder=output_folder
+        output_folder=output_folder,
+        port= port
     )
 
     code_gen.generate_command_setting(

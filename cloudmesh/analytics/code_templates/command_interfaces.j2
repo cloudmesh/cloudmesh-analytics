@@ -24,7 +24,7 @@ class AnalyticsCommand(PluginCommand):
         ::
 
             Usage:
-                analytics codegen sklearn linearmodel [--class_name=VALUE]
+                analytics codegen sklearn linearmodel [--class_name=VALUE] [--port=PORT]
                 analytics server start [--cloud=CLOUD]
                 analytics server start detached [--cloud=CLOUD]
                 analytics server stop [--cloud=CLOUD]
@@ -49,8 +49,10 @@ class AnalyticsCommand(PluginCommand):
         setting_path = os.path.join(
             (os.path.dirname(__file__)), 'command_setting.json')
 
+        port = arguments["--port"] or 8000
+
         if arguments.codegen:
-            cms_autoapi.main_generate(arguments['--class_name'])
+            cms_autoapi.main_generate(arguments['--class_name'], port)
 
         if arguments.server and arguments.stop:
             with open(setting_path, 'r') as settings:
