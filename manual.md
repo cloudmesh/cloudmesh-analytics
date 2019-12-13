@@ -3,14 +3,14 @@
 ## Instalation
 
 ```bash
-mkdir cm
-cd cm
-pip install cloudmesh-installer
-cloudmesh-installer git clone cms
-cloudmesh-installer install cms
+$ mkdir cm
+$ cd cm
+$ pip install cloudmesh-installer
+$ cloudmesh-installer git clone cms
+$ cloudmesh-installer install cms
 
-git clone https://github.com/cloudmesh/cloudmesh-analytics.git
-cd cloudmesh-analytics
+$ git clone https://github.com/cloudmesh/cloudmesh-analytics.git
+$ cd cloudmesh-analytics
 
 
 ```
@@ -18,11 +18,11 @@ cd cloudmesh-analytics
 or as developer you can simply do 
 
 ```bash
-mkdir cm
-cd cm
-pip install cloudmesh-installer
-cloudmesh-installer git clone analytics
-cloudmesh-installer install analytics
+$ mkdir cm
+$ cd cm
+$ pip install cloudmesh-installer
+$ cloudmesh-installer git clone analytics
+$ cloudmesh-installer install analytics
 ```
 
 
@@ -31,8 +31,8 @@ cloudmesh-installer install analytics
 Generate a flask server exposing the *class_name*, e.g.,LinearRegression
 first. This command will generate a server
 
-```
-> cms analytics codegen sklearn linearmodel --class_name=LinearRegression
+```bash
+$ cms analytics codegen sklearn linearmodel --class_name=LinearRegression
 ```
 
 The class can be other classes among the linear model, e.g., LogisticRegression
@@ -40,50 +40,51 @@ The class can be other classes among the linear model, e.g., LogisticRegression
 
 Launch the server
 
-```
-cms analytics server start detached --cloud=local
+```bash
+$ cms analytics server start detached --cloud=local
 ```
 
 Now the server is running,
 Doing predication is much simpler by typing the following commands,
 
-```
-> cms analytics LinearRegression
+```bash
+$ cms analytics LinearRegression
 {"return":"successfully constructed"}
 ```
-```
-> cms analytics LinearRegression fit --X="[[1,2]]" --y="[[3,4]]"
+
+```bash
+$ cms analytics LinearRegression fit --X="[[1,2]]" --y="[[3,4]]"
 {"return":"LinearRegression(copy_X=True, 
 fit_intercept=True, n_jobs=1, normalize=False)"}
 ```
 
-```
-> cms analytics LinearRegression predict --X="[[1,2]]"
+```bash
+$ cms analytics LinearRegression predict --X="[[1,2]]"
 {"return":"[[3. 4.]]"}
 ```
 
 When the input data is large, users can upload csv files that provide
 the data. The value of X or y can be replaced with the file name.
 
-```
-> cms analytics file upload --filename=user_input_data.csv
+```bash
+$ cms analytics file upload --filename=user_input_data.csv
 ```
 
-```
-> cms analytics LinearRegression predict --X=user_input_data
+```bash
+$ cms analytics LinearRegression predict --X=user_input_data
 ```
 
 To read or list the files uploaded, and the file extension can be ignored
 
-```
-> cms analytics file list
-> cms analytics file read --filename=user_input_data
+```bash
+$ cms analytics file list
+$ cms analytics file read --filename=user_input_data
 ```
 
 To kill the server, 
 
-```
-> cms analytics server stop
+```bash
+$ cms analytics server stop
 ```
 
 ## Scikit-Learn REST API Generation
@@ -332,13 +333,13 @@ build
 
 1. Launch the server by running the following command
 
-```
-> python ./server.py
+```bash
+$ python ./server.py
 ```
 
 2. Send a request to test whether the server works
 
-```
+```bash
 curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_constructor/" \
      -H "accept: */*" -H "Content-Type: application/json" \
      -d "{\"paras\":{\"n_jobs\":1}}"
@@ -351,7 +352,7 @@ indicate the instance is successfully created.
 
 3. Fit a model
 
-```
+```bash
 curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_fit/" \
      -H "accept: */*" -H "Content-Type: application/json" \
      -d "{\"paras\":{\"X\":[[1,2]], \"y\":[[3,4]]}}"
@@ -363,8 +364,9 @@ response with the signatures of the fitted model
 
 4. Predict
 
-```
-curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_predict/" -H "accept: /" -H "Content-Type: application/json" -d "{"paras":{"X":[[1,2]]}}" 
+```bash
+curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_predict/" \
+     -H "accept: /" -H "Content-Type: application/json" -d "{"paras":{"X":[[1,2]]}}" 
 {"return":"[[3. 4.]]"}
 ```
 
@@ -373,14 +375,16 @@ The predicate result is [[3, 4]] by applying the fitted model
 The value of X and y can be a file name that was uploaded before, for
 example,
 
-```
-curl -X POST "http://localhost:8000/cloudmesh-analytics/file/upload" -H "accept: application/json" -H "Content-Type: multipart/form-data"
+```bash
+curl -X POST "http://localhost:8000/cloudmesh-analytics/file/upload" \
+     -H "accept: application/json" -H "Content-Type: multipart/form-data"
 ```
 
 Then predict by specifying the file name which is the data source
 
-```
-curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_predict/" -H "accept: /" -H "Content-Type: application/json" -d "{"paras":{"X":\"test_upload\"}}" 
+```bash
+curl -X POST "http://localhost:8000/cloudmesh-analytics/LinearRegression_predict/" \
+     -H "accept: /" -H "Content-Type: application/json" -d "{"paras":{"X":\"test_upload\"}}" 
 {"return":"[[3. 4.]]"}
 ```
 
@@ -408,11 +412,15 @@ command
 
 A glance of the generated definition,
 
+
+TODO: do we just add the real man page her or keep it this way
 ```
 # command.py
 ...
-analytics LinearRegression[--fit_intercept=VALUE] [--normalize=VALUE] [--copy_X=VALUE] [--n_jobs=VALUE] 
-analytics LinearRegression fit [--X=VALUE] [--y=VALUE]  [--sample_weight=VALUE] 
+analytics LinearRegression [--fit_intercept=VALUE] [--normalize=VALUE] 
+                           [--copy_X=VALUE] [--n_jobs=VALUE] 
+analytics LinearRegression fit [--X=VALUE] [--y=VALUE]  
+                               [--sample_weight=VALUE] 
 analytics LinearRegression predict [--X=VALUE] 
 ...
 ```
@@ -436,11 +444,14 @@ cloudmesh/analytics
 Doing predication is much simpler by typing the following commands,
 
 ```
-> cms analytics LinearRegression --n_jobs=1 
+$ cms analytics LinearRegression --n_jobs=1 
 {"return":"successfully constructed"}
-> cms analytics LinearRegression fit --X=[[1,2]] --y=[[3,4]]
+
+$ cms analytics LinearRegression fit --X=[[1,2]] --y=[[3,4]]
 {"return":"LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)"}
-> cms analytics LinearRegression predict --X=[[1,2]]
+
+$ cms analytics LinearRegression predict --X=[[1,2]]
+
 # or cms analytics LinearRegression predict --X=test_upload
 {"return":"[[3. 4.]]"}
 ```
