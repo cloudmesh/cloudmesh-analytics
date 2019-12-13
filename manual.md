@@ -2,16 +2,17 @@
 
 ## How to Run This Project
 
-Generate a flask server exposing the *class_name*, e.g.,LinearRegression first. This command will generate a server under flask directory
+Generate a flask server exposing the *class_name*, e.g.,LinearRegression first. This command will generate a server
 
 ```
-cms analytics codegen sklearn linearmodel [--class_name=VALUE]
+> cms analytics codegen sklearn linearmodel --class_name=LinearRegression
+# The class can be other classes among the linear model, e.g., LogisticRegression
 ```
 
 Launch the server
 
 ```
-cms analytics server start
+cms analytics server start detached --cloud=local
 ```
 
 Now the server is running,
@@ -20,10 +21,39 @@ Doing predication is much simpler by typing the following commands,
 ```
 > cms analytics LinearRegression
 {"return":"successfully constructed"}
+```
+```
 > cms analytics LinearRegression fit --X="[[1,2]]" --y="[[3,4]]"
-{"return":"LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)"}
+{"return":"LinearRegression(copy_X=True, 
+fit_intercept=True, n_jobs=1, normalize=False)"}
+```
+
+```
 > cms analytics LinearRegression predict --X="[[1,2]]"
 {"return":"[[3. 4.]]"}
+```
+
+When the input data is large, users can upload csv files that provide the data. The value of X or y can be replaced with the file name.
+
+```
+> cms analytics file upload --filename=user_input_data.csv
+```
+
+```
+> cms analytics LinearRegression predict --X=user_input_data
+```
+
+To read or list the files uploaded, and the file extension can be ignored
+
+```
+> cms analytics file list
+> cms analytics file read --filename=user_input_data
+```
+
+To kill the server, 
+
+```
+> cms analytics server stop
 ```
 
 ## Scikit-Learn REST API Generation
