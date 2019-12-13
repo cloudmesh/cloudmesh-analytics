@@ -8,10 +8,12 @@ from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.run.background import run
 
 from cloudmesh.analytics import cms_autoapi
-from cloudmesh.analytics.build import server
+
 import json
 import requests
 import os
+
+LOCAL_UPLOAD_FOLDER = "D:/IUBLife/2019Fall/cloudM/cloudmesh-analytics/tests/test_uploaded_files"
 
 class AnalyticsCommand(PluginCommand):
 
@@ -25,6 +27,9 @@ class AnalyticsCommand(PluginCommand):
                 analytics codegen sklearn linearmodel [--class_name=VALUE]
                 analytics server start [--cloud=CLOUD]
                 analytics server stop [--cloud=CLOUD]
+                analytics file upload [--filename=FILENAME]
+                analytics file list
+                analytics file read [--filename=FILENAME]
                 {%- for i, class in all.items()%}
                 analytics {{class.class_name}} {%- for p, type in class.constructor.items() %}[--{{p}}=VALUE] {% endfor %}
                 {%- for m, paras in class.members.items() %}
@@ -58,7 +63,8 @@ class AnalyticsCommand(PluginCommand):
 
             with open(setting_path, 'w') as new_settings:
                 json.dump(settings, new_settings)
-            
+
+            from cloudmesh.analytics.build import server
             server.run_app()
         else:
             with open(setting_path, 'r') as settings:
@@ -77,7 +83,10 @@ def run_command(arguments, root_url):
         payload = {'paras': {}}
         {% for p, type in paras.items()%}
         if arguments['--{{p}}'] is not None:
-            payload['paras']['{{p}}']= json.loads(arguments['--{{p}}'])
+            try:
+                payload['paras']['{{p}}']= json.loads(arguments['--{{p}}'])
+            except:
+                payload['paras']['{{p}}']= arguments['--{{p}}']
         {% endfor %}
         r = requests.post(url, json=payload)
         return r.text
@@ -87,8 +96,23 @@ def run_command(arguments, root_url):
         payload = {'paras': {}}
         {% for p, type in class.constructor.items() %}
         if arguments['--{{p}}'] is not None:
-            payload['paras'] = json.loads(arguments['--{{p}}'])
+            payload['paras']['{{p}}'] = json.loads(arguments['--{{p}}'])
         {% endfor %}
         r = requests.post(url, json=payload)
         return r.text
-    {% endfor %} 
+    {% endfor %}
+    if arguments.file and arguments.upload and arguments['--filename']:
+        url = 'http://' + root_url + '/file/upload'
+        files = {'file': open(arguments['--filename'], 'rb')}
+        r = requests.post(url, files=files)
+        return r.text
+
+    if arguments.file and arguments.list:
+        url = 'http://' + root_url + '/file/list'
+        r = requests.get(url)
+        return r.text
+
+    if arguments.file and arguments.read and arguments['--filename']:
+        url = 'http://' + root_url + '/file/read/' + arguments['--filename']
+        r = requests.get(url)
+        return r.text
