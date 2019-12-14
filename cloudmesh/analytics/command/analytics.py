@@ -5,6 +5,9 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.run.background import run
+from cloudmesh.analytics.sklearn.manual import sklearn
+
+from cloudmesh.analytics.sklearn.manual import manual
 
 from cloudmesh.common.util import writefile
 from cloudmesh.analytics import cms_autoapi
@@ -17,64 +20,6 @@ from pathlib import Path
 import subprocess
 import signal
 from pprint import pprint
-
-
-def manual(service):
-    # Type table
-    type_table = {
-        'matrix': 'array',
-        'array': 'array',
-        'array-like': 'array',
-        'numpy array': 'array',
-        'bool': 'boolean',
-        'int': 'integer',
-        'float': 'number'
-    }
-    import sklearn.linear_model
-    from cloudmesh.analytics.cms_autoapi import SignatureScraper
-    # The module to read
-    module = sklearn.linear_model
-    # The classes to read from the module
-    classes = [service]
-    # If type table is specified, it will read all classes in the module
-    sigs = SignatureScraper().get_signatures(
-        module=module,
-        classes=classes,
-        type_table=type_table)
-
-    pprint (classes)
-
-    pprint(sigs)
-
-    content = [
-        service,
-        len(service) * "=",
-        ""
-    ]
-
-    for counter, entry in sigs.items():
-        print (entry)
-
-        #
-        # create value manual string
-        #
-        command = ["analytics {class_name}".format(**entry)]
-        for parameter in entry["constructor"]:
-            command.append(f"[{parameter}=VALUE]")
-        content.append(' '.join(command))
-        #
-        # create method strings
-        #
-        for name, parameters in entry['members'].items():
-            print (name, parameters)
-            command = ["analytics {class_name} {name}".format(**entry, name=name)]
-            for parameter in parameters:
-                command.append(f"[{parameter}=VALUE]")
-            content.append(' '.join(command))
-        content.append('')
-    print("\n".join(content))
-
-    return ""
 
 
 class Request(object):
@@ -146,6 +91,8 @@ class AnalyticsCommand(PluginCommand):
         ::
 
             Usage:
+                analytics help FUNCTION
+                analytics manual SERVICE
                 analytics codegen sklearn linearmodel [--class_name=VALUE] [--port=PORT]
                 analytics server start detached [--cloud=CLOUD] [--class_name=VALUE] [--port=PORT]
                 analytics server start [--cloud=CLOUD] [--class_name=VALUE] [--port=PORT]
@@ -153,7 +100,6 @@ class AnalyticsCommand(PluginCommand):
                 analytics file upload PARAMETERS...
                 analytics file list
                 analytics file read PARAMETERS...
-                analytics manual SERVICE
                 analytics run SERVICE PARAMETERS...
                 analytics SERVICE
 
@@ -188,8 +134,14 @@ class AnalyticsCommand(PluginCommand):
 
         port = arguments["--port"] or str(8000)
 
-        if arguments.manual:
-            manual(arguments.SERVICE)
+        if arguments.help:
+            function = arguments["FUNCTION"]
+            module, function = function.rsplit(".", 1)
+            sklearn.get_help(module, function)
+            return ""
+
+        elif arguments.manual:
+            print(manual(arguments.SERVICE))
             return ""
 
         elif arguments.codegen:
