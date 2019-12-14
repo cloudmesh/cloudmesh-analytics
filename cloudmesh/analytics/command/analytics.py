@@ -1,11 +1,12 @@
 from __future__ import print_function
-from cloudmesh.shell.command import command
+from cloudmesh.shell.command import command, map_parameters
 from cloudmesh.shell.command import PluginCommand
 from cloudmesh.common.console import Console
-from cloudmesh.common.util import path_expand
+from cloudmesh.common.util import path_expand, readfile
 from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.run.background import run
 from cloudmesh.analytics.sklearn.manual import sklearn
+import importlib
 
 from cloudmesh.analytics.sklearn.manual import manual
 
@@ -21,6 +22,8 @@ import subprocess
 import signal
 from pprint import pprint
 
+import sys
+sys.path.append(".")
 
 class Request(object):
 
@@ -93,9 +96,21 @@ class AnalyticsCommand(PluginCommand):
             Usage:
                 analytics help FUNCTION
                 analytics manual SERVICE
-                analytics codegen sklearn linearmodel [--class_name=VALUE] [--port=PORT]
-                analytics server start detached [--cloud=CLOUD] [--class_name=VALUE] [--port=PORT]
-                analytics server start [--cloud=CLOUD] [--class_name=VALUE] [--port=PORT]
+                analytics codegen function FILENAME NAME [--dir=DIR]
+                                                         [--port=PORT]
+                                                         [--host=PORT]
+                analytics codegen sklearn linearmodel [--class_name=VALUE]
+                                                      [--port=PORT]
+                                                      [--dir=DIR]
+                                                      [--host=PORT]
+                analytics server start detached [--cloud=CLOUD]
+                                                [--class_name=VALUE]
+                                                [--port=PORT]
+                                                [--dir=DIR]
+                analytics server start [--cloud=CLOUD]
+                                       [--class_name=VALUE]
+                                       [--port=PORT]
+                                       [--dir=DIR]
                 analytics server stop [--cloud=CLOUD]
                 analytics file upload PARAMETERS...
                 analytics file list
@@ -110,9 +125,42 @@ class AnalyticsCommand(PluginCommand):
                 --cloud=CLOUD  The name of the cloud as specified in the
                                 cloudmesh.yaml file
 
+                --dir=DIR      The directory in which the service is to be
+                               placed [default=./build]
+
+                --port=PORT    The port of the service [default=8000]
+
+                --host=HOST    The hostname to run this server on
+                               [default=127.0.0.1]
+
+                --class_name   The name of the service (should than not just
+                               be name?)
+
+            Arguments:
+
+                SERVICE  the name of the service
+                PARAMETERS  the PARAMETERS to be send toy the service
+
         """
 
-        def set_up_parameters():
+        map_parameters(arguments,
+                       'class_name',
+                       'cloud',
+                       'port')
+
+        def find_server_parameters():
+            """
+            finds parameters from the commandline arguments. This includes
+            any string with an = sign any string without.
+
+            TODO: FIX:
+
+            There is alos an undocumented hardcoded configuration json file
+            which should actually be a yaml file and should be able to be passed
+            as a parameter or placed into the buld dir.
+
+            :return: parameters, flgs, ip
+            """
             commands = arguments.PARAMETERS
             parameters = []
             flag = []
@@ -121,21 +169,37 @@ class AnalyticsCommand(PluginCommand):
                     parameters.append(command)
                 else:
                     flag.append(command)
-            print(parameters)
-            print(flag)
+            #
+            # I DO NOT KNOW WHAT THE NEXT STUFF IS?
+            #
             with open(setting_path, 'r') as settings:
                 settings = json.load(settings)
-                # ip = os.path.join(settings['cloud'][settings['cwd.cloud']]['ip'])
                 ip = os.path.join(settings['cloud']["localhost"]['ip'])
+
             return parameters, flag, ip
 
         setting_path = os.path.join(
             (os.path.dirname(__file__)), 'command_setting.json')
 
-        port = arguments["--port"] or str(8000)
+        port = arguments.port or str(8000)
 
-        if arguments.help:
-            function = arguments["FUNCTION"]
+
+        if arguments.codegen and arguments.function and arguments.FILENAME:
+
+            filename = arguments.FILENAME
+            name = arguments.NAME
+            module_name = filename.replace(".py", "").replace("/", ".")
+
+            module = importlib.import_module(module_name)
+            f = getattr(module, name)
+            print (f"from {module_name} import {name}")
+            print (f.__doc__)
+            print (f.__annotations__)
+
+            return ""
+
+        elif arguments.help:
+            function = arguments.FUNCTION
             module, function = function.rsplit(".", 1)
             sklearn.get_help(module, function)
             return ""
@@ -145,7 +209,7 @@ class AnalyticsCommand(PluginCommand):
             return ""
 
         elif arguments.codegen:
-            cms_autoapi.main_generate(arguments['--class_name'], port)
+            cms_autoapi.main_generate(arguments.class_name, port)
 
         elif arguments.server and arguments.stop:
             with open(setting_path, 'r') as settings:
@@ -160,14 +224,14 @@ class AnalyticsCommand(PluginCommand):
                 json.dump(settings, new_settings)
 
         elif arguments.server and arguments.start and arguments.detached and \
-            arguments['--cloud']:
+            arguments.cloud:
             p = subprocess.Popen(
                 args=['cms',
                       'analytics',
                       'server',
                       'start',
-                      '--cloud=' + arguments['--cloud'],
-                      '--class_name=' + arguments['--class_name'],
+                      f'--cloud={arguments.cloud}',
+                      f'--class_name={arguments.class_name}',
                       f"--port={port}"],
                 stdout=False)
 
@@ -180,40 +244,40 @@ class AnalyticsCommand(PluginCommand):
                 json.dump(settings, new_settings)
 
         elif arguments.run and arguments.SERVICE:
-            parameters, flag, ip = set_up_parameters()
+            parameters, flag, ip = find_server_parameters()
             res = Request.run(flag[0], flag[1:], parameters, command, ip)
             print(res)
 
         elif arguments.file and arguments.upload:
-            parameters, flag, ip = set_up_parameters()
+            parameters, flag, ip = find_server_parameters()
             res = Request.file_upload(parameters, ip)
             print(res)
 
         elif arguments.file and arguments.list:
-            parameters, flag, ip = set_up_parameters()
+            parameters, flag, ip = find_server_parameters()
 
             res = Request.file_list(parameters, ip)
             print(res)
 
         elif arguments.file and arguments.read:
-            parameters, flag, ip = set_up_parameters()
+            parameters, flag, ip = find_server_parameters()
             res = Request.file_upload(parameters, ip)
             print(res)
 
         # Configure current working server
         if arguments.server and arguments.start and not arguments.detached and \
-            arguments['--cloud']:
+            arguments.cloud:
             settings = None
 
             with open(setting_path, 'r') as settings:
                 settings = json.load(settings)
 
-            settings['cwd.cloud'] = arguments['--cloud']
+            settings['cwd.cloud'] = arguments.cloud
 
             with open(setting_path, 'w') as new_settings:
                 json.dump(settings, new_settings)
 
-            service = arguments['--class_name']
+            service = arguments.class_name
 
             build_path = Path(os.path.dirname(__file__)) / '../build'
             writefile(f'{build_path}/__init__.py', '')
@@ -243,7 +307,7 @@ class AnalyticsCommand(PluginCommand):
 
         if arguments.SERVICE:
             service = arguments.SERVICE
-            parameters, flag, ip = set_up_parameters()
+            parameters, flag, ip = find_server_parameters()
             res = Request.simple_run(service, parameters, ip)
             print(res)
 
