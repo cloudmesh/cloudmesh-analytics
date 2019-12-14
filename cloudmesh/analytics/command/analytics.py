@@ -99,16 +99,16 @@ class AnalyticsCommand(PluginCommand):
                 analytics codegen function FILENAME NAME [--dir=DIR]
                                                          [--port=PORT]
                                                          [--host=PORT]
-                analytics codegen sklearn linearmodel [--class_name=VALUE]
+                analytics codegen sklearn linearmodel [--class_name=NAME]
                                                       [--port=PORT]
                                                       [--dir=DIR]
                                                       [--host=PORT]
                 analytics server start detached [--cloud=CLOUD]
-                                                [--class_name=VALUE]
+                                                [--class_name=NAME]
                                                 [--port=PORT]
                                                 [--dir=DIR]
                 analytics server start [--cloud=CLOUD]
-                                       [--class_name=VALUE]
+                                       [--class_name=NAME]
                                        [--port=PORT]
                                        [--dir=DIR]
                 analytics server stop [--cloud=CLOUD]
@@ -133,8 +133,8 @@ class AnalyticsCommand(PluginCommand):
                 --host=HOST    The hostname to run this server on
                                [default=127.0.0.1]
 
-                --class_name   The name of the service (should than not just
-                               be name?)
+                --class_name=NAME   The name of the service (should than not just
+                                    be name?)
 
             Arguments:
 
