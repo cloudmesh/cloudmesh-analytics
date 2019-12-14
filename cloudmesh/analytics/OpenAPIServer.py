@@ -8,6 +8,7 @@ import os
 import connexion
 import sys
 
+
 class OpenAPIServer:
     """
     This is a Conveneinet method to create an OpenAPI server with
@@ -16,6 +17,9 @@ class OpenAPIServer:
     Uasage
 
         from cloudmesh.analytics.OpenAPIServer import OpenAPIServer
+
+        import sys
+        sys.path.append(".")
 
         server = OpenAPIServer(
             host = "127.0.0.1",
