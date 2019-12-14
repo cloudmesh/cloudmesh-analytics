@@ -1,11 +1,26 @@
 import sklearn.linear_model
 from cloudmesh.analytics.cms_autoapi import SignatureScraper
+from pprint import pprint
 
 """
 import sklearn
 import sklearn.linear_model
 help (sklearn.linear_model.LinearRegression)
 """
+
+class sklearn:
+
+    @staticmethod
+    def get_help(module, function):
+        print (module, function)
+        try:
+            #_module = __import__(module, fromlist=[function])
+            #print (_module.__dict__)
+            # eval (help(f"{module}.{function}"))
+            help(f"{module}.{function}")
+        except ImportError as e:
+            print (e)
+
 
 def manual(service):
     # Type table
