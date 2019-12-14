@@ -62,6 +62,71 @@ def manual(service):
     return ""
 
 
+class Request(object):
+
+    def __init__(self):
+        self.flag = None
+        self.data = None
+        self.service = None
+        self.root_url = None
+        self.name = None
+
+    def get_parameters(self, parameters):
+        data = {}
+        for parameter in parameters:
+            attribute, value = parameter.split("=")
+            try:
+                data[attribute] = json.loads(value)
+            except:
+                data[attribute] = value
+        return data
+
+    @staticmethod
+    def run(service, flag, parameters, command, root_url):
+        data = Request.get_parameters(parameters)
+        name = flag[0]
+        url = f'http://{root_url}/{service}_{name}'
+        payload = {
+            'paras': data
+        }
+        r = requests.post(url, json=payload)
+        return r.text
+
+    @staticmethod
+    def simple_run(service, parameters, root_url):
+        data = Request.get_parameters(parameters)
+        url = f'http://{root_url}/{service}/constructor'
+        print('url:', url)
+        payload = {
+            'paras': data
+        }
+        r = requests.post(url, json=payload)
+        return r.text
+
+    @staticmethod
+    def file_upload(parameters, root_url):
+        data = Request.get_parameters(parameters)
+        url = f'http://{root_url}/file/upload'
+        files = {'file': open(data['filename'], 'rb')}
+        r = requests.post(url, files=files)
+        return r.text
+
+    @staticmethod
+    def file_list(parameters, root_url):
+        data = Request.get_parameters(parameters)
+        url = f'http://{root_url}/file/list'
+        r = requests.get(url)
+        return r.text
+
+    @staticmethod
+    def file_read(parameters, root_url):
+        data = Request.get_parameters(parameters)
+        print('data:', data)
+        filename = data["filename"]
+        url = f'http://{root_url}/file/read/{filename}'
+        r = requests.get(url)
+        return r.text
+
 class AnalyticsCommand(PluginCommand):
 
     # noinspection PyUnusedLocal
@@ -90,47 +155,6 @@ class AnalyticsCommand(PluginCommand):
                                 cloudmesh.yaml file
 
         """
-        setting_path = os.path.join(
-            (os.path.dirname(__file__)), 'command_setting.json')
-
-        port = arguments["--port"] or str(8000)
-
-        if arguments.manual:
-            manual(arguments.SERVICE)
-            return ""
-
-        if arguments.codegen:
-            cms_autoapi.main_generate(arguments['--class_name'], port)
-
-        if arguments.server and arguments.stop:
-            with open(setting_path, 'r') as settings:
-                settings = json.load(settings)
-
-            print('killing the server')
-            server_pid = settings['server_id']
-            os.kill(server_pid, signal.SIGKILL)
-            settings['server_id'] = ""
-
-            with open(setting_path, 'w') as new_settings:
-                json.dump(settings, new_settings)
-
-        if arguments.server and arguments.start and arguments.detached and \
-            arguments['--cloud']:
-            p = subprocess.Popen(
-                args=['cms', 'analytics', 'server', 'start',
-                      '--cloud=' + arguments['--cloud'],
-                      '--class_name='+ arguments['--class_name'],
-                      "--port=" + port],
-                stdout=False)
-
-            with open(setting_path, 'r') as settings:
-                settings = json.load(settings)
-
-            settings['server_id'] = p.pid
-
-            with open(setting_path, 'w') as new_settings:
-                json.dump(settings, new_settings)
-
         def set_up_parameters():
             commands = arguments.PARAMETERS
             parameters = []
@@ -148,24 +172,67 @@ class AnalyticsCommand(PluginCommand):
                 ip = os.path.join(settings['cloud']["localhost"]['ip'])
             return parameters, flag, ip
 
-        if arguments.run and arguments.SERVICE:
+
+        setting_path = os.path.join(
+            (os.path.dirname(__file__)), 'command_setting.json')
+
+        port = arguments["--port"] or str(8000)
+
+        if arguments.manual:
+            manual(arguments.SERVICE)
+            return ""
+
+        elif arguments.codegen:
+            cms_autoapi.main_generate(arguments['--class_name'], port)
+
+        elif arguments.server and arguments.stop:
+            with open(setting_path, 'r') as settings:
+                settings = json.load(settings)
+
+            print('killing the server')
+            server_pid = settings['server_id']
+            os.kill(server_pid, signal.SIGKILL)
+            settings['server_id'] = ""
+
+            with open(setting_path, 'w') as new_settings:
+                json.dump(settings, new_settings)
+
+        elif arguments.server and arguments.start and arguments.detached and \
+            arguments['--cloud']:
+            p = subprocess.Popen(
+                args=['cms', 'analytics', 'server', 'start',
+                      '--cloud=' + arguments['--cloud'],
+                      '--class_name='+ arguments['--class_name'],
+                      "--port=" + port],
+                stdout=False)
+
+            with open(setting_path, 'r') as settings:
+                settings = json.load(settings)
+
+            settings['server_id'] = p.pid
+
+            with open(setting_path, 'w') as new_settings:
+                json.dump(settings, new_settings)
+
+        elif arguments.run and arguments.SERVICE:
             parameters, flag, ip = set_up_parameters()
-            res = run_command_2(flag[0], flag[1:], parameters, "run", root_url=ip)
+            res = Request.run(flag[0], flag[1:], parameters, command, ip)
             print(res)
 
-        if arguments.file and arguments.upload:
+        elif arguments.file and arguments.upload:
             parameters, flag, ip = set_up_parameters()
-            res = run_command_2('', flag, parameters, "upload", root_url=ip)
+            res = Request.file_upload(parameters, ip)
             print(res)
 
         elif arguments.file and arguments.list:
             parameters, flag, ip = set_up_parameters()
-            res = run_command_2('', flag, parameters, "list", root_url=ip)
+
+            res = Request.file_list(parameters, ip)
             print(res)
 
         elif arguments.file and arguments.read:
             parameters, flag, ip = set_up_parameters()
-            res = run_command_2('', flag, parameters, "read", root_url=ip)
+            res = Request.file_upload(parameters, ip)
             print(res)
 
         # Configure current working server
@@ -220,179 +287,3 @@ class AnalyticsCommand(PluginCommand):
         return ""
 
 
-def run_command(arguments, root_url):
-    if arguments.LinearRegression and arguments.fit and (
-        arguments['--X'] or arguments['--y'] or arguments[
-        '--sample_weight'] or True):
-        url = 'http://' + root_url + '/LinearRegression_fit'
-        payload = {'paras': {}}
-
-        if arguments['--X'] is not None:
-            try:
-                payload['paras']['X'] = json.loads(arguments['--X'])
-            except:
-                payload['paras']['X'] = arguments['--X']
-
-        if arguments['--y'] is not None:
-            try:
-                payload['paras']['y'] = json.loads(arguments['--y'])
-            except:
-                payload['paras']['y'] = arguments['--y']
-
-        if arguments['--sample_weight'] is not None:
-            try:
-                payload['paras']['sample_weight'] = json.loads(
-                    arguments['--sample_weight'])
-            except:
-                payload['paras']['sample_weight'] = arguments['--sample_weight']
-
-        r = requests.post(url, json=payload)
-        return r.text
-
-    if arguments.LinearRegression and arguments.get_params and (
-        arguments['--deep'] or True):
-        url = 'http://' + root_url + '/LinearRegression_get_params'
-        payload = {'paras': {}}
-
-        if arguments['--deep'] is not None:
-            try:
-                payload['paras']['deep'] = json.loads(arguments['--deep'])
-            except:
-                payload['paras']['deep'] = arguments['--deep']
-
-        r = requests.post(url, json=payload)
-        return r.text
-
-    if arguments.LinearRegression and arguments.predict and (
-        arguments['--X'] or True):
-        url = 'http://' + root_url + '/LinearRegression_predict'
-        payload = {'paras': {}}
-
-        if arguments['--X'] is not None:
-            try:
-                payload['paras']['X'] = json.loads(arguments['--X'])
-            except:
-                payload['paras']['X'] = arguments['--X']
-
-        r = requests.post(url, json=payload)
-        return r.text
-
-    if arguments.LinearRegression and arguments.score and (
-        arguments['--X'] or arguments['--y'] or arguments[
-        '--sample_weight'] or True):
-        url = 'http://' + root_url + '/LinearRegression_score'
-        payload = {'paras': {}}
-
-        if arguments['--X'] is not None:
-            try:
-                payload['paras']['X'] = json.loads(arguments['--X'])
-            except:
-                payload['paras']['X'] = arguments['--X']
-
-        if arguments['--y'] is not None:
-            try:
-                payload['paras']['y'] = json.loads(arguments['--y'])
-            except:
-                payload['paras']['y'] = arguments['--y']
-
-        if arguments['--sample_weight'] is not None:
-            try:
-                payload['paras']['sample_weight'] = json.loads(
-                    arguments['--sample_weight'])
-            except:
-                payload['paras']['sample_weight'] = arguments['--sample_weight']
-
-        r = requests.post(url, json=payload)
-        return r.text
-
-    if arguments.LinearRegression and (
-        arguments['--fit_intercept'] or arguments['--normalize'] or arguments[
-        '--copy_X'] or arguments['--n_jobs'] or True):
-        url = 'http://' + root_url + '/LinearRegression_constructor'
-        payload = {'paras': {}}
-
-        if arguments['--fit_intercept'] is not None:
-            payload['paras']['fit_intercept'] = json.loads(
-                arguments['--fit_intercept'])
-
-        if arguments['--normalize'] is not None:
-            payload['paras']['normalize'] = json.loads(arguments['--normalize'])
-
-        if arguments['--copy_X'] is not None:
-            payload['paras']['copy_X'] = json.loads(arguments['--copy_X'])
-
-        if arguments['--n_jobs'] is not None:
-            payload['paras']['n_jobs'] = json.loads(arguments['--n_jobs'])
-
-        r = requests.post(url, json=payload)
-        return r.text
-
-    """
-    if arguments.file and arguments.upload and arguments['filename']:
-        url = 'http://' + root_url + '/file/upload'
-        files = {'file': open(arguments['filename'], 'rb')}
-        r = requests.post(url, files=files)
-        return r.text
-
-    if arguments.file and arguments.list:
-        url = 'http://' + root_url + '/file/list'
-        r = requests.get(url)
-        return r.text
-
-    if arguments.file and arguments.read and arguments['filename']:
-        url = 'http://' + root_url + '/file/read/' + arguments['filename']
-        r = requests.get(url)
-        return r.text
-    """
-
-
-def run_command_2(service, flag, parameters, command, root_url):
-    print(service)
-    print(parameters)
-    print(flag)
-
-    data = {}
-    for parameter in parameters:
-        attribute, value = parameter.split("=")
-        try:
-            data[attribute] = json.loads(value)
-        except:
-            data[attribute] = value
-
-    if command == "run":
-        id = flag[0]
-        url = f'http://{root_url}/{service}_{id}'
-        print('url:',url)
-        payload = {
-            'paras': data
-        }
-        r = requests.post(url, json=payload)
-        return r.text
-    elif command == "simple_run":
-        # url = f'http://{root_url}/{service}_constructor'
-        url = f'http://{root_url}/{service}/constructor'
-        print('url:',url)
-        payload = {
-            'paras': data
-        }
-        r = requests.post(url, json=payload)
-        return r.text
-    elif command == 'upload':
-        url = f'http://{root_url}/file/upload'
-        files = {'file': open(data['filename'], 'rb')}
-        r = requests.post(url, files=files)
-        return r.text
-
-    elif command == 'list':
-        url = f'http://{root_url}/file/list'
-        r = requests.get(url)
-        return r.text
-
-    elif command == 'read':
-        print('data:',data)
-        filename = data["filename"]
-        url = f'http://{root_url}/file/read/{filename}'
-        r = requests.get(url)
-        return r.text
-    else:
-        print('Error: Not Support')
