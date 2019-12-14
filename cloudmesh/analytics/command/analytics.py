@@ -96,22 +96,20 @@ class AnalyticsCommand(PluginCommand):
             Usage:
                 analytics help FUNCTION
                 analytics manual SERVICE
-                analytics codegen function FILENAME NAME [--dir=DIR]
-                                                         [--port=PORT]
-                                                         [--host=PORT]
-                analytics codegen sklearn linearmodel [--class_name=NAME]
-                                                      [--port=PORT]
-                                                      [--dir=DIR]
-                                                      [--host=PORT]
-                analytics server start detached [--cloud=CLOUD]
-                                                [--class_name=NAME]
-                                                [--port=PORT]
-                                                [--dir=DIR]
-                analytics server start [--cloud=CLOUD]
-                                       [--class_name=NAME]
-                                       [--port=PORT]
-                                       [--dir=DIR]
-                analytics server stop [--cloud=CLOUD]
+                analytics codegen function FILENAME NAME
+                    [--dir=DIR]
+                    [--port=PORT]
+                    [--host=HOST]
+                analytics codegen sklearn MODEL
+                    [--service=SERVICE]
+                    [--port=PORT]
+                    [--dir=DIR]
+                    [--host=HOST]
+                analytics server start
+                    [--service=SERVICE]
+                    [--cloud=CLOUD]
+                    [--detached]
+                analytics server stop [--service=SERVICE] [--cloud=CLOUD]
                 analytics file upload PARAMETERS...
                 analytics file list
                 analytics file read PARAMETERS...
@@ -209,6 +207,20 @@ class AnalyticsCommand(PluginCommand):
             return ""
 
         elif arguments.codegen:
+
+            name = arguments.class_name
+            directory = arguments.dir
+            host = arguments.host
+
+            print(name)
+            print(directory)
+            print(host)
+
+            pprint(arguments)
+
+            return ""
+
+
             cms_autoapi.main_generate(arguments.class_name, port)
 
         elif arguments.server and arguments.stop:
