@@ -59,10 +59,6 @@ class CodeGenerator:
         }
         self._generate_from_template(all, output_name, template_name)
 
-    def generate_command_interfaces(self, output_name, template_name):
-        self._generate_from_template(
-            self.func_signatures, output_name, template_name)
-
     def generate_command_setting(self, output_name, template_name):
         all = {
             'PORT': self.port
@@ -382,9 +378,7 @@ def main_generate(class_name,
     # generator.output_folder = os.path.join((os.path.dirname(__file__)),
     #                                       'command')
     # print(output_folder)
-    # generator.generate_command_interfaces(
-    #     output_name=f'{class_name}_analytics.py',
-    #     template_name='command_interfaces.j2')
+
     # generator.generate_command_setting(
     #     output_name='command_setting.json',
     #     template_name='command_setting.j2')
@@ -398,20 +392,15 @@ def main_generate(class_name,
         template_name='file.j2')
 
 
+    #
+    # Generate the server code while using a build in cloudmesh specific server
+    #
     server = OpenAPIServer(
         host="127.0.0.1",
         path=".",
         spec=f"{class_name}.yaml",
         key="dev")
     server.write(f'{directory}/{class_name}/{class_name}_server.py')
-
-    #
-    # OUTDATED
-    #
-    #generator.generate_server(
-    #    output_name=f'{class_name}/{class_name}_server.py',
-    #    template_name='server.j2',
-    #    class_name=class_name)
 
     generator.generate_api_specification(
         output_name=f'{class_name}/{class_name}.yaml',
@@ -420,9 +409,7 @@ def main_generate(class_name,
     generator.output_folder = os.path.join((os.path.dirname(__file__)),
                                           'command')
     print(directory)
-    # generator.generate_command_interfaces(
-    #     output_name='analytics.py',
-    #     template_name='command_interfaces.j2')
+
     # generator.generate_command_setting(
     #     output_name='command_setting.json',
     #     template_name='command_setting.j2')
