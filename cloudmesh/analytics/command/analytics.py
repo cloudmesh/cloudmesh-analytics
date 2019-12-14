@@ -96,17 +96,15 @@ class AnalyticsCommand(PluginCommand):
             Usage:
                 analytics help FUNCTION
                 analytics manual SERVICE
-                analytics codegen function FILENAME NAME
+                analytics codegen function FILENAME --service=NAME
                     [--dir=DIR]
                     [--port=PORT]
                     [--host=HOST]
-                analytics codegen sklearn MODEL
-                    [--service=SERVICE]
+                analytics codegen sklearn MODEL --service=SERVICE
                     [--port=PORT]
                     [--dir=DIR]
                     [--host=HOST]
-                analytics server start
-                    [--service=SERVICE]
+                analytics server start --service=SERVICE
                     [--cloud=CLOUD]
                     [--detached]
                 analytics server stop [--service=SERVICE] [--cloud=CLOUD]
@@ -142,9 +140,13 @@ class AnalyticsCommand(PluginCommand):
         """
 
         map_parameters(arguments,
-                       'class_name',
+                       'service',
+                       'host',
+                       'dir',
                        'cloud',
                        'port')
+
+        pprint (arguments)
 
         def find_server_parameters():
             """
@@ -206,22 +208,20 @@ class AnalyticsCommand(PluginCommand):
             print(manual(arguments.SERVICE))
             return ""
 
-        elif arguments.codegen:
+        elif arguments.codegen and arguments.sklearn:
 
-            name = arguments.class_name
+            service = arguments.service
             directory = arguments.dir
             host = arguments.host
 
-            print(name)
+            print(service)
             print(directory)
             print(host)
 
-            pprint(arguments)
 
-            return ""
-
-
-            cms_autoapi.main_generate(arguments.class_name, port)
+            cms_autoapi.main_generate(service,
+                                      directory,
+                                      port)
 
         elif arguments.server and arguments.stop:
             with open(setting_path, 'r') as settings:

@@ -108,8 +108,8 @@ class OpenAPIServer:
                 path = f"{self.path}",
                 spec = f"{self.spec}",
                 key = f"{self.key}")
-            server.run()
-            :return: 
+            server.app()
+
             """)
         return program
 
