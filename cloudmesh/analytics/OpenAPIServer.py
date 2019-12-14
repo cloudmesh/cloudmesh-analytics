@@ -7,7 +7,8 @@ The method definition to create a flask app by call ing the create_app function
 import os
 import connexion
 import sys
-
+import textwrap
+from cloudmesh.common.util import writefile
 
 class OpenAPIServer:
     """
@@ -22,8 +23,18 @@ class OpenAPIServer:
             host = "127.0.0.1",
             path = ".",
             spec = "server.yaml",
-            key = 'dev')
+            key = "dev")
         server.run()
+
+    In case you like to specify a program that contains such a server you can
+    use
+
+        server = OpenAPIServer(
+            host = "127.0.0.1",
+            path = ".",
+            spec = "server.yaml",
+            key = "dev")
+        server.write("server.py")
 
 
     """
@@ -41,13 +52,13 @@ class OpenAPIServer:
         sys.path.append(path)
 
     def create_app(self, config=None):
-        """To create a flask app
+        """
+        Creates the server while using the config file. In addition some
+        configuration parameters are used that are defined at instantiation time.
 
-        Args:
-            config: A dictionary contains the configurations for the flask app
+        :param config: parameters passed to the flas server
 
-        Return:
-            A flask app object
+        :return: a flas server
         """
 
         # ensure the file folder exists
@@ -56,6 +67,7 @@ class OpenAPIServer:
         except OSError:
             pass
 
+        # Setup the server
         _app = connexion.App(__name__, specification_dir=self.path)
         _app.add_api(self.spec)
         _app.app.config.from_mapping(
@@ -74,7 +86,43 @@ class OpenAPIServer:
         return _app.app
 
     def app(self):
+        """
+        Starts the server
+
+        """
         self.create_app().run(host=self.host, port=self.port)
 
+
+    def __str__(self):
+        """
+        returns the Server as a python program string
+        :return:
+        """
+
+        program = textwrap.dedent(
+            f"""
+            from cloudmesh.analytics.OpenAPIServer import OpenAPIServer
+    
+            server = OpenAPIServer(
+                host = f"{self.host}",
+                path = f"{self.path}",
+                spec = f"{self.spec}",
+                key = f"{self.key}")
+            server.run()
+            :return: 
+            """)
+        return program
+
+
+    def write(self, filename):
+        """
+        Writes a python program into the filename that contains the server
+        details. This fil can be started and will run an OpenAPI server
+
+        :param filename:
+        :return:
+        """
+        content = self.__str__()
+        writefile(filename, content)
 
 
