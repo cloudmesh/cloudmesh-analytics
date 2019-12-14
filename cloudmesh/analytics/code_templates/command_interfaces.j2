@@ -25,8 +25,8 @@ class AnalyticsCommand(PluginCommand):
 
             Usage:
                 analytics codegen sklearn linearmodel [--class_name=VALUE] [--port=PORT]
-                analytics server start [--cloud=CLOUD]
-                analytics server start detached [--cloud=CLOUD]
+                analytics server start [--cloud=CLOUD] [--port=PORT]
+                analytics server start detached [--cloud=CLOUD] [--port=PORT]
                 analytics server stop [--cloud=CLOUD]
                 analytics file upload [--filename=FILENAME]
                 analytics file list
@@ -49,7 +49,7 @@ class AnalyticsCommand(PluginCommand):
         setting_path = os.path.join(
             (os.path.dirname(__file__)), 'command_setting.json')
 
-        port = arguments["--port"] or 8000
+        port = arguments["--port"] or str(8000)
 
         if arguments.codegen:
             cms_autoapi.main_generate(arguments['--class_name'], port)
@@ -68,7 +68,7 @@ class AnalyticsCommand(PluginCommand):
 
         if arguments.server and arguments.start and arguments.detached and arguments['--cloud']:
             p = subprocess.Popen(
-                args=['cms', 'analytics', 'server', 'start', '--cloud='+arguments['--cloud']],
+                args=['cms', 'analytics', 'server', 'start', '--cloud='+arguments['--cloud'], "--port="+port],
                 stdout=False)
             
             with open(setting_path, 'r') as settings:

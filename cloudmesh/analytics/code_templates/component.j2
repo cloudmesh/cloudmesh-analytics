@@ -13,7 +13,7 @@ paths:
   /file/upload:
     post:
       summary: uploading file to the server
-      operationId: {{all.files.operation_id}}.upload
+      operationId: file.upload
       requestBody:
         description: the file uploaded by the user
         required: true
@@ -47,7 +47,7 @@ paths:
   /file/list:
     get:
       summary: list all uploaded files
-      operationId:  {{all.files.operation_id}}.list
+      operationId:  file.list
       responses:
         '200':
           description: upload succeed
@@ -64,7 +64,7 @@ paths:
   /file/read/{file_name}:
     get:
       summary: read file content
-      operationId: {{all.files.operation_id}}.read
+      operationId: file.read
       parameters:
         - in: path
           name: file_name   # Note the name is the same as in the path

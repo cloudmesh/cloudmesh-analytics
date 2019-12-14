@@ -17,7 +17,7 @@ def save_obj(obj, class_name):
     return
 
 
-def {{class.class_name}}_constructor(body):
+def constructor(body):
     try:
         paras = body['paras']
         res = {{class.class_name}}(**paras)
@@ -27,7 +27,7 @@ def {{class.class_name}}_constructor(body):
     return jsonify({'return': 'successfully constructed'})
 
 {% for member_name, parameter in class.members.items() %}
-def {{class.class_name}}_{{member_name}}(body):
+def {{member_name}}(body):
     if 'X' in body['paras'].keys() and isinstance(body['paras']['X'], str):
         file_name = body['paras']['X']
         body['paras']['X'] = file.read_csv(file_name)
