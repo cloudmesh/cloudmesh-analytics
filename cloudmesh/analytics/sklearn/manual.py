@@ -1,6 +1,12 @@
 import sklearn.linear_model
 from cloudmesh.analytics.cms_autoapi import SignatureScraper
 
+"""
+import sklearn
+import sklearn.linear_model
+help (sklearn.linear_model.LinearRegression)
+"""
+
 def manual(service):
     # Type table
     type_table = {
