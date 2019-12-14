@@ -18,9 +18,6 @@ class OpenAPIServer:
 
         from cloudmesh.analytics.OpenAPIServer import OpenAPIServer
 
-        import sys
-        sys.path.append(".")
-
         server = OpenAPIServer(
             host = "127.0.0.1",
             path = ".",
@@ -41,6 +38,7 @@ class OpenAPIServer:
         self.spec = spec
         self.key = key
         self.host = host
+        sys.path.append(path)
 
     def create_app(self, config=None):
         """To create a flask app
