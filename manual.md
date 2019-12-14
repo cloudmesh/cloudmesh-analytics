@@ -7,6 +7,18 @@ LOGIC IS MISSING E>G> WHAT DOES THIS DO AND WHY ITS USEFUL AND WHAT STEPS ARE NE
 GREGOR MAY HELP HER IF HE FINDS TIOME ;-) WHICH HE DOES NOT ;-)
 
 
+cms anlyntics server generate --port=PORT --class_name=LineraRegression
+
+>  LineraRegrassion
+      Dockerfile
+      server.py
+      yaml
+      analytics.py
+      file.py
+      requirements.txt
+      test_upload_files.scv
+
+
 
 ## Instalation
 
