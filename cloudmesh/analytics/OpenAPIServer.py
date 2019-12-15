@@ -92,8 +92,7 @@ class OpenAPIServer:
         _app.add_api(self.spec)
         _app.app.config.from_mapping(
             SECRET_KEY=self.key,
-            # TODO: The os.getcwd is changed. the default path need fix
-            UPLOAD_FOLDER=self.path
+            UPLOAD_FOLDER=f"{self.path}/data"
         )
 
         if config is None:

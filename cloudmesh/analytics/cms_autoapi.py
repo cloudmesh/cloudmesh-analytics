@@ -327,6 +327,7 @@ def main_generate(class_name,
 
     Shell.mkdir(f"{directory}/{class_name}")
     Shell.mkdir(f"{directory}/{class_name}/cloudmesh")
+    Shell.mkdir(f"{directory}/{class_name}/data")
     writefile(f"{directory}/{class_name}/cloudmesh/__init__.py", "")
 
     #
