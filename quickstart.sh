@@ -2,18 +2,29 @@
 
 export PORT=8000
 
+#
+# starting the server
+#
 cms analytics codegen sklearn linearmodel --service=LinearRegression --port=$PORT --dir=./build --host=127.0.0.1
 cms analytics server start  --cloud=local --service=LinearRegression --dir=./build
-
-# touch build/LinearRegression/data/a.csv
-# cms analytics file list LinearRegression
-
-cms analytics file upload LinearRegression tests/test_uploaded_files/user_input_data.csv
 
 # --detached
 #sleep 3
 
-# ok #cms analytics LinearRegression --port=$PORT
+#
+# NOT SURE WHAT THIS DOES
+#
+# cms analytics LinearRegression --port=$PORT
+
+
+#
+# Testing FILE functions
+#
+# touch build/LinearRegression/data/test.csv
+# cms analytics file upload LinearRegression tests/data/user_input_data.csv
+# cms analytics file list LinearRegression
+
+
 
 
 ##cms analytics LinearRegression fit X="[[1,2]]" y="[[3,4]]" --port=$PORT
