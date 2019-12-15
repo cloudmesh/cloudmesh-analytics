@@ -325,7 +325,7 @@ def main_generate(class_name, port=8000):
     code_gen.generate_handlers(
         output_name='analytics.py', template_name='handlers.j2')
     code_gen.generate_file_operations(
-        output_name='file.py', template_name='file.j2')
+        output_name='file.py', template_name='file.py')
     code_gen.generate_server(
         output_name='server.py', template_name='server.j2')
     code_gen.generate_api_specification(

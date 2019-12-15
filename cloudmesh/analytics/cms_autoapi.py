@@ -378,7 +378,7 @@ def main_generate(class_name,
 
     generator.generate_file_operations(
         output_name=f'{class_name}/cloudmesh/file.py',
-        template_name='file.j2')
+        template_name='file.py')
 
     #
     # Generate the server code while using a build in cloudmesh specific server
