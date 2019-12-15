@@ -56,7 +56,7 @@ class AnalyticsCommand(PluginCommand):
                 analytics file list
                 analytics file read PARAMETERS...
                 analytics run SERVICE PARAMETERS...
-                analytics SERVICE
+                analytics SERVICE [--cloud=CLOUD] [--port=PORT] [-v]
 
             This command manages the cloudmesh analytics server on the given cloud.
             If the cloud is not spified it is run on localhost
@@ -81,6 +81,9 @@ class AnalyticsCommand(PluginCommand):
                 SERVICE  the name of the service
                 PARAMETERS  the PARAMETERS to be send toy the service
 
+            Description:
+
+               http://127.0.0.1:8000/cloudmesh/LinearRegression/ui/
         """
 
         map_parameters(arguments,
@@ -89,10 +92,11 @@ class AnalyticsCommand(PluginCommand):
                        'host',
                        'dir',
                        'cloud',
-                       'port')
+                       'port',
+                       'v')
 
         port = arguments.port or str(8000)
-
+        ip = f"{arguments.cloud}:{arguments.port}"
 
         # pprint(arguments)
 
@@ -118,17 +122,8 @@ class AnalyticsCommand(PluginCommand):
                     parameters.append(command)
                 else:
                     flag.append(command)
-            #
-            # I DO NOT KNOW WHAT THE NEXT STUFF IS?
-            #
-            with open(setting_path, 'r') as settings:
-                settings = json.load(settings)
-                ip = os.path.join(settings['cloud']["localhost"]['ip'])
 
-            return parameters, flag, ip
-
-        setting_path = os.path.join(
-            (os.path.dirname(__file__)), 'command_setting.json')
+            return parameters, flag
 
 
         if arguments.codegen and arguments.function and arguments.FILENAME:
@@ -186,23 +181,23 @@ class AnalyticsCommand(PluginCommand):
                 json.dump(settings, new_settings)
 
         elif arguments.run and arguments.SERVICE:
-            parameters, flag, ip = find_server_parameters()
+            parameters, flag = find_server_parameters()
             res = Request.run(flag[0], flag[1:], parameters, command, ip)
             print(res)
 
         elif arguments.file and arguments.upload:
-            parameters, flag, ip = find_server_parameters()
+            parameters, flag = find_server_parameters()
             res = Request.file_upload(parameters, ip)
             print(res)
 
         elif arguments.file and arguments.list:
-            parameters, flag, ip = find_server_parameters()
+            parameters, flag = find_server_parameters()
 
             res = Request.file_list(parameters, ip)
             print(res)
 
         elif arguments.file and arguments.read:
-            parameters, flag, ip = find_server_parameters()
+            parameters, flag = find_server_parameters()
             res = Request.file_upload(parameters, ip)
             print(res)
 
@@ -302,9 +297,16 @@ class AnalyticsCommand(PluginCommand):
                 print("needs to be fixed")
 
         if arguments.SERVICE:
+
             service = arguments.SERVICE
-            parameters, flag, ip = find_server_parameters()
-            res = Request.simple_run(service, parameters, ip)
+            parameters, flag = find_server_parameters()
+
+            host = arguments.cloud or "127.0.0.1"
+            port = arguments.port or 8000
+
+            ip = f"{host}:{port}"
+
+            res = Request.constructor(service, ip, verbose=arguments["-v"])
             print(res)
 
         return ""

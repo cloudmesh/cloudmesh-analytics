@@ -1,1 +1,1 @@
-{"cwd.cloud": "local", "cloud": {"azure": {"ip": ""}, "chameleon": {"ip": ""}, "localhost": {"ip": "localhost:8000/cloudmesh-analytics"}}, "server_id": 28904}
+{"cwd.cloud": "local", "cloud": {"azure": {"ip": ""}, "chameleon": {"ip": ""}, "localhost": {"ip": "localhost:8000/cloudmesh"}}, "server_id": 28904}

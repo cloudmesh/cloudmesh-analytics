@@ -302,7 +302,7 @@ def main_generate(class_name, port=8000):
         type_table=type_table)
 
     template_folder = os.path.join(
-        (os.path.dirname(__file__)), 'code_templates')
+        (os.path.dirname(__file__)), 'templates')
     output_folder = os.path.join(
         (os.path.dirname(__file__)), 'build')
 

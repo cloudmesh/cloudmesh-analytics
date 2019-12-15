@@ -34,7 +34,7 @@ def generate(class_name):
             function_operation_id_root='analytics',
             file_operation_id_root='file',
             server_url='http://localhost:5000/cloudmesh-analytics',
-            template_folder='./code_templates',
+            template_folder='./templates',
             output_folder='./build'
         )
 

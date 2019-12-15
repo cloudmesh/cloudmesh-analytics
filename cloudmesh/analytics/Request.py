@@ -1,7 +1,14 @@
 import json
 import requests
+import webbrowser
 
 class Request(object):
+
+    @staticmethod
+    def ui(self, service, root_url):
+        url = f"{root_url}/{service}"
+        print (url)
+        open(url, new=0, autoraise=True)
 
     @staticmethod
     def get_parameters(parameters):
@@ -26,10 +33,24 @@ class Request(object):
         return r.text
 
     @staticmethod
+    def constructor(service, root_url, verbose=False):
+        url = f'http://{root_url}/cloudmesh/{service}/constructor'
+        payload = {
+            'paras': dict({})
+        }
+        if verbose:
+            print ("Contacting:", url)
+            print ("payload:", payload)
+        r = requests.post(url, json=payload)
+        return r.text
+
+
+    @staticmethod
     def simple_run(service, parameters, root_url):
         data = Request.get_parameters(parameters)
         url = f'http://{root_url}/{service}/constructor'
         print('url:', url)
+        print ('data:', data)
         payload = {
             'paras': data
         }

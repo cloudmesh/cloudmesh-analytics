@@ -64,7 +64,7 @@ def test_integrated_code_generator(linear_regression_signatures):
         function_operation_id_root='analytics',
         file_operation_id_root='file',
         server_url='http://localhost:8000/cloudmesh-analytics',
-        template_folder='./tests/test_assets/code_templates',
+        template_folder='./tests/test_assets/templates',
         output_folder='./tests/test_assets/build'
     )
     code_gen.generate_command_runner(
@@ -159,7 +159,7 @@ class TestYAMLGenerator:
     def test_generate_yaml(self, table_yamlInfo):
         """Generate yaml file using the python template engine"""
         env = Environment(loader=FileSystemLoader(
-            './tests/test_assets/code_templates'))
+            './tests/test_assets/templates'))
         template = env.get_template('component.yaml')
 
         all = table_yamlInfo
