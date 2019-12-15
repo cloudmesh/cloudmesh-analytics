@@ -2,10 +2,13 @@ from __future__ import print_function
 from cloudmesh.shell.command import command, map_parameters
 from cloudmesh.shell.command import PluginCommand
 from cloudmesh.common.console import Console
-from cloudmesh.common.util import path_expand, readfile
+from cloudmesh.common.util import path_expand, readfile, banner
 from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.run.background import run
+from cloudmesh.analytics.Request import Request
 from cloudmesh.analytics.sklearn.manual import sklearn
+from cloudmesh.common.Shell import Shell
+
 import importlib
 
 from cloudmesh.analytics.sklearn.manual import manual
@@ -22,69 +25,7 @@ import subprocess
 import signal
 from pprint import pprint
 
-import sys
-
 sys.path.append(".")
-
-
-class Request(object):
-
-    @staticmethod
-    def get_parameters(parameters):
-        data = {}
-        for parameter in parameters:
-            attribute, value = parameter.split("=")
-            try:
-                data[attribute] = json.loads(value)
-            except:
-                data[attribute] = value
-        return data
-
-    @staticmethod
-    def run(service, flag, parameters, command, root_url):
-        data = Request.get_parameters(parameters)
-        name = flag[0]
-        url = f'http://{root_url}/{service}_{name}'
-        payload = {
-            'paras': data
-        }
-        r = requests.post(url, json=payload)
-        return r.text
-
-    @staticmethod
-    def simple_run(service, parameters, root_url):
-        data = Request.get_parameters(parameters)
-        url = f'http://{root_url}/{service}/constructor'
-        print('url:', url)
-        payload = {
-            'paras': data
-        }
-        r = requests.post(url, json=payload)
-        return r.text
-
-    @staticmethod
-    def file_upload(parameters, root_url):
-        data = Request.get_parameters(parameters)
-        url = f'http://{root_url}/file/upload'
-        files = {'file': open(data['filename'], 'rb')}
-        r = requests.post(url, files=files)
-        return r.text
-
-    @staticmethod
-    def file_list(parameters, root_url):
-        data = Request.get_parameters(parameters)
-        url = f'http://{root_url}/file/list'
-        r = requests.get(url)
-        return r.text
-
-    @staticmethod
-    def file_read(parameters, root_url):
-        data = Request.get_parameters(parameters)
-        print('data:', data)
-        filename = data["filename"]
-        url = f'http://{root_url}/file/read/{filename}'
-        r = requests.get(url)
-        return r.text
 
 
 class AnalyticsCommand(PluginCommand):
@@ -108,6 +49,7 @@ class AnalyticsCommand(PluginCommand):
                     [--host=HOST]
                 analytics server start --service=SERVICE
                     [--cloud=CLOUD]
+                    [--dir=DIR]
                     [--detached]
                 analytics server stop [--service=SERVICE] [--cloud=CLOUD]
                 analytics file upload PARAMETERS...
@@ -148,7 +90,7 @@ class AnalyticsCommand(PluginCommand):
                        'cloud',
                        'port')
 
-        pprint(arguments)
+        # pprint(arguments)
 
         def find_server_parameters():
             """
@@ -211,13 +153,17 @@ class AnalyticsCommand(PluginCommand):
 
         elif arguments.codegen and arguments.sklearn:
 
+            banner("Generate the Cloudmesh OpenAPI Server")
+
             service = arguments.service
             directory = arguments.dir
             host = arguments.host
 
-            print(service)
-            print(directory)
-            print(host)
+            print("  Service:  ", service)
+            print("  Directory:", directory)
+            print("  Host:     ", host)
+            print("  Port:     ", port)
+            print()
 
             cms_autoapi.main_generate(service,
                                       directory,
@@ -231,26 +177,6 @@ class AnalyticsCommand(PluginCommand):
             server_pid = settings['server_id']
             os.kill(server_pid, signal.SIGKILL)
             settings['server_id'] = ""
-
-            with open(setting_path, 'w') as new_settings:
-                json.dump(settings, new_settings)
-
-        elif arguments.server and arguments.start and arguments.detached and \
-            arguments.cloud:
-            p = subprocess.Popen(
-                args=['cms',
-                      'analytics',
-                      'server',
-                      'start',
-                      f'--cloud={arguments.cloud}',
-                      f'--class_name={arguments.class_name}',
-                      f"--port={port}"],
-                stdout=False)
-
-            with open(setting_path, 'r') as settings:
-                settings = json.load(settings)
-
-            settings['server_id'] = p.pid
 
             with open(setting_path, 'w') as new_settings:
                 json.dump(settings, new_settings)
@@ -276,39 +202,61 @@ class AnalyticsCommand(PluginCommand):
             res = Request.file_upload(parameters, ip)
             print(res)
 
-        # Configure current working server
+
+        elif arguments.server and arguments.start and arguments.detached and \
+            arguments.cloud:
+            p = subprocess.Popen(
+                args=['cms',
+                      'analytics',
+                      'server',
+                      'start',
+                      f'--cloud={arguments.cloud}',
+                      f'--class_name={arguments.class_name}',
+                      f"--port={port}"],
+                stdout=False)
+
+            # with open(setting_path, 'r') as settings:
+            #    settings = json.load(settings)
+            #
+            # settings['server_id'] = p.pid
+            #
+            # with open(setting_path, 'w') as new_settings:
+            #    json.dump(settings, new_settings)
+
+
         if arguments.server and arguments.start and not arguments.detached and \
             arguments.cloud:
             settings = None
 
-            with open(setting_path, 'r') as settings:
-                settings = json.load(settings)
+            directory = arguments.dir
+            service = arguments.service
 
-            settings['cwd.cloud'] = arguments.cloud
+            if arguments.cloud in ['local', '127.0.0.1']:
 
-            with open(setting_path, 'w') as new_settings:
-                json.dump(settings, new_settings)
+                banner('Manaul')
 
-            service = arguments.class_name
+                print('comamnd to issue the manual')
 
-            build_path = Path(os.path.dirname(__file__)) / '../build'
-            writefile(f'{build_path}/__init__.py', '')
+                banner('OpenAPI Manual')
 
-            # p = f'cloudmesh.analytics.build.{service}_server.Server'
-            p = f'cloudmesh.analytics.build'
+                print('  The Online manaul is available at ')
+                print()
+                print (f"  http://127.0.0.1:{port}/cloudmesh/{service}/ui")
+                print()
 
-            # m = __import__(p, fromlist=[f'{service}_server.Server'])
 
-            m = __import__(p)
-            m = getattr(getattr(m, 'analytics'), 'build')
-            # m = getattr(getattr(getattr(m, 'analytics'), 'build'),f'{service}_server')
-            pprint(m.__dict__)
-            # eval(f'from cloudmesh.analytics.build.{service}_server import run_app')
-            # mod = __import__(f'cloudmesh.analytics.build.{service}_server')
+            banner(f'Start the Server {service}')
 
-            # server.run_app()
+            which = Shell.which("python")
+            version = Shell.execute("python", ["--version"])
 
-            return
+            command = f'cd {directory}/{service}; python {service}_server.py'
+            print()
+            print ("  Python :", version, which)
+            print ("  Command:", command)
+            os.system(command)
+
+            return ""
         else:
             with open(setting_path, 'r') as settings:
                 settings = json.load(settings)

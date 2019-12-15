@@ -53,7 +53,7 @@ class CodeGenerator:
             server_root_url=self.server_url)
         self.all.update(all)
 
-        pprint(self.all)
+        # pprint(self.all)
 
 
     def _generate_from_template(self, role_name, template_name):
@@ -351,8 +351,8 @@ def main_generate(class_name,
                                    'code_templates')
     directory = path_expand(directory)
 
-    print(template_folder)
-    print(directory)
+    # print(template_folder)
+    # print(directory)
 
     generator = CodeGenerator(
         func_signatures=sigs,

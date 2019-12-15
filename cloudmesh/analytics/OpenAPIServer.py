@@ -62,9 +62,10 @@ class OpenAPIServer:
         else:
             self.path = path_expand(path)
 
-        print("Server Path:", self.path)
+        print("  Server Path:", self.path)
+        print()
         sys.path.append(self.path)
-        banner(self.path)
+        # banner(self.path)
 
     def create_app(self, config=None):
         """

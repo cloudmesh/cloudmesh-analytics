@@ -28,7 +28,7 @@ def readfile(filename):
 # add minimum requirements here
 #
 requiers = """
-connexion
+connexion[swagger-ui]
 flask
 scikit-learn
 numpy
