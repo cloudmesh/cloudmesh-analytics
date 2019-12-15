@@ -40,6 +40,8 @@ cms analytics server start  --cloud=local --service=LinearRegression --dir=./bui
 #
 ##cms analytics LinearRegression predict X=user_input_data
 #
-#cms analytics file read filename=user_input_data
-#cms analytics server stop
+##cms analytics file read filename=user_input_data
 
+
+
+#ok# cms analytics server stop LinearRegression
