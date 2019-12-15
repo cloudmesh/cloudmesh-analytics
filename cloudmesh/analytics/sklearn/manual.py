@@ -8,18 +8,20 @@ import sklearn.linear_model
 help (sklearn.linear_model.LinearRegression)
 """
 
+
+# noinspection PyPep8Naming
 class sklearn:
 
     @staticmethod
     def get_help(module, function):
-        print (module, function)
+        print(module, function)
         try:
-            #_module = __import__(module, fromlist=[function])
-            #print (_module.__dict__)
+            # _module = __import__(module, fromlist=[function])
+            # print (_module.__dict__)
             # eval (help(f"{module}.{function}"))
             help(f"{module}.{function}")
         except ImportError as e:
-            print (e)
+            print(e)
 
 
 def manual(service):
@@ -61,11 +63,11 @@ def manual(service):
         # create method strings
         #
         for name, parameters in entry['members'].items():
-            command = ["analytics {class_name} {name}".format(**entry, name=name)]
+            command = [
+                "analytics {class_name} {name}".format(**entry, name=name)]
             for parameter in parameters:
                 command.append(f"[{parameter}=VALUE]")
             content.append(' '.join(command))
         content.append('')
 
     return "\n".join(content)
-

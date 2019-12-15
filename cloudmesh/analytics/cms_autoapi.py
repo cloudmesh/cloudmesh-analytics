@@ -13,6 +13,7 @@ from cloudmesh.common.util import writefile
 from cloudmesh.analytics.OpenAPIServer import OpenAPIServer
 from pprint import pprint
 
+
 class CodeGenerator:
     """Generate code for REST API applications
     """
@@ -74,8 +75,7 @@ class CodeGenerator:
             server_root_url=self.server_url)
         self.all.update(all)
 
-        pprint (self.all)
-
+        pprint(self.all)
 
         self._generate_from_template(output_name, template_name)
 
@@ -113,10 +113,9 @@ class CodeGenerator:
                 'operation_id': f'{class_i_name}.constructor',
                 'paras': {}}
 
-            for init_para_name, init_para_type in class_i[
-                'constructor'].items():
-                constructor_yaml_info['paras'][init_para_name] = {
-                    'name': init_para_name, 'type': init_para_type}
+            for _name, _type in class_i['constructor'].items():
+                constructor_yaml_info['paras'][_name] = {
+                    'name': _name, 'type': _type}
             table_yaml[count] = constructor_yaml_info
 
             # build the yaml information table for class members
@@ -128,11 +127,13 @@ class CodeGenerator:
                         'request_method': 'post',
                         'doc_string': 'this is a doc string',
                         'operation_id': f'{class_i_name}.{member_name}',
-                        'paras': {}}
+                        'paras': {}
+                    }
 
-                    for member_para_name, member_para_type in parameters.items():
-                        member_yaml_info['paras'][member_para_name] = {
-                            'name': member_para_name, 'type': member_para_type}
+                    for _name, _type in parameters.items():
+                        member_yaml_info['paras'][_name] = {
+                            'name': _name, 'type': _type
+                        }
                     table_yaml[count] = member_yaml_info
         res = {
             'header': {'server_url': server_root_url},
@@ -225,12 +226,11 @@ class SignatureScraper:
                 current_members = {}
                 current_class['members'] = current_members
 
-                for member_name, f in self.get_public_members(
-                    class_obj).items():
+                for name, f in self.get_public_members(class_obj).items():
                     if inspect.isfunction(f):
                         doc = inspect.getdoc(f)
                         paras_dict = self.get_parameters(doc, type_table)
-                        current_members[member_name] = paras_dict
+                        current_members[name] = paras_dict
                     else:
                         continue
             # Ignore the classes that do not have signatures
@@ -316,7 +316,6 @@ class SignatureScraper:
 def main_generate(class_name,
                   directory,
                   port=8000):
-
     #
     # set up dir structure
     #
@@ -347,7 +346,8 @@ def main_generate(class_name,
         classes=classes,
         type_table=type_table)
 
-    template_folder = os.path.join((os.path.dirname(__file__)), 'code_templates')
+    template_folder = os.path.join((os.path.dirname(__file__)),
+                                   'code_templates')
     directory = path_expand(directory)
 
     print(template_folder)
@@ -367,8 +367,6 @@ def main_generate(class_name,
         service=class_name
     )
 
-
-
     generator.generate_api_specification(
         output_name=f'{class_name}/{class_name}.yaml',
         template_name='component.j2')
@@ -381,7 +379,6 @@ def main_generate(class_name,
         output_name=f'{class_name}/file.py',
         template_name='file.j2')
 
-
     #
     # Generate the server code while using a build in cloudmesh specific server
     #
@@ -393,7 +390,7 @@ def main_generate(class_name,
     server.write(f'{directory}/{class_name}/{class_name}_server.py')
 
     generator.output_folder = os.path.join((os.path.dirname(__file__)),
-                                          'command')
+                                           'command')
     print(directory)
 
     # generator.generate_command_setting(

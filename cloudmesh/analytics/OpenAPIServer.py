@@ -13,6 +13,7 @@ from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import banner
 from pathlib import Path
 
+
 class OpenAPIServer:
     """
     This is a Conveneinet method to create an OpenAPI server with
@@ -57,7 +58,6 @@ class OpenAPIServer:
         else:
             self.path = path_expand(path)
 
-
         print("Server Path:", self.path)
         sys.path.append(self.path)
         banner(self.path)
@@ -65,7 +65,8 @@ class OpenAPIServer:
     def create_app(self, config=None):
         """
         Creates the server while using the config file. In addition some
-        configuration parameters are used that are defined at instantiation time.
+        configuration parameters are used that are defined at instantiation
+        time.
 
         :param config: parameters passed to the flas server
 
@@ -75,7 +76,7 @@ class OpenAPIServer:
         if self.path == ".":
             self.path = os.getcwd()
 
-        print ("YYYY", self.path)
+        print("YYYY", self.path)
 
         # ensure the file folder exists
         try:
@@ -88,7 +89,7 @@ class OpenAPIServer:
         _app.add_api(self.spec)
         _app.app.config.from_mapping(
             SECRET_KEY=self.key,
-            #TODO: The os.getcwd is changed. the default path need fix
+            # TODO: The os.getcwd is changed. the default path need fix
             UPLOAD_FOLDER=self.path
         )
 
@@ -107,7 +108,6 @@ class OpenAPIServer:
 
         """
         self.create_app().run(host=self.host, port=self.port)
-
 
     def __str__(self):
         """
@@ -128,7 +128,6 @@ class OpenAPIServer:
             """)
         return program
 
-
     def write(self, filename, path="."):
         """
         Writes a python program into the filename that contains the server
@@ -141,5 +140,3 @@ class OpenAPIServer:
         content = self.__str__()
         self.path = path
         writefile(filename, content)
-
-
