@@ -52,9 +52,9 @@ class AnalyticsCommand(PluginCommand):
                     [--dir=DIR]
                     [--detached]
                 analytics server stop [--service=NAME] [--cloud=CLOUD]
-                analytics file upload PARAMETERS... [--cloud=CLOUD] [--port=PORT]
-                analytics file list [--cloud=CLOUD] [--port=PORT]
-                analytics file read PARAMETERS... [--cloud=CLOUD] [--port=PORT]
+                analytics file upload SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
+                analytics file list SERVICE [--cloud=CLOUD] [--port=PORT]
+                analytics file read SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
                 analytics run SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
                 analytics SERVICE [--cloud=CLOUD] [--port=PORT] [-v]
 
@@ -183,15 +183,29 @@ class AnalyticsCommand(PluginCommand):
 
         elif arguments.file and arguments.upload:
             parameters, flag = find_server_parameters()
+
+            host = arguments.cloud or "127.0.0.1"
+            port = arguments.port or 8000
+
+            ip = f"{host}:{port}"
+
+
             res = Request.file_upload(parameters, ip)
             print(res)
             return ""
 
 
         elif arguments.file and arguments.list:
+
             parameters, flag = find_server_parameters()
 
-            res = Request.file_list(parameters, ip)
+            host = arguments.cloud or "127.0.0.1"
+            port = arguments.port or 8000
+            service = arguments.SERVICE
+
+            url = f"{host}:{port}/cloudmesh/{service}"
+
+            res = Request.file_list(url)
             print(res)
             return ""
 

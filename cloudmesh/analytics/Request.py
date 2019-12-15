@@ -59,25 +59,27 @@ class Request(object):
 
     @staticmethod
     def file_upload(parameters, root_url):
+
         data = Request.get_parameters(parameters)
-        url = f'http://{root_url}/file/upload'
+
+        url = f'http://{root_url}/cloudmesh/file/upload'
         files = {'file': open(data['filename'], 'rb')}
         r = requests.post(url, files=files)
         return r.text
 
     @staticmethod
-    def file_list(parameters, root_url):
-        data = Request.get_parameters(parameters)
-        url = f'http://{root_url}/file/list'
-        r = requests.get(url)
+    def file_list(root_url):
+        r = requests.get(f'http://{root_url}/file/list')
         return r.text
 
     @staticmethod
     def file_read(parameters, root_url):
+
         data = Request.get_parameters(parameters)
+
         print('data:', data)
         filename = data["filename"]
-        url = f'http://{root_url}/file/read/{filename}'
+        url = f'http://{root_url}/cloudmesh/file/read/{filename}'
         r = requests.get(url)
         return r.text
 

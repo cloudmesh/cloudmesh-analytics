@@ -27,7 +27,8 @@ class CodeGenerator:
                  template_folder=None,
                  output_folder=None,
                  port=8000,
-                 service=None):
+                 service=None,
+                 cloud=None):
         self.func_signatures = func_signatures
         self.cwd = cwd
         self.function_operation_id_root = function_operation_id_root
@@ -37,10 +38,13 @@ class CodeGenerator:
         self.output_folder = output_folder
         self.port = port
         self.service = service
+        self.cloud = cloud
 
         self.all = {
-            'service': service,
+            'cloud': self.cloud,
             'port': self.port,
+            'basepath': f"http://{cloud}:{port}/cloudmesh",
+            'service': service,
             'class_name': service,
             'cwd': self.cwd,
             'sigs': self.func_signatures
