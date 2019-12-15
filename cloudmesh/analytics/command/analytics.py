@@ -106,13 +106,7 @@ class AnalyticsCommand(PluginCommand):
             finds parameters from the commandline arguments. This includes
             any string with an = sign any string without.
 
-            TODO: FIX:
-
-            There is alos an undocumented hardcoded configuration json file
-            which should actually be a yaml file and should be able to be passed
-            as a parameter or placed into the buld dir.
-
-            :return: parameters, flgs, ip
+            :return: parameters, flags
             """
             commands = arguments.PARAMETERS
             parameters = []
@@ -169,38 +163,37 @@ class AnalyticsCommand(PluginCommand):
                                       port)
 
         elif arguments.server and arguments.stop:
-            with open(setting_path, 'r') as settings:
-                settings = json.load(settings)
-
             print('killing the server')
-            server_pid = settings['server_id']
-            os.kill(server_pid, signal.SIGKILL)
-            settings['server_id'] = ""
-
-            with open(setting_path, 'w') as new_settings:
-                json.dump(settings, new_settings)
+            # os.kill(server_pid, signal.SIGKILL)
+            raise NotImplementedError
 
         elif arguments.run and arguments.SERVICE:
             parameters, flag = find_server_parameters()
             res = Request.run(flag[0], flag[1:], parameters, command, ip)
             print(res)
+            return ""
+
 
         elif arguments.file and arguments.upload:
             parameters, flag = find_server_parameters()
             res = Request.file_upload(parameters, ip)
             print(res)
+            return ""
+
 
         elif arguments.file and arguments.list:
             parameters, flag = find_server_parameters()
 
             res = Request.file_list(parameters, ip)
             print(res)
+            return ""
+
 
         elif arguments.file and arguments.read:
             parameters, flag = find_server_parameters()
             res = Request.file_upload(parameters, ip)
             print(res)
-
+            return ""
 
         elif arguments.server and arguments.start and arguments.cloud:
 
@@ -289,12 +282,8 @@ class AnalyticsCommand(PluginCommand):
 
             return ""
         else:
-            with open(setting_path, 'r') as settings:
-                settings = json.load(settings)
-                # ip = os.path.join(settings['cloud'][settings['cwd.cloud']]['ip'])
-                ip = os.path.join(settings['cloud']["localhost"]['ip'])
-                # print(Request.run(arguments, ip))
-                print("needs to be fixed")
+            # print(Request.run(arguments, ip))
+            print("needs to be fixed")
 
         if arguments.SERVICE:
 
