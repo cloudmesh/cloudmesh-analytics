@@ -9,7 +9,7 @@ from cloudmesh.common.StopWatch import StopWatch
 class TestBenchmark:
     @pytest.fixture
     def test_project_uploaded_file_path(self):
-        return os.path.join(os.path.dirname(__file__), "test_uploaded_files")
+        return os.path.join(os.path.dirname(__file__), "data")
 
     def test_generated_data_file(self, test_project_uploaded_file_path):
         xs = np.random.rand(50, 2)

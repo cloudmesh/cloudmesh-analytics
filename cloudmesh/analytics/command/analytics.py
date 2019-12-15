@@ -52,7 +52,7 @@ class AnalyticsCommand(PluginCommand):
                     [--dir=DIR]
                     [--detached]
                 analytics server stop [--service=NAME] [--cloud=CLOUD]
-                analytics file upload SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
+                analytics file upload SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
                 analytics file list SERVICE [--cloud=CLOUD] [--port=PORT]
                 analytics file read SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
                 analytics run SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
@@ -182,15 +182,15 @@ class AnalyticsCommand(PluginCommand):
 
 
         elif arguments.file and arguments.upload:
-            parameters, flag = find_server_parameters()
 
             host = arguments.cloud or "127.0.0.1"
             port = arguments.port or 8000
+            filename = arguments.FILENAME
+            service = arguments.SERVICE
 
             ip = f"{host}:{port}"
 
-
-            res = Request.file_upload(parameters, ip)
+            res = Request.file_upload(ip, service, filename)
             print(res)
             return ""
 
