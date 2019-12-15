@@ -3,7 +3,7 @@ from sklearn.linear_model import {{class.class_name}}
 {%- endfor %}
 import os
 import numpy as np
-from cloudmesh.analytics.build import file
+from cloudmesh import file
 from flask import jsonify
 
 {% for i, class in all.sigs.items() -%}

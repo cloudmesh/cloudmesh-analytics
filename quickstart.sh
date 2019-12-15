@@ -4,7 +4,6 @@
 cms analytics codegen sklearn linearmodel --service=LinearRegression --port=8000 --dir=./build --host=127.0.0.1
 
 
-#cms analytics codegen sklearn linearmodel --class_name=LinearRegression --port=8000
 #@cms analytics server start detached --cloud=local --class_name=LinearRegression --port=8000
 #sleep 3
 

@@ -24,6 +24,7 @@ class OpenAPIServer:
         from cloudmesh.analytics.OpenAPIServer import OpenAPIServer
 
         server = OpenAPIServer(
+            port = "8000"
             host = "127.0.0.1",
             path = ".",
             spec = "server.yaml",
@@ -34,6 +35,7 @@ class OpenAPIServer:
     use
 
         server = OpenAPIServer(
+            port = "8000"
             host = "127.0.0.1",
             path = ".",
             spec = "server.yaml",
@@ -44,6 +46,7 @@ class OpenAPIServer:
     """
 
     def __init__(self,
+                 port=8000,
                  host="127.0.0.1",
                  path=".",
                  spec="server.yaml",
@@ -52,6 +55,7 @@ class OpenAPIServer:
         self.spec = spec
         self.key = key
         self.host = host
+        self.port = port
 
         if path == ".":
             self.path = "."
@@ -75,8 +79,6 @@ class OpenAPIServer:
 
         if self.path == ".":
             self.path = os.getcwd()
-
-        print("YYYY", self.path)
 
         # ensure the file folder exists
         try:
@@ -119,6 +121,7 @@ class OpenAPIServer:
             from cloudmesh.analytics.OpenAPIServer import OpenAPIServer
     
             server = OpenAPIServer(
+                port = f"{self.port}",
                 host = f"{self.host}",
                 path = f"{self.path}",
                 spec = f"{self.path}/{self.spec}",

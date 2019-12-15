@@ -377,7 +377,7 @@ def main_generate(class_name,
         template_name='handlers.j2')
 
     generator.generate_file_operations(
-        output_name=f'{class_name}/file.py',
+        output_name=f'{class_name}/cloudmesh/file.py',
         template_name='file.j2')
 
     #

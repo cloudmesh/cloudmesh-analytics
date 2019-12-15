@@ -9,13 +9,11 @@ info:
 servers:
   - url: {{all.header.server_url}}
 
-XXXX {{ all.service }}
-
 paths:
   /file/upload:
     post:
       summary: uploading file to the server
-      operationId: cloudmesh.{{ all.service }}.file.upload
+      operationId: cloudmesh.file.upload
       requestBody:
         description: the file uploaded by the user
         required: true
@@ -49,7 +47,7 @@ paths:
   /file/list:
     get:
       summary: list all uploaded files
-      operationId:  cloudmesh.{{ all.service }}.file.list
+      operationId:  cloudmesh.file.list
       responses:
         '200':
           description: upload succeed
@@ -66,7 +64,7 @@ paths:
   /file/read/{file_name}:
     get:
       summary: read file content
-      operationId: cloudmesh.{{ service  }}.file.read
+      operationId: cloudmesh.file.read
       parameters:
         - in: path
           name: file_name   # Note the name is the same as in the path
@@ -91,7 +89,7 @@ paths:
   /{{f.name}}/:
       {{f.request_method}}: # The method should be decided at running. It depends on the type bound to this name.
         summary: {{f.doc_string}} # This is the doc retrieved from signatures
-        operationId: cloudmesh.{{ all.service }}.{{f.operation_id}}
+        operationId: cloudmesh.{{f.operation_id}}
         requestBody: # Request body depends on the signature of the class
           content:
             application/json:
