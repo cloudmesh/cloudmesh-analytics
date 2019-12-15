@@ -43,15 +43,15 @@ class AnalyticsCommand(PluginCommand):
                     [--dir=DIR]
                     [--port=PORT]
                     [--host=HOST]
-                analytics codegen sklearn MODEL --service=SERVICE
+                analytics codegen sklearn MODEL --service=NAME
                     [--port=PORT]
                     [--dir=DIR]
                     [--host=HOST]
-                analytics server start --service=SERVICE
+                analytics server start --service=NAME
                     [--cloud=CLOUD]
                     [--dir=DIR]
                     [--detached]
-                analytics server stop [--service=SERVICE] [--cloud=CLOUD]
+                analytics server stop [--service=NAME] [--cloud=CLOUD]
                 analytics file upload PARAMETERS...
                 analytics file list
                 analytics file read PARAMETERS...
@@ -73,7 +73,7 @@ class AnalyticsCommand(PluginCommand):
                 --host=HOST    The hostname to run this server on
                                [default=127.0.0.1]
 
-                --class_name=NAME   The name of the service (should than not just
+                --service=NAME   The name of the service (should than not just
                                     be name?)
 
             Arguments:
@@ -84,13 +84,18 @@ class AnalyticsCommand(PluginCommand):
         """
 
         map_parameters(arguments,
+                       'detached',
                        'service',
                        'host',
                        'dir',
                        'cloud',
                        'port')
 
+        port = arguments.port or str(8000)
+
+
         # pprint(arguments)
+
 
         def find_server_parameters():
             """
@@ -125,7 +130,6 @@ class AnalyticsCommand(PluginCommand):
         setting_path = os.path.join(
             (os.path.dirname(__file__)), 'command_setting.json')
 
-        port = arguments.port or str(8000)
 
         if arguments.codegen and arguments.function and arguments.FILENAME:
 
@@ -203,58 +207,90 @@ class AnalyticsCommand(PluginCommand):
             print(res)
 
 
-        elif arguments.server and arguments.start and arguments.detached and \
-            arguments.cloud:
-            p = subprocess.Popen(
-                args=['cms',
-                      'analytics',
-                      'server',
-                      'start',
-                      f'--cloud={arguments.cloud}',
-                      f'--class_name={arguments.class_name}',
-                      f"--port={port}"],
-                stdout=False)
+        elif arguments.server and arguments.start and arguments.cloud:
 
-            # with open(setting_path, 'r') as settings:
-            #    settings = json.load(settings)
-            #
-            # settings['server_id'] = p.pid
-            #
-            # with open(setting_path, 'w') as new_settings:
-            #    json.dump(settings, new_settings)
+            pprint (arguments)
 
-
-        if arguments.server and arguments.start and not arguments.detached and \
-            arguments.cloud:
-            settings = None
-
-            directory = arguments.dir
             service = arguments.service
+            directory = arguments.dir
 
-            if arguments.cloud in ['local', '127.0.0.1']:
-
-                banner('Manaul')
-
-                print('comamnd to issue the manual')
-
-                banner('OpenAPI Manual')
-
-                print('  The Online manaul is available at ')
-                print()
-                print (f"  http://127.0.0.1:{port}/cloudmesh/{service}/ui")
-                print()
-
-
-            banner(f'Start the Server {service}')
-
-            which = Shell.which("python")
-            version = Shell.execute("python", ["--version"])
-
-            command = f'cd {directory}/{service}; python {service}_server.py'
+            print("  Service:  ", service)
+            print("  Directory:", directory)
+            print("  Cloud:    ", arguments.cloud)
             print()
-            print ("  Python :", version, which)
-            print ("  Command:", command)
-            os.system(command)
+
+            banner('Manaul')
+
+            print('comamnd to issue the manual')
+
+            print()
+
+            if arguments.detached:
+
+                print ("DETACHED")
+
+                command = [f"python",
+                           f"{service}_server.py"]
+
+                pprint(command)
+
+                directory = Path(f"{directory}/{service}").resolve()
+
+                print (directory)
+
+                try:
+                    p = subprocess.Popen(args=command, stdout=False, cwd=directory)
+
+
+                    banner (f"Pid: {p.pid}")
+
+                except Exception as e:
+                    if "Address already in use":
+                        print()
+                        Console.error("The address is already in use")
+                        print()
+
+                        name = f"{service}"
+                        pid = Shell.get_pid(name)
+                        print(pid, name)
+
+                        if pid is not None:
+                            Console.error(f"There is also a server running on pid {pid}")
+
+                # with open(setting_path, 'r') as settings:
+                #    settings = json.load(settings)
+                #
+                # settings['server_id'] = p.pid
+                #
+                # with open(setting_path, 'w') as new_settings:
+                #    json.dump(settings, new_settings)
+
+                return ""
+
+            else:
+
+                settings = None
+
+                if arguments.cloud in ['local', '127.0.0.1']:
+
+                    banner('OpenAPI Manual')
+
+                    print('  The Online manaul is available at ')
+                    print()
+                    print (f"  http://127.0.0.1:{port}/cloudmesh/{service}/ui")
+                    print()
+
+
+                banner(f'Start the Server {service}')
+
+                which = Shell.which("python")
+                version = Shell.execute("python", ["--version"])
+
+                command = f'cd {directory}/{service}; python {service}_server.py'
+                print()
+                print ("  Python :", version, which)
+                print ("  Command:", command)
+                os.system(command)
 
             return ""
         else:

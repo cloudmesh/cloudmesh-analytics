@@ -348,7 +348,7 @@ def main_generate(class_name,
         type_table=type_table)
 
     template_folder = os.path.join((os.path.dirname(__file__)),
-                                   'code_templates')
+                                   'templates')
     directory = path_expand(directory)
 
     # print(template_folder)
@@ -360,8 +360,7 @@ def main_generate(class_name,
         # BUG: THIS IS WRONG
         function_operation_id_root='.',
         file_operation_id_root='cloudmesh.analytics.build.file',
-        # server_url=f'http://localhost:5000/cloudmesh-analytics/{class_name}',
-        server_url=f'http://localhost:5000/cloudmesh/{class_name}',
+        server_url=f'http://localhost:{port}/cloudmesh/{class_name}',
         template_folder=template_folder,
         output_folder=directory,
         port=port,
