@@ -6,7 +6,7 @@ from cloudmesh.common.util import path_expand, readfile, banner
 from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.run.background import run
 from cloudmesh.analytics.Request import Request
-from cloudmesh.analytics.sklearn.manual import sklearn
+from cloudmesh.analytics.sklearn.manual import helper
 from cloudmesh.common.Shell import Shell
 
 import importlib
@@ -52,10 +52,10 @@ class AnalyticsCommand(PluginCommand):
                     [--dir=DIR]
                     [--detached]
                 analytics server stop [--service=NAME] [--cloud=CLOUD]
-                analytics file upload PARAMETERS...
-                analytics file list
-                analytics file read PARAMETERS...
-                analytics run SERVICE PARAMETERS...
+                analytics file upload PARAMETERS... [--cloud=CLOUD] [--port=PORT]
+                analytics file list [--cloud=CLOUD] [--port=PORT]
+                analytics file read PARAMETERS... [--cloud=CLOUD] [--port=PORT]
+                analytics run SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
                 analytics SERVICE [--cloud=CLOUD] [--port=PORT] [-v]
 
             This command manages the cloudmesh analytics server on the given cloud.
@@ -84,6 +84,13 @@ class AnalyticsCommand(PluginCommand):
             Description:
 
                http://127.0.0.1:8000/cloudmesh/LinearRegression/ui/
+
+            Examples:
+
+               cms analytics manual LinearRegression
+               cms analytics help LinearRegression
+               cms analytics help sklearn.linear_model.LinearRegression
+
         """
 
         map_parameters(arguments,
@@ -137,7 +144,7 @@ class AnalyticsCommand(PluginCommand):
         elif arguments.help:
             function = arguments.FUNCTION
             module, function = function.rsplit(".", 1)
-            sklearn.get_help(module, function)
+            helper.get_help(module, function)
             return ""
 
         elif arguments.manual:
@@ -281,11 +288,8 @@ class AnalyticsCommand(PluginCommand):
                 os.system(command)
 
             return ""
-        else:
-            # print(Request.run(arguments, ip))
-            print("needs to be fixed")
 
-        if arguments.SERVICE:
+        elif arguments.SERVICE:
 
             service = arguments.SERVICE
             parameters, flag = find_server_parameters()

@@ -10,7 +10,7 @@ help (sklearn.linear_model.LinearRegression)
 
 
 # noinspection PyPep8Naming
-class sklearn:
+class helper:
 
     @staticmethod
     def get_help(module, function):
