@@ -11,6 +11,7 @@ from cloudmesh.common.util import path_expand
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import writefile
 from cloudmesh.analytics.OpenAPIServer import OpenAPIServer
+from pprint import pprint
 
 class CodeGenerator:
     """Generate code for REST API applications
@@ -34,37 +35,34 @@ class CodeGenerator:
         self.template_folder = template_folder
         self.output_folder = output_folder
         self.port = port
+        self.service = service
 
-    def _generate_from_template(self, all, role_name, template_name):
+        self.all = {
+            'server': service,
+            'port': self.port,
+            'class_name': service,
+            'cwd': self.cwd,
+            'sigs': self.func_signatures
+        }
+
+    def _generate_from_template(self, role_name, template_name):
         env = Environment(loader=FileSystemLoader(self.template_folder))
         template = env.get_template(template_name)
 
-        res = template.render(all=all)
+        res = template.render(all=self.all)
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
         with open(os.path.join(self.output_folder, role_name), 'w') as f:
             f.write(res)
 
     def generate_server(self, output_name, template_name, class_name):
-        all = {
-            'PORT': self.port,
-            'class_name': class_name
-        }
-        self._generate_from_template(all, output_name, template_name)
+        self._generate_from_template(output_name, template_name)
 
     def generate_handlers(self, output_name, template_name):
-        all = {
-            'cwd': self.cwd,
-            'sigs': self.func_signatures
-        }
-        self._generate_from_template(all, output_name, template_name)
+        self._generate_from_template(output_name, template_name)
 
     def generate_command_setting(self, output_name, template_name):
-        all = {
-            'PORT': self.port
-        }
-        self._generate_from_template(
-            all, output_name, template_name)
+        self._generate_from_template(output_name, template_name)
 
     def generate_api_specification(self,
                                    output_name,
@@ -74,10 +72,15 @@ class CodeGenerator:
             function_operation_id_root=self.function_operation_id_root,
             file_operation_id_root=self.file_operation_id_root,
             server_root_url=self.server_url)
-        self._generate_from_template(all, output_name, template_name)
+        self.all.update(all)
+
+        pprint (self.all)
+
+
+        self._generate_from_template(output_name, template_name)
 
     def generate_file_operations(self, output_name, template_name):
-        self._generate_from_template(all, output_name, template_name)
+        self._generate_from_template(output_name, template_name)
 
     def construct_yaml_fields(self,
                               signatures,
@@ -354,7 +357,7 @@ def main_generate(class_name,
         func_signatures=sigs,
         cwd=directory,
         # BUG: THIS IS WRONG
-        function_operation_id_root='cloudmesh.analytics.build.analytics',
+        function_operation_id_root='.',
         file_operation_id_root='cloudmesh.analytics.build.file',
         # server_url=f'http://localhost:5000/cloudmesh-analytics/{class_name}',
         server_url=f'http://localhost:5000/cloudmesh/{class_name}',
@@ -364,24 +367,11 @@ def main_generate(class_name,
         service=class_name
     )
 
-    # generator.generate_handlers(
-    #     output_name=f'{class_name}_analytics.py',
-    #     template_name='handlers.j2')
-    # generator.generate_file_operations(
-    #     output_name=f'{class_name}_file.py', template_name='file.j2')
-    # generator.generate_server(
-    #     output_name=f'{class_name}_server.py', template_name='server.j2')
-    # generator.generate_api_specification(
-    #     output_name=f'{class_name}_analytics.yaml',
-    #     template_name='component.j2')
-    #
-    # generator.output_folder = os.path.join((os.path.dirname(__file__)),
-    #                                       'command')
-    # print(output_folder)
 
-    # generator.generate_command_setting(
-    #     output_name='command_setting.json',
-    #     template_name='command_setting.j2')
+
+    generator.generate_api_specification(
+        output_name=f'{class_name}/{class_name}.yaml',
+        template_name='component.j2')
 
     generator.generate_handlers(
         output_name=f'{class_name}/cloudmesh/{class_name}.py',
@@ -401,10 +391,6 @@ def main_generate(class_name,
         spec=f"{class_name}.yaml",
         key="dev")
     server.write(f'{directory}/{class_name}/{class_name}_server.py')
-
-    generator.generate_api_specification(
-        output_name=f'{class_name}/{class_name}.yaml',
-        template_name='component.j2')
 
     generator.output_folder = os.path.join((os.path.dirname(__file__)),
                                           'command')

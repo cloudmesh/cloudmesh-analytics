@@ -23,7 +23,9 @@ import signal
 from pprint import pprint
 
 import sys
+
 sys.path.append(".")
+
 
 class Request(object):
 
@@ -146,7 +148,7 @@ class AnalyticsCommand(PluginCommand):
                        'cloud',
                        'port')
 
-        pprint (arguments)
+        pprint(arguments)
 
         def find_server_parameters():
             """
@@ -183,7 +185,6 @@ class AnalyticsCommand(PluginCommand):
 
         port = arguments.port or str(8000)
 
-
         if arguments.codegen and arguments.function and arguments.FILENAME:
 
             filename = arguments.FILENAME
@@ -192,9 +193,9 @@ class AnalyticsCommand(PluginCommand):
 
             module = importlib.import_module(module_name)
             f = getattr(module, name)
-            print (f"from {module_name} import {name}")
-            print (f.__doc__)
-            print (f.__annotations__)
+            print(f"from {module_name} import {name}")
+            print(f.__doc__)
+            print(f.__annotations__)
 
             return ""
 
@@ -217,7 +218,6 @@ class AnalyticsCommand(PluginCommand):
             print(service)
             print(directory)
             print(host)
-
 
             cms_autoapi.main_generate(service,
                                       directory,

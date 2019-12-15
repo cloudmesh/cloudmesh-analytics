@@ -15,6 +15,7 @@ import os
 import subprocess
 import signal
 
+
 class AnalyticsCommand(PluginCommand):
 
     # noinspection PyUnusedLocal
@@ -61,16 +62,18 @@ class AnalyticsCommand(PluginCommand):
             print('killing the server')
             server_pid = settings['server_id']
             os.kill(server_pid, signal.SIGKILL)
-            settings['server_id']=""
-            
+            settings['server_id'] = ""
+
             with open(setting_path, 'w') as new_settings:
                 json.dump(settings, new_settings)
 
-        if arguments.server and arguments.start and arguments.detached and arguments['--cloud']:
+        if arguments.server and arguments.start and arguments.detached and \
+            arguments['--cloud']:
             p = subprocess.Popen(
-                args=['cms', 'analytics', 'server', 'start', '--cloud='+arguments['--cloud']],
+                args=['cms', 'analytics', 'server', 'start',
+                      '--cloud=' + arguments['--cloud']],
                 stdout=False)
-            
+
             with open(setting_path, 'r') as settings:
                 settings = json.load(settings)
 
@@ -80,7 +83,8 @@ class AnalyticsCommand(PluginCommand):
                 json.dump(settings, new_settings)
 
         # Configure current working server
-        if arguments.server and arguments.start and not arguments.detached and arguments['--cloud']:
+        if arguments.server and arguments.start and not arguments.detached and \
+            arguments['--cloud']:
             settings = None
             with open(setting_path, 'r') as settings:
                 settings = json.load(settings)
@@ -102,102 +106,112 @@ class AnalyticsCommand(PluginCommand):
         return ""
 
 def run_command(arguments, root_url):
-    
-    if arguments.LinearRegression and arguments.fit and ( arguments['--X'] or  arguments['--y'] or  arguments['--sample_weight'] or  True):
+    if arguments.LinearRegression and arguments.fit and (
+        arguments['--X'] or arguments['--y'] or arguments[
+        '--sample_weight'] or True):
         url = 'http://' + root_url + '/LinearRegression_fit'
         payload = {'paras': {}}
-        
+
         if arguments['--X'] is not None:
             try:
-                payload['paras']['X']= json.loads(arguments['--X'])
+                payload['paras']['X'] = json.loads(arguments['--X'])
             except:
-                payload['paras']['X']= arguments['--X']
-        
+                payload['paras']['X'] = arguments['--X']
+
         if arguments['--y'] is not None:
             try:
-                payload['paras']['y']= json.loads(arguments['--y'])
+                payload['paras']['y'] = json.loads(arguments['--y'])
             except:
-                payload['paras']['y']= arguments['--y']
-        
+                payload['paras']['y'] = arguments['--y']
+
         if arguments['--sample_weight'] is not None:
             try:
-                payload['paras']['sample_weight']= json.loads(arguments['--sample_weight'])
+                payload['paras']['sample_weight'] = json.loads(
+                    arguments['--sample_weight'])
             except:
-                payload['paras']['sample_weight']= arguments['--sample_weight']
-        
+                payload['paras']['sample_weight'] = arguments['--sample_weight']
+
         r = requests.post(url, json=payload)
         return r.text
-    
-    if arguments.LinearRegression and arguments.get_params and ( arguments['--deep'] or  True):
+
+    if arguments.LinearRegression and arguments.get_params and (
+        arguments['--deep'] or True):
         url = 'http://' + root_url + '/LinearRegression_get_params'
         payload = {'paras': {}}
-        
+
         if arguments['--deep'] is not None:
             try:
-                payload['paras']['deep']= json.loads(arguments['--deep'])
+                payload['paras']['deep'] = json.loads(arguments['--deep'])
             except:
-                payload['paras']['deep']= arguments['--deep']
-        
+                payload['paras']['deep'] = arguments['--deep']
+
         r = requests.post(url, json=payload)
         return r.text
-    
-    if arguments.LinearRegression and arguments.predict and ( arguments['--X'] or  True):
+
+    if arguments.LinearRegression and arguments.predict and (
+        arguments['--X'] or True):
         url = 'http://' + root_url + '/LinearRegression_predict'
         payload = {'paras': {}}
-        
+
         if arguments['--X'] is not None:
             try:
-                payload['paras']['X']= json.loads(arguments['--X'])
+                payload['paras']['X'] = json.loads(arguments['--X'])
             except:
-                payload['paras']['X']= arguments['--X']
-        
+                payload['paras']['X'] = arguments['--X']
+
         r = requests.post(url, json=payload)
         return r.text
-    
-    if arguments.LinearRegression and arguments.score and ( arguments['--X'] or  arguments['--y'] or  arguments['--sample_weight'] or  True):
+
+    if arguments.LinearRegression and arguments.score and (
+        arguments['--X'] or arguments['--y'] or arguments[
+        '--sample_weight'] or True):
         url = 'http://' + root_url + '/LinearRegression_score'
         payload = {'paras': {}}
-        
+
         if arguments['--X'] is not None:
             try:
-                payload['paras']['X']= json.loads(arguments['--X'])
+                payload['paras']['X'] = json.loads(arguments['--X'])
             except:
-                payload['paras']['X']= arguments['--X']
-        
+                payload['paras']['X'] = arguments['--X']
+
         if arguments['--y'] is not None:
             try:
-                payload['paras']['y']= json.loads(arguments['--y'])
+                payload['paras']['y'] = json.loads(arguments['--y'])
             except:
-                payload['paras']['y']= arguments['--y']
-        
+                payload['paras']['y'] = arguments['--y']
+
         if arguments['--sample_weight'] is not None:
             try:
-                payload['paras']['sample_weight']= json.loads(arguments['--sample_weight'])
+                payload['paras']['sample_weight'] = json.loads(
+                    arguments['--sample_weight'])
             except:
-                payload['paras']['sample_weight']= arguments['--sample_weight']
-        
+                payload['paras']['sample_weight'] = arguments['--sample_weight']
+
         r = requests.post(url, json=payload)
         return r.text
-    
-    if arguments.LinearRegression and ( arguments['--fit_intercept'] or  arguments['--normalize'] or  arguments['--copy_X'] or  arguments['--n_jobs'] or  True):
-        url = 'http://'+ root_url + '/LinearRegression_constructor'
+
+    if arguments.LinearRegression and (
+        arguments['--fit_intercept'] or arguments['--normalize'] or arguments[
+        '--copy_X'] or arguments['--n_jobs'] or True):
+        url = 'http://' + root_url + '/LinearRegression_constructor'
         payload = {'paras': {}}
-        
+
         if arguments['--fit_intercept'] is not None:
-            payload['paras']['fit_intercept'] = json.loads(arguments['--fit_intercept'])
-        
+            payload['paras']['fit_intercept'] = json.loads(
+                arguments['--fit_intercept'])
+
         if arguments['--normalize'] is not None:
             payload['paras']['normalize'] = json.loads(arguments['--normalize'])
-        
+
         if arguments['--copy_X'] is not None:
             payload['paras']['copy_X'] = json.loads(arguments['--copy_X'])
-        
+
         if arguments['--n_jobs'] is not None:
             payload['paras']['n_jobs'] = json.loads(arguments['--n_jobs'])
-        
+
         r = requests.post(url, json=payload)
         return r.text
-    
+
     if arguments.file and arguments.upload and arguments['--filename']:
         url = 'http://' + root_url + '/file/upload'
         files = {'file': open(arguments['--filename'], 'rb')}

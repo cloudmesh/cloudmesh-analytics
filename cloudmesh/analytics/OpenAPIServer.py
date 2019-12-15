@@ -9,6 +9,9 @@ import connexion
 import sys
 import textwrap
 from cloudmesh.common.util import writefile
+from cloudmesh.common.util import path_expand
+from cloudmesh.common.util import banner
+from pathlib import Path
 
 class OpenAPIServer:
     """
@@ -45,11 +48,19 @@ class OpenAPIServer:
                  spec="server.yaml",
                  key='dev'):
 
-        self.path = path
         self.spec = spec
         self.key = key
         self.host = host
-        sys.path.append(path)
+
+        if path == ".":
+            self.path = "."
+        else:
+            self.path = path_expand(path)
+
+
+        print("Server Path:", self.path)
+        sys.path.append(self.path)
+        banner(self.path)
 
     def create_app(self, config=None):
         """
@@ -60,6 +71,11 @@ class OpenAPIServer:
 
         :return: a flas server
         """
+
+        if self.path == ".":
+            self.path = os.getcwd()
+
+        print ("YYYY", self.path)
 
         # ensure the file folder exists
         try:
@@ -98,7 +114,6 @@ class OpenAPIServer:
         returns the Server as a python program string
         :return:
         """
-
         program = textwrap.dedent(
             f"""
             from cloudmesh.analytics.OpenAPIServer import OpenAPIServer
@@ -106,7 +121,7 @@ class OpenAPIServer:
             server = OpenAPIServer(
                 host = f"{self.host}",
                 path = f"{self.path}",
-                spec = f"{self.spec}",
+                spec = f"{self.path}/{self.spec}",
                 key = f"{self.key}")
             server.app()
 
@@ -114,7 +129,7 @@ class OpenAPIServer:
         return program
 
 
-    def write(self, filename):
+    def write(self, filename, path="."):
         """
         Writes a python program into the filename that contains the server
         details. This fil can be started and will run an OpenAPI server
@@ -122,7 +137,9 @@ class OpenAPIServer:
         :param filename:
         :return:
         """
+
         content = self.__str__()
+        self.path = path
         writefile(filename, content)
 
 
