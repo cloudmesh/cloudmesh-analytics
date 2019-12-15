@@ -39,12 +39,22 @@ class CodeGenerator:
         self.service = service
 
         self.all = {
-            'server': service,
+            'service': service,
             'port': self.port,
             'class_name': service,
             'cwd': self.cwd,
             'sigs': self.func_signatures
         }
+
+        all = self.construct_yaml_fields(
+            signatures=self.func_signatures,
+            function_operation_id_root=self.function_operation_id_root,
+            file_operation_id_root=self.file_operation_id_root,
+            server_root_url=self.server_url)
+        self.all.update(all)
+
+        pprint(self.all)
+
 
     def _generate_from_template(self, role_name, template_name):
         env = Environment(loader=FileSystemLoader(self.template_folder))
@@ -68,15 +78,6 @@ class CodeGenerator:
     def generate_api_specification(self,
                                    output_name,
                                    template_name):
-        all = self.construct_yaml_fields(
-            signatures=self.func_signatures,
-            function_operation_id_root=self.function_operation_id_root,
-            file_operation_id_root=self.file_operation_id_root,
-            server_root_url=self.server_url)
-        self.all.update(all)
-
-        pprint(self.all)
-
         self._generate_from_template(output_name, template_name)
 
     def generate_file_operations(self, output_name, template_name):
