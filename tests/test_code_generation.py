@@ -5,7 +5,7 @@ from jinja2 import Environment, PackageLoader, FileSystemLoader
 from tests.utilities import signature_scraper, type_scraper, code_generators
 from numpydoc import docscrape
 import inspect
-import pprint
+from pprint import pprint
 import pytest
 import sklearn.linear_model
 import os
@@ -164,8 +164,8 @@ class TestYAMLGenerator:
 
         all = table_yamlInfo
         # generated_yaml = template.render(all=all)
-        # pprint.pprint(generated_yaml)
-        pprint.pprint(all)
+        # pprint(generated_yaml)
+        pprint(all)
 
 
 class TestSignatureScraper:
@@ -202,7 +202,7 @@ class TestSignatureScraper:
         # sample_module = ['RidgeClassifier']
         sigs = signature_scraper.get_signatures(
             sample_module, type_table)
-        pprint.pprint(sigs)
+        pprint(sigs)
 
     def test_inspect(self):
         from tests.test_assets import sample_module

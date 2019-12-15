@@ -51,7 +51,7 @@ class AnalyticsCommand(PluginCommand):
                     [--cloud=CLOUD]
                     [--dir=DIR]
                     [--detached]
-                analytics server stop [--service=NAME] [--cloud=CLOUD]
+                analytics server stop SERVICE [--service=NAME] [--cloud=CLOUD]
                 analytics file upload SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
                 analytics file list SERVICE [--cloud=CLOUD] [--port=PORT]
                 analytics file read SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
@@ -171,8 +171,18 @@ class AnalyticsCommand(PluginCommand):
 
         elif arguments.server and arguments.stop:
             print('killing the server')
-            # os.kill(server_pid, signal.SIGKILL)
-            raise NotImplementedError
+
+            service = arguments.SERVICE
+
+            result = Shell.ps().splitlines()
+
+            for entry in result:
+                if ".py" in entry and service in entry:
+                    pid = int(entry.split(" ")[0])
+                    os.kill(pid, signal.SIGKILL)
+
+
+            return ""
 
         elif arguments.run and arguments.SERVICE:
             parameters, flag = find_server_parameters()
@@ -218,7 +228,7 @@ class AnalyticsCommand(PluginCommand):
 
         elif arguments.server and arguments.start and arguments.cloud:
 
-            pprint (arguments)
+            #pprint (arguments)
 
             service = arguments.service
             directory = arguments.dir
