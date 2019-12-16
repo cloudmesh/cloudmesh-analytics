@@ -34,9 +34,11 @@ class CodeGenerator:
         with open(os.path.join(self.output_folder, role_name), 'w') as f:
             f.write(res)
 
-    def generate_server(self, output_name, template_name):
+    def generate_server(self, output_name, template_name, port):
+        all = {}
+        all['port'] = port
         self._generate_from_template(
-            self.func_signatures, output_name, template_name)
+            all, output_name, template_name)
 
     def generate_handlers(self, output_name, template_name):
         all = {}
@@ -48,9 +50,11 @@ class CodeGenerator:
         self._generate_from_template(
             self.func_signatures, output_name, template_name)
 
-    def generate_command_setting(self, output_name, template_name):
+    def generate_command_setting(self, output_name, template_name, port):
+        all = {}
+        all['port'] = port
         self._generate_from_template(
-            self.func_signatures, output_name, template_name)
+            all, output_name, template_name)
 
     def generate_api_specification(self, output_name, template_name):
         all = self.construct_yaml_fields(signatures=self.func_signatures,
@@ -61,6 +65,21 @@ class CodeGenerator:
 
     def generate_file_operations(self, output_name, template_name):
         self._generate_from_template(all, output_name, template_name)
+
+    def generate_docker_build_run(self, output_name, template_name, class_name, port):
+        all = {}
+        all['class_name'] = class_name
+        all['port'] = port
+        self._generate_from_template(all, output_name, template_name)
+
+    def generate_dockerfile(self, output_name, template_name):
+        self._generate_from_template(
+            self.func_signatures, output_name, template_name)
+
+    def generate_requirements(self, output_name, template_name):
+        self._generate_from_template(
+            self.func_signatures, output_name, template_name)
+
 
     def construct_yaml_fields(self, signatures, function_operation_id_root,
                               file_operation_id_root, server_root_url):
@@ -279,7 +298,7 @@ class SignatureScraper:
         return True
 
 
-def main_generate(class_name):
+def main_generate(class_name, port):
     # Type table
     type_table = {
         'matrix': 'array',
@@ -312,25 +331,32 @@ def main_generate(class_name):
     code_gen = CodeGenerator(
         func_signatures=sigs,
         cwd=output_folder,
-        function_operation_id_root='cloudmesh.analytics.build.analytics',
-        file_operation_id_root='cloudmesh.analytics.build.file',
-        server_url='http://localhost:5000/cloudmesh-analytics',
+        function_operation_id_root='analytics',
+        file_operation_id_root='file',
+        server_url='http://localhost:8000/cloudmesh-analytics',
         template_folder=template_folder,
         output_folder=output_folder
     )
 
-    code_gen.generate_command_setting(
-        output_name='command_setting.json', template_name='command_setting.j2')
+
     code_gen.generate_handlers(
         output_name='analytics.py', template_name='handlers.j2')
     code_gen.generate_file_operations(
         output_name='file.py', template_name='file.j2')
     code_gen.generate_server(
-        output_name='server.py', template_name='server.j2')
+        output_name='server.py', template_name='server.j2', port=port)
     code_gen.generate_api_specification(
         output_name='analytics.yaml', template_name='component.j2')
+    code_gen.generate_dockerfile(
+        output_name='Dockerfile', template_name='dockerfile.j2')
+    code_gen.generate_requirements(
+        output_name='requirements.txt', template_name='requirements.j2')
 
     code_gen.output_folder = os.path.join((os.path.dirname(__file__)), 'command')
     print(output_folder)
-    code_gen.generate_command_interfaces(
-        output_name='analytics.py', template_name='command_interfaces.j2')
+    #code_gen.generate_command_interfaces(
+    #    output_name='analytics.py', template_name='command_interfaces.j2')
+    code_gen.generate_docker_build_run(
+        output_name='docker_build_run_commands.sh', template_name='docker_build_run_commands.j2', class_name=class_name, port=port)
+    code_gen.generate_command_setting(
+        output_name='command_setting.json', template_name='command_setting.j2', port=port)
