@@ -16,6 +16,7 @@ def read(file_name):
     :param file_name: The input data source.
     :return: a json response.
     """
+    print ("FFF", file_name)
     try:
         data = read_csv(file_name)
     except:
@@ -57,9 +58,10 @@ def read_csv(file_name):
     :param file_name: The file name to read
     :return: A numpy array
     """
-    data = pd.read_csv(os.path.join(current_app.config['UPLOAD_FOLDER'],
-                                    f"{file_name}.csv", ),
-                       header=None)
+    directory = current_app.config['UPLOAD_FOLDER']
+    uri = f"{directory}/{file_name}"
+    data = pd.read_csv(uri, header=None)
+
     return data.values
 
 def allowed(file_name, allowed_extentions):

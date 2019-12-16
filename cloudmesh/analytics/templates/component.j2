@@ -10,7 +10,7 @@ servers:
   - url: {{all.header.server_url}}
 
 paths:
-  /file/upload:
+  /file/put:
     post:
       summary: uploading file to the server
       operationId: cloudmesh.file.upload
@@ -61,7 +61,7 @@ paths:
                     error_message:
                       type: string
 
-  /file/read/{file_name}:
+  /file/get/{file_name}:
     get:
       summary: read file content
       operationId: cloudmesh.file.read

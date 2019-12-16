@@ -58,9 +58,9 @@ class Request(object):
         return r.text
 
     @staticmethod
-    def file_upload(root_url, service, filename):
+    def file_put(root_url, service, filename):
 
-        url = f'http://{root_url}/cloudmesh/{service}/file/upload'
+        url = f'http://{root_url}/cloudmesh/{service}/file/put'
         print ("URL", url)
         files = {'file': open(filename, 'rb')}
         r = requests.post(url, files=files)
@@ -72,13 +72,12 @@ class Request(object):
         return r.text
 
     @staticmethod
-    def file_read(parameters, root_url):
+    def file_get(root_url, service, filename):
 
-        data = Request.get_parameters(parameters)
+        url = f'http://{root_url}/cloudmesh/{service}/file/get/{filename}'
 
-        print('data:', data)
-        filename = data["filename"]
-        url = f'http://{root_url}/cloudmesh/file/read/{filename}'
+        print ("URL", url)
+
         r = requests.get(url)
         return r.text
 

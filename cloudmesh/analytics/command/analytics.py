@@ -52,9 +52,9 @@ class AnalyticsCommand(PluginCommand):
                     [--dir=DIR]
                     [--detached]
                 analytics server stop SERVICE [--service=NAME] [--cloud=CLOUD]
-                analytics file upload SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
+                analytics file put SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
                 analytics file list SERVICE [--cloud=CLOUD] [--port=PORT]
-                analytics file read SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
+                analytics file get SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
                 analytics run SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
                 analytics SERVICE [--cloud=CLOUD] [--port=PORT] [-v]
 
@@ -185,13 +185,14 @@ class AnalyticsCommand(PluginCommand):
             return ""
 
         elif arguments.run and arguments.SERVICE:
+
             parameters, flag = find_server_parameters()
             res = Request.run(flag[0], flag[1:], parameters, command, ip)
             print(res)
             return ""
 
 
-        elif arguments.file and arguments.upload:
+        elif arguments.file and arguments.put:
 
             host = arguments.cloud or "127.0.0.1"
             port = arguments.port or 8000
@@ -200,14 +201,14 @@ class AnalyticsCommand(PluginCommand):
 
             ip = f"{host}:{port}"
 
-            res = Request.file_upload(ip, service, filename)
+            res = Request.file_put(ip, service, filename)
             print(res)
             return ""
 
 
         elif arguments.file and arguments.list:
 
-            parameters, flag = find_server_parameters()
+            # parameters, flag = find_server_parameters()
 
             host = arguments.cloud or "127.0.0.1"
             port = arguments.port or 8000
@@ -220,9 +221,20 @@ class AnalyticsCommand(PluginCommand):
             return ""
 
 
-        elif arguments.file and arguments.read:
-            parameters, flag = find_server_parameters()
-            res = Request.file_upload(parameters, ip)
+        elif arguments.file and arguments.get:
+            # analytics file read SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
+            #
+
+
+            host = arguments.cloud or "127.0.0.1"
+            port = arguments.port or 8000
+            filename = arguments.FILENAME
+            service = arguments.SERVICE
+
+            ip = f"{host}:{port}"
+
+
+            res = Request.file_get(ip, service, filename)
             print(res)
             return ""
 

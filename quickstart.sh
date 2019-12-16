@@ -21,8 +21,9 @@ cms analytics server start  --cloud=local --service=LinearRegression --dir=./bui
 # Testing FILE functions
 #
 # touch build/LinearRegression/data/test.csv
-# cms analytics file upload LinearRegression tests/data/user_input_data.csv
+# cms analytics file put LinearRegression tests/data/user_input_data.csv
 # cms analytics file list LinearRegression
+# cms analytics file get LinearRegression user_input_data.csv
 
 #
 # Help
