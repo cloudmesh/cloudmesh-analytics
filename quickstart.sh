@@ -36,12 +36,9 @@ cms analytics server start  --cloud=local --service=LinearRegression --dir=./bui
 # TODO
 #
 
-##cms analytics LinearRegression fit X="[[1,2]]" y="[[3,4]]" --port=$PORT
-##cms analytics LinearRegression predict X="[[1,2]]"
-#
+##cms analytics run LinearRegression fit X="[[1,2]]" y="[[3,4]]" --port=$PORT
+##ccms analytics run LinearRegression predict X="[[1,2]]" --port=$PORT
 ##cms analytics LinearRegression predict X=user_input_data
-#
-##cms analytics file read filename=user_input_data
 
 
 

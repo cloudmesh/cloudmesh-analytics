@@ -55,7 +55,7 @@ class AnalyticsCommand(PluginCommand):
                 analytics file put SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
                 analytics file list SERVICE [--cloud=CLOUD] [--port=PORT]
                 analytics file get SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
-                analytics run SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT]
+                analytics run SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT] [-v]
                 analytics SERVICE [--cloud=CLOUD] [--port=PORT] [-v]
 
             This command manages the cloudmesh analytics server on the given cloud.
@@ -186,8 +186,22 @@ class AnalyticsCommand(PluginCommand):
 
         elif arguments.run and arguments.SERVICE:
 
+            host = arguments.cloud or "127.0.0.1"
+            port = arguments.port or 8000
+            service = arguments.SERVICE
+
+            ip = f"{host}:{port}"
+
             parameters, flag = find_server_parameters()
-            res = Request.run(flag[0], flag[1:], parameters, command, ip)
+
+            print ("Parameters", parameters)
+            print ("Flags", flag)
+            print ("Service:", service)
+            print ("Ip:", ip)
+
+            # def run(service, flag, parameters, root_url):
+
+            res = Request.run(service, flag[0], parameters, ip)
             print(res)
             return ""
 

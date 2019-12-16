@@ -5,7 +5,15 @@ import webbrowser
 class Request(object):
 
     @staticmethod
-    def ui(self, service, root_url):
+    def _post(url, payload, verbose=False):
+        if verbose:
+            print("Contacting:", url)
+            print("payload:", payload)
+        r = requests.post(url, json=payload)
+        return r
+
+    @staticmethod
+    def ui(service, root_url):
         url = f"{root_url}/{service}"
         print (url)
         open(url, new=0, autoraise=True)
@@ -22,14 +30,13 @@ class Request(object):
         return data
 
     @staticmethod
-    def run(service, flag, parameters, command, root_url):
+    def run(service, name, parameters, root_url, verbose=False):
         data = Request.get_parameters(parameters)
-        name = flag[0]
-        url = f'http://{root_url}/{service}_{name}'
+        url = f'http://{root_url}/cloudmesh/{service}/{name}'
         payload = {
             'paras': data
         }
-        r = requests.post(url, json=payload)
+        r = Request._post(url, payload=payload, verbose=verbose)
         return r.text
 
     @staticmethod
@@ -38,15 +45,12 @@ class Request(object):
         payload = {
             'paras': dict({})
         }
-        if verbose:
-            print ("Contacting:", url)
-            print ("payload:", payload)
-        r = requests.post(url, json=payload)
+        r = Request._post(url, payload=payload, verbose=verbose)
         return r.text
 
 
     @staticmethod
-    def simple_run(service, parameters, root_url):
+    def simple_run(service, parameters, root_url, verbose=False):
         data = Request.get_parameters(parameters)
         url = f'http://{root_url}/{service}/constructor'
         print('url:', url)
@@ -54,11 +58,11 @@ class Request(object):
         payload = {
             'paras': data
         }
-        r = requests.post(url, json=payload)
+        r = Request._post(url, payload=payload, verbose=verbose)
         return r.text
 
     @staticmethod
-    def file_put(root_url, service, filename):
+    def file_put(root_url, service, filename, verbose=False):
 
         url = f'http://{root_url}/cloudmesh/{service}/file/put'
         print ("URL", url)
