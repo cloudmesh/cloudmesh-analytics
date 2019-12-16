@@ -357,6 +357,6 @@ def main_generate(class_name, port):
     #code_gen.generate_command_interfaces(
     #    output_name='analytics.py', template_name='command_interfaces.j2')
     code_gen.generate_docker_build_run(
-        output_name='docker_build_run_commands.sh', template_name='docker_build_run_commands.j2', class_name=class_name, port=port)
+        output_name='docker_build_run_commands.sh', template_name='docker_build_run_commands.j2', class_name=class_name.lower(), port=port)
     code_gen.generate_command_setting(
         output_name='command_setting.json', template_name='command_setting.j2', port=port)
