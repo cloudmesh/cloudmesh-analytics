@@ -46,7 +46,7 @@ def upload(file=None):
 
 def list():
     """List all uploaded files"""
-    files = os.listdir(current_app.config['UPLOAD_FOLDER'])
+    files = os.listdir('.')
     return jsonify({'files': files})
 
 
@@ -86,6 +86,6 @@ def save(file):
     """
     filename = secure_filename(file.filename)
     try:
-        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        file.save(filename)
     except Exception as e:
         return jsonify({'error_message': str(e)})
