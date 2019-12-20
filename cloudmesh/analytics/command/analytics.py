@@ -31,17 +31,17 @@ class AnalyticsCommand(PluginCommand):
                 analytics [--class_name=VALUE] file upload [--filename=FILENAME]
                 analytics [--class_name=VALUE] file list
                 analytics [--class_name=VALUE] file read [--filename=FILENAME]
-                analytics LogisticRegression[--penalty=VALUE] [--dual=VALUE] [--tol=VALUE] [--C=VALUE] [--fit_intercept=VALUE] [--intercept_scaling=VALUE] [--class_weight=VALUE] [--random_state=VALUE] [--solver=VALUE] [--max_iter=VALUE] [--multi_class=VALUE] [--verbose=VALUE] [--warm_start=VALUE] [--n_jobs=VALUE] [--l1_ratio=VALUE] 
-                analytics LogisticRegression decision_function [--X=VALUE] 
-                analytics LogisticRegression densify
-                analytics LogisticRegression fit [--X=VALUE]  [--y=VALUE]  [--sample_weight=VALUE] 
-                analytics logisticRegression get_params [--deep=VALUE]
-                analytics LogisticRegression predict [--X=VALUE] 
-                analytics LogisticRegression predict_log_proba [--X=VALUE] 
-                analytics LogisticRegression predict_proba [--X=VALUE] 
-                analytics LogisticRegression score [--X=VALUE]  [--y=VALUE]  [--sample_weight=VALUE] 
-                analytics LogisticRegression sparsify
-                analytics LogisticRegression get_properties [--name=VALUE] 
+                analytics [--class_name=VALUE] [--penalty=VALUE] [--dual=VALUE] [--tol=VALUE] [--C=VALUE] [--fit_intercept=VALUE] [--intercept_scaling=VALUE] [--class_weight=VALUE] [--random_state=VALUE] [--solver=VALUE] [--max_iter=VALUE] [--multi_class=VALUE] [--verbose=VALUE] [--warm_start=VALUE] [--n_jobs=VALUE] [--l1_ratio=VALUE]
+                analytics [--class_name=VALUE] decision_function [--X=VALUE]
+                analytics [--class_name=VALUE] densify
+                analytics [--class_name=VALUE] fit [--X=VALUE]  [--y=VALUE]  [--sample_weight=VALUE]
+                analytics [--class_name=VALUE] get_params [--deep=VALUE]
+                analytics [--class_name=VALUE] predict [--X=VALUE]
+                analytics [--class_name=VALUE] predict_log_proba [--X=VALUE]
+                analytics [--class_name=VALUE] predict_proba [--X=VALUE]
+                analytics [--class_name=VALUE] score [--X=VALUE]  [--y=VALUE]  [--sample_weight=VALUE]
+                analytics [--class_name=VALUE] sparsify
+                analytics [--class_name=VALUE] get_properties [--name=VALUE]
                 
 
             This command manages the cloudmesh analytics server on the given cloud.
@@ -86,7 +86,7 @@ class AnalyticsCommand(PluginCommand):
 
 def run_command(arguments, root_url):
     
-    if arguments.LogisticRegression and arguments.decision_function and ( arguments['--X'] or  True):
+    if arguments.decision_function and ( arguments['--X'] or  True):
         url = 'http://' + root_url + '/LogisticRegression_decision_function'
         payload = {'paras': {}}
         
@@ -99,15 +99,15 @@ def run_command(arguments, root_url):
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and arguments.densify and ( True):
+    if arguments.densify and ( True):
         url = 'http://' + root_url + '/LogisticRegression_densify'
         payload = {'paras': {}}
         
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and arguments.fit and ( arguments['--X'] or  arguments['--y'] or  arguments['--sample_weight'] or  True):
-        url = 'http://' + root_url + '/LogisticRegression_fit'
+    if arguments.fit and ( arguments['--X'] or  arguments['--y'] or  arguments['--sample_weight'] or  True):
+        url = f'http://{root_url}/{arguments["--class_name"]}_fit'
         payload = {'paras': {}}
         
         if arguments['--X'] is not None:
@@ -131,8 +131,8 @@ def run_command(arguments, root_url):
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and arguments.get_params and ( arguments['--deep'] or  True):
-        url = 'http://' + root_url + '/LogisticRegression_get_params'
+    if arguments.get_params and ( arguments['--deep'] or  True):
+        url = f'http://{root_url}/{arguments["--class_name"]}_get_params'
         payload = {'paras': {}}
         
         if arguments['--deep'] is not None:
@@ -144,8 +144,8 @@ def run_command(arguments, root_url):
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and arguments.predict and ( arguments['--X'] or  True):
-        url = 'http://' + root_url + '/LogisticRegression_predict'
+    if arguments.predict and ( arguments['--X'] or  True):
+        url = f'http://{root_url}/{arguments["--class_name"]}_predict'
         payload = {'paras': {}}
         
         if arguments['--X'] is not None:
@@ -157,7 +157,7 @@ def run_command(arguments, root_url):
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and arguments.predict_log_proba and ( arguments['--X'] or  True):
+    if arguments.predict_log_proba and ( arguments['--X'] or  True):
         url = 'http://' + root_url + '/LogisticRegression_predict_log_proba'
         payload = {'paras': {}}
         
@@ -170,7 +170,7 @@ def run_command(arguments, root_url):
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and arguments.predict_proba and ( arguments['--X'] or  True):
+    if arguments.predict_proba and ( arguments['--X'] or  True):
         url = 'http://' + root_url + '/LogisticRegression_predict_proba'
         payload = {'paras': {}}
         
@@ -183,8 +183,8 @@ def run_command(arguments, root_url):
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and arguments.score and ( arguments['--X'] or  arguments['--y'] or  arguments['--sample_weight'] or  True):
-        url = 'http://' + root_url + '/LogisticRegression_score'
+    if arguments.score and ( arguments['--X'] or  arguments['--y'] or  arguments['--sample_weight'] or  True):
+        url = f'http://{root_url}/{arguments["--class_name"]}_score'
         payload = {'paras': {}}
         
         if arguments['--X'] is not None:
@@ -208,14 +208,14 @@ def run_command(arguments, root_url):
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and arguments.sparsify and ( True):
+    if arguments.sparsify and ( True):
         url = 'http://' + root_url + '/LogisticRegression_sparsify'
         payload = {'paras': {}}
         
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and arguments.get_properties and ( arguments['--name'] or  True):
+    if arguments.get_properties and ( arguments['--name'] or  True):
         url = 'http://' + root_url + '/LogisticRegression_get_properties'
         payload = {'paras': {}}
         
@@ -228,8 +228,8 @@ def run_command(arguments, root_url):
         r = requests.post(url, json=payload)
         return r.text
     
-    if arguments.LogisticRegression and ( arguments['--penalty'] or  arguments['--dual'] or  arguments['--tol'] or  arguments['--C'] or  arguments['--fit_intercept'] or  arguments['--intercept_scaling'] or  arguments['--class_weight'] or  arguments['--random_state'] or  arguments['--solver'] or  arguments['--max_iter'] or  arguments['--multi_class'] or  arguments['--verbose'] or  arguments['--warm_start'] or  arguments['--n_jobs'] or  arguments['--l1_ratio'] or  True):
-        url = 'http://'+ root_url + '/LogisticRegression_constructor'
+    if ( arguments['--penalty'] or  arguments['--dual'] or  arguments['--tol'] or  arguments['--C'] or  arguments['--fit_intercept'] or  arguments['--intercept_scaling'] or  arguments['--class_weight'] or  arguments['--random_state'] or  arguments['--solver'] or  arguments['--max_iter'] or  arguments['--multi_class'] or  arguments['--verbose'] or  arguments['--warm_start'] or  arguments['--n_jobs'] or  arguments['--l1_ratio'] or  True):
+        url = f'http://{root_url}/{arguments["--class_name"]}_constructor'
         payload = {'paras': {}}
         
         if arguments['--penalty'] is not None:
