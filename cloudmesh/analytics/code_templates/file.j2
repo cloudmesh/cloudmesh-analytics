@@ -59,7 +59,7 @@ def read_csv(file_name):
     Return:
         A numpy array
     """
-    data = pd.read_csv(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name + '.csv', ), header=None)
+    data = pd.read_csv(file_name + '.csv', header=None)
     return data.values
 
 def allowed(file_name, allowed_extentions):
@@ -84,7 +84,7 @@ def save(file):
     Return:
         Return a json response
     """
-    filename = secure_filename(os.path.join(os.path.dirname(__file__), file.filename))
+    filename = secure_filename(file.filename)
     try:
         file.save(filename)
     except Exception as e:
