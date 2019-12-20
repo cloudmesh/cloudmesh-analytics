@@ -31,7 +31,7 @@ class AnalyticsCommand(PluginCommand):
                 analytics [--class_name=VALUE] file upload [--filename=FILENAME]
                 analytics [--class_name=VALUE] file list
                 analytics [--class_name=VALUE] file read [--filename=FILENAME]
-                analytics [--class_name=VALUE] [--penalty=VALUE] [--dual=VALUE] [--tol=VALUE] [--C=VALUE] [--fit_intercept=VALUE] [--intercept_scaling=VALUE] [--class_weight=VALUE] [--random_state=VALUE] [--solver=VALUE] [--max_iter=VALUE] [--multi_class=VALUE] [--verbose=VALUE] [--warm_start=VALUE] [--n_jobs=VALUE] [--l1_ratio=VALUE]
+                analytics cons [--class_name=VALUE] [--penalty=VALUE] [--dual=VALUE] [--tol=VALUE] [--C=VALUE] [--fit_intercept=VALUE] [--intercept_scaling=VALUE] [--class_weight=VALUE] [--random_state=VALUE] [--solver=VALUE] [--max_iter=VALUE] [--multi_class=VALUE] [--verbose=VALUE] [--warm_start=VALUE] [--n_jobs=VALUE] [--l1_ratio=VALUE]
                 analytics [--class_name=VALUE] decision_function [--X=VALUE]
                 analytics [--class_name=VALUE] densify
                 analytics [--class_name=VALUE] fit [--X=VALUE]  [--y=VALUE]  [--sample_weight=VALUE]
@@ -228,7 +228,7 @@ def run_command(arguments, root_url):
         r = requests.post(url, json=payload)
         return r.text
     
-    if ( arguments['--penalty'] or  arguments['--dual'] or  arguments['--tol'] or  arguments['--C'] or  arguments['--fit_intercept'] or  arguments['--intercept_scaling'] or  arguments['--class_weight'] or  arguments['--random_state'] or  arguments['--solver'] or  arguments['--max_iter'] or  arguments['--multi_class'] or  arguments['--verbose'] or  arguments['--warm_start'] or  arguments['--n_jobs'] or  arguments['--l1_ratio'] or  True):
+    if arguments['cons'] and ( arguments['--penalty'] or  arguments['--dual'] or  arguments['--tol'] or  arguments['--C'] or  arguments['--fit_intercept'] or  arguments['--intercept_scaling'] or  arguments['--class_weight'] or  arguments['--random_state'] or  arguments['--solver'] or  arguments['--max_iter'] or  arguments['--multi_class'] or  arguments['--verbose'] or  arguments['--warm_start'] or  arguments['--n_jobs'] or  arguments['--l1_ratio'] or  True):
         url = f'http://{root_url}/{arguments["--class_name"]}_constructor'
         payload = {'paras': {}}
         

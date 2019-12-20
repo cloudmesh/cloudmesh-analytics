@@ -16,6 +16,9 @@
 
  cms analytics  --class_name=LinearRegression file read --filename=user_input_data
  cms analytics  --class_name=LogisticRegression file read --filename=user_output_data
+
+ cms analytics cons --class_name=LinearRegression
+ cms analytics --class_name=LinearRegression fit --X=[[1,2],[3,4]] --y=[5,6]
 ```
 
 ## How to Run This Project
