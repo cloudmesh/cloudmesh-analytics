@@ -19,6 +19,7 @@
 
  cms analytics cons --class_name=LinearRegression
  cms analytics --class_name=LinearRegression fit --X=[[1,2],[3,4]] --y=[5,6]
+ cms analytics --class_name=LinearRegression predict --X=[[3,4]]
 ```
 
 ## How to Run This Project
