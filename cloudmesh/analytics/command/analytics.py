@@ -26,10 +26,10 @@ class AnalyticsCommand(PluginCommand):
 
             Usage:
                 analytics codegen sklearn linearmodel [--class_name=VALUE] [--port=PORT]
-                analytics server start [--cloud=CLOUD]
+                analytics server start [--cloud=CLOUD] [--class_name=VALUE]
                 analytics server stop [--cloud=CLOUD]
                 analytics file upload [--filename=FILENAME]
-                analytics file list
+                analytics [--class_name=VALUE] file list
                 analytics file read [--filename=FILENAME]
                 analytics LogisticRegression[--penalty=VALUE] [--dual=VALUE] [--tol=VALUE] [--C=VALUE] [--fit_intercept=VALUE] [--intercept_scaling=VALUE] [--class_weight=VALUE] [--random_state=VALUE] [--solver=VALUE] [--max_iter=VALUE] [--multi_class=VALUE] [--verbose=VALUE] [--warm_start=VALUE] [--n_jobs=VALUE] [--l1_ratio=VALUE] 
                 analytics LogisticRegression decision_function [--X=VALUE] 
@@ -61,7 +61,7 @@ class AnalyticsCommand(PluginCommand):
             cms_autoapi.main_generate(arguments['--class_name'], int(arguments['--port']))
 
         # Configure current working server
-        if arguments.server and arguments.start and arguments['--cloud']:
+        elif arguments.server and arguments.start and arguments['--cloud']:
             settings = None
             with open(setting_path, 'r') as settings:
                 settings = json.load(settings)
@@ -73,13 +73,13 @@ class AnalyticsCommand(PluginCommand):
 
             # from cloudmesh.analytics.build import server
             # server.run_app()
-            subprocess.run(['sh', './docker_build_run_commands.sh'])
+            subprocess.run(['sh', os.path.join(os.path.dirname(__file__), arguments[--class_name], 'docker_build_run_commands.sh'])
 
         else:
             with open(setting_path, 'r') as settings:
                 settings = json.load(settings)
                 # ip = os.path.join(settings['cloud'][settings['cwd.cloud']]['ip'])
-                ip = os.path.join(settings['cloud']["localhost"]['ip'])
+                ip = os.path.join(settings['cloud']["localhost"][arguments['--class_name']])
                 print(run_command(arguments, ip))
 
         return ""

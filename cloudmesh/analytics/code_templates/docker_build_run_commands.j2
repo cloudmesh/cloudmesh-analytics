@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 
-cd ../build/
+cd ../../build/{{all.class_name}}
 docker build -t {{all.class_name}} .
 docker run -p {{all.port}}:{{all.port}} -d {{all.class_name}}
-cd ../command/

@@ -50,8 +50,9 @@ class CodeGenerator:
         self._generate_from_template(
             self.func_signatures, output_name, template_name)
 
-    def generate_command_setting(self, output_name, template_name, port):
+    def generate_command_setting(self, output_name, template_name, class_name, port):
         all = {}
+        all['class_name'] = class_name
         all['port'] = port
         self._generate_from_template(
             all, output_name, template_name)
@@ -323,7 +324,7 @@ def main_generate(class_name, port):
     template_folder = os.path.join(
         (os.path.dirname(__file__)), 'code_templates')
     output_folder = os.path.join(
-        (os.path.dirname(__file__)), 'build')
+        (os.path.dirname(__file__)), 'build', class_name.lower())
 
     print(template_folder)
     print(output_folder)
@@ -333,7 +334,7 @@ def main_generate(class_name, port):
         cwd=output_folder,
         function_operation_id_root='analytics',
         file_operation_id_root='file',
-        server_url='http://localhost:8000/cloudmesh-analytics',
+        server_url= f'http://localhost:{port}/cloudmesh-analytics',
         template_folder=template_folder,
         output_folder=output_folder
     )
@@ -352,11 +353,23 @@ def main_generate(class_name, port):
     code_gen.generate_requirements(
         output_name='requirements.txt', template_name='requirements.j2')
 
-    code_gen.output_folder = os.path.join((os.path.dirname(__file__)), 'command')
-    print(output_folder)
+    code_gen.output_folder = os.path.join((os.path.dirname(__file__)), 'command', class_name)
     #code_gen.generate_command_interfaces(
     #    output_name='analytics.py', template_name='command_interfaces.j2')
     code_gen.generate_docker_build_run(
         output_name='docker_build_run_commands.sh', template_name='docker_build_run_commands.j2', class_name=class_name.lower(), port=port)
-    code_gen.generate_command_setting(
-        output_name='command_setting.json', template_name='command_setting.j2', port=port)
+
+    # if command_setting.json exists, means at least one service is started
+    # need to add class_name-ip key pair
+    code_gen.output_folder = os.path.join((os.path.dirname(__file__)), 'command')
+    if os.path.exists(os.path.join(code_gen.output_folder, 'command_setting.json')):
+        settings = None
+        with open(os.path.join(code_gen.output_folder, 'command_setting.json'), 'r') as settings:
+            settings = json.load(settings)
+
+        settings['cloud']['localhost'][f"{class_name}"] = f"localhost:{port}/cloudmesh-analytics"
+        with open(os.path.join(code_gen.output_folder, 'command_setting.json'), 'w') as new_settings:
+            json.dump(settings, new_settings)
+    else:
+        code_gen.generate_command_setting(
+            output_name='command_setting.json', template_name='command_setting.j2', class_name=class_name, port=port)
