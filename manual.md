@@ -1,6 +1,22 @@
 # Cloudmesh Analytics Manual
 
+## QuickStart (qiwei-yanting branch)
+```
+ cms analytics codegen sklearn linearmodel --class_name=LinearRegression --port=5000
+ cms analytics codegen sklearn linearmodel --class_name=LogisticRegression --port=5001
+ 
+ cms analytics server start --cloud=local --class_name=LinearRegression
+ cms analytics server start --cloud=local --class_name=LogisticRegression
+ 
+ cms analytics --class_name=LinearRegression file upload --filename=user_input_data.csv
+ cms analytics --class_name=LogisticRegression file upload --filename=user_output_data.csv
+ 
+ cms analytics  --class_name=LinearRegression file read --filename=user_input_data
+ cms analytics  --class_name=LogisticRegression file read --filename=user_output_data
+```
+
 ## How to Run This Project
+
 
 Generate a flask server exposing the *class_name*, e.g.,LinearRegression first. This command will generate a server under flask directory
 
