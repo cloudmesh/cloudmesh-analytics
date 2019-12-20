@@ -11,6 +11,9 @@
  cms analytics --class_name=LinearRegression file upload --filename=user_input_data.csv
  cms analytics --class_name=LogisticRegression file upload --filename=user_output_data.csv
  
+ cms analytics --class_name=LinearRegression file list
+ cms analytics --class_name=LogisticRegression file list
+
  cms analytics  --class_name=LinearRegression file read --filename=user_input_data
  cms analytics  --class_name=LogisticRegression file read --filename=user_output_data
 ```
