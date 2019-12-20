@@ -73,7 +73,7 @@ class AnalyticsCommand(PluginCommand):
 
             # from cloudmesh.analytics.build import server
             # server.run_app()
-            subprocess.run(['sh', os.path.join(os.path.dirname(__file__), arguments[--class_name], 'docker_build_run_commands.sh')])
+            subprocess.run(['sh', os.path.join(os.path.dirname(__file__), arguments['--class_name'], 'docker_build_run_commands.sh')])
 
         else:
             with open(setting_path, 'r') as settings:
