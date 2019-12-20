@@ -28,7 +28,7 @@ class AnalyticsCommand(PluginCommand):
                 analytics codegen sklearn linearmodel [--class_name=VALUE] [--port=PORT]
                 analytics server start [--cloud=CLOUD] [--class_name=VALUE]
                 analytics server stop [--cloud=CLOUD]
-                analytics file upload [--filename=FILENAME]
+                analytics [--class_name=VALUE] file upload [--filename=FILENAME]
                 analytics [--class_name=VALUE] file list
                 analytics file read [--filename=FILENAME]
                 analytics LogisticRegression[--penalty=VALUE] [--dual=VALUE] [--tol=VALUE] [--C=VALUE] [--fit_intercept=VALUE] [--intercept_scaling=VALUE] [--class_weight=VALUE] [--random_state=VALUE] [--solver=VALUE] [--max_iter=VALUE] [--multi_class=VALUE] [--verbose=VALUE] [--warm_start=VALUE] [--n_jobs=VALUE] [--l1_ratio=VALUE] 
