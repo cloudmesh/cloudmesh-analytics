@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 MY_DIR=$(dirname "$(realpath $0)")
-cd MY_DIR/../../build/{{all.class_name}}
+cd $(MY_DIR)/../../build/{{all.class_name}}
 docker build -t {{all.class_name}} .
 docker run -p {{all.port}}:{{all.port}} -d {{all.class_name}}
