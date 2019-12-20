@@ -84,7 +84,7 @@ def save(file):
     Return:
         Return a json response
     """
-    filename = secure_filename(file.filename)
+    filename = secure_filename(os.path.join(os.path.dirname(__file__), file.filename))
     try:
         file.save(filename)
     except Exception as e:
