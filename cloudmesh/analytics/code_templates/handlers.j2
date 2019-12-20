@@ -12,7 +12,7 @@ def load_obj(path):
 
 
 def save_obj(obj, class_name):
-    np.save(os.path.join('{{all.cwd}}', str(class_name) + '_constructor'),
+    np.save(os.path.join(str(class_name) + '_constructor'),
             obj, allow_pickle=True)
     return
 
@@ -37,7 +37,7 @@ def {{class.class_name}}_{{member_name}}(body):
         body['paras']['y'] = file.read_csv(file_name)
 
     try:
-        obj =load_obj(os.path.join('{{all.cwd}}', '{{class.class_name}}_constructor.npy'))
+        obj =load_obj(os.path.join('{{class.class_name}}_constructor.npy'))
         res = obj.{{member_name}}(**body['paras'])
         save_obj(obj, '{{class.class_name}}')
     except Exception as e:

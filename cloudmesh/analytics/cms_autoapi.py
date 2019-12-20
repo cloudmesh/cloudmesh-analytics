@@ -42,7 +42,6 @@ class CodeGenerator:
 
     def generate_handlers(self, output_name, template_name):
         all = {}
-        all['cwd'] = self.cwd
         all['sigs'] = self.func_signatures
         self._generate_from_template(all, output_name, template_name)
 
