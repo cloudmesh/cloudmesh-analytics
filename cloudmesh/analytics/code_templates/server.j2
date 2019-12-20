@@ -44,4 +44,5 @@ def create_app(config=None):
 def run_app():
     create_app().run(host='0.0.0.0',port={{all.port}}) # port default is 5000
 
-run_app()
+if __name__=='__main__':
+    run_app()
