@@ -17,7 +17,6 @@
 
 ## How to Run This Project
 
-
 Generate a flask server exposing the *class_name*, e.g.,LinearRegression first. This command will generate a server under flask directory
 
 ```
