@@ -2,23 +2,13 @@
 
 ## Introduction
 
-LOGIC IS MISSING E>G> WHAT DOES THIS DO AND WHY ITS USEFUL AND WHAT STEPS ARE NEEDED
-
-GREGOR MAY HELP HER IF HE FINDS TIOME ;-) WHICH HE DOES NOT ;-)
-
-
-cms anlyntics server generate --port=PORT --class_name=LineraRegression
-
->  LineraRegrassion
-      Dockerfile
-      server.py
-      yaml
-      analytics.py
-      file.py
-      requirements.txt
-      test_upload_files.scv
-
-
+This project develops REST service that invokes functions of sklearn. 
+There are two special things in this project: first, 
+the application code and deployment code are auto generated. 
+This makes the users of this program only need to focus on which sklearn APIs they want to invoke, 
+then this program will auto-generate application code and deployment code for the chosen sklearn APIs. 
+Second, multiple REST services can run simultaneously, 
+which makes exposing the functionality of hundreds of sklearn APIs possible.
 
 ## Instalation
 
@@ -32,6 +22,8 @@ $ cloudmesh-installer install cms
 $ git clone https://github.com/cloudmesh/cloudmesh-analytics.git
 $ cd cloudmesh-analytics
 
+# program in qiwei-yanting branch has the feature of running multiple REST services simultaneously
+$ git checkout qiwei-yanting
 pip install -e .
 ```
 
@@ -43,7 +35,8 @@ $ cd cm
 $ pip install cloudmesh-installer
 $ cloudmesh-installer git clone analytics
 $ cloudmesh-installer install analytics
-
+$ cd cloudmesh-analytics
+$ git checkout qiwei-yanting
 pip install -e .
 ```
 
@@ -53,51 +46,31 @@ Generate a flask server exposing the *class_name*, e.g.,LinearRegression
 first. This command will generate a server
 
 ```bash
-$ cms analytics codegen sklearn linearmodel --class_name=LinearRegression
+$ cms analytics codegen sklearn linearmodel --class_name=LinearRegression --port=5000
 ```
 
 This will put the code for the server in teh directory 
-`./cloudmesh/analytics/build/`
-
-
-
-.. todo:: It should do 
-
-            ```bash
-            $ cms analytics codegen sklearn linearmodel --class_name=LinearRegression --port=8001
-            ```
-            
-            todo and write it to  `./cloudmesh/analytics/build/LinearRegression`
+`./cloudmesh/analytics/build/LinearRegression`
 
 
 In addition to this example, we are providing other examples such as 
 
 * LogisticRegression
-* ????
-* ????
-
-... TODO: add some other examples
 
 
 Next we need to launch the server with the command
 
 ```bash
-$ cms analytics server start detached --cloud=local
+$ cms analytics server start --cloud=local --class_name=LinearRegression
 ```
 
-.. todo:: it should be 
 
-            cms analytics server start detached --cloud=local --class_name=LinearRegression
-
-
-The keyword `detached` means the service is runnig in the background.
-
-
-Now the server is running,
+Now the server is running in docker container,
 Doing predication is much simpler by typing the following commands,
 
 ```bash
 $ cms analytics LinearRegression
+# cms analytics cons --class_name=LinearRegression in qiwei-yanting branch
 {"return":"successfully constructed"}
 ```
 
@@ -115,34 +88,78 @@ $ cms analytics LinearRegression predict --X="[[1,2]]"
 When the input data is large, users can upload csv files that provide
 the data. The value of X or y can be replaced with the file name.
 
-.. todo:: This does not yet work
-
 ```bash
-$ cms analytics file upload --filename=tests/test_uploaded_files/user_input_data.csv
+$ cms analytics --class_name=LinearRegression file upload --filename=./tests/test_uploaded_files/user_input_data.csv
 ```
 
 ```bash
-$ cms analytics LinearRegression predict --X=user_input_data
+$ cms analytics --class_name=LinearRegression predict --X=user_input_data
 ```
 
 To read or list the files uploaded, and the file extension can be ignored
 
 ```bash
-$ cms analytics file list
-$ cms analytics file read --filename=user_input_data
+$ cms analytics --class_name=LinearRegression file list
+$ cms analytics --class_name=LinearRegression file read --filename=user_input_data
 ```
 
 To kill the server, 
 
 ```bash
-$ cms analytics server stop
+$ cms analytics server stop --cloud=local --class_name=LinearRegression
 ```
+
+Notice that "--class_name=LinearRegression" shows up in every command, 
+and the reason is that this argument tells which API should be invoked, 
+when "--class_name=LogisticRegression", API in LogisticRegression will be invoked.
 
 ## Quickstart
 
 Here we just show you all the commands we execute without explanation so
 you can quickly see how it works
 
+The newest version in qiwei-yanting branch:
+
+```bash
+# generate code for two services
+$ cms analytics codegen sklearn linearmodel --class_name=LinearRegression --port=5000
+$ cms analytics codegen sklearn linearmodel --class_name=LogisticRegression --port=5001
+ 
+# start the two services
+$ cms analytics server start --cloud=local --class_name=LinearRegression
+$ cms analytics server start --cloud=local --class_name=LogisticRegression
+ 
+# upload files in two servers (Assuming terminal is in PATH/cloudmesh-analytics/)
+$ cd ./tests/test_uploaded_files/ 
+$ cms analytics --class_name=LinearRegression file upload --filename=user_input_data.csv
+$ cms analytics --class_name=LogisticRegression file upload --filename=user_output_data.csv
+
+# list the files in two servers
+$ cms analytics --class_name=LinearRegression file list
+$ cms analytics --class_name=LogisticRegression file list
+
+# read the uploaded files in two servers
+$ cms analytics  --class_name=LinearRegression file read --filename=user_input_data
+$ cms analytics  --class_name=LogisticRegression file read --filename=user_output_data
+
+# run the functionality of LinearRegression server
+$ cms analytics cons --class_name=LinearRegression
+$ cms analytics --class_name=LinearRegression fit --X=[[1,2],[3,4]] --y=[5,6]
+$ cms analytics --class_name=LinearRegression predict --X=[[3,4]]
+$ cms analytics --class_name=LinearRegression get_params
+
+# run the functionality of LogisticRegression server
+$ cms analytics cons --class_name=LogisticRegression
+$ cms analytics --class_name=LogisticRegression fit --X=[[1,2],[3,4]] --y=[0,1]
+$ cms analytics --class_name=LogisticRegression predict --X=[[3,4]]
+$ cms analytics --class_name=LogisticRegression get_params
+
+# stop the two services
+$ cms analytics server stop --cloud=local --class_name=LinearRegression
+$ cms analytics server stop --cloud=local --class_name=LogisticRegression
+```
+
+The old version in master branch:
 
 ```bash
 $ cms analytics codegen sklearn linearmodel --class_name=LinearRegression
