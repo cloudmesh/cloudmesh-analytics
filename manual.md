@@ -571,6 +571,10 @@ At this time we have not worked on providing security rules such as
 setting up firewalls and alike. This is out of the scope of his project
 at this time. Please be carful while using our demonstrations.
 
+Also, the variety of sklearn APIs is currently restricted on linear model.
+To integrate classification model, clustering model and other machine 
+learning models, an abstraction of functionality of sklearn APIs is needed.
+
 ## Appendix
 
 ### main.py
