@@ -1,0 +1,51 @@
+# cms command client in local computer
+# start a server in azure cloud
+
++-------------------+-----------------------------------------------------------------------------------+
+| Machine Attribute | Value                                                                             |
++-------------------+-----------------------------------------------------------------------------------+
+| cpu_count         | 12                                                                                |
+| mac_version       |                                                                                   |
+| machine           | ('AMD64',)                                                                        |
+| mem_available     | 4.5 GiB                                                                           |
+| mem_free          | 4.5 GiB                                                                           |
+| mem_percent       | 71.9%                                                                             |
+| mem_total         | 15.9 GiB                                                                          |
+| mem_used          | 11.5 GiB                                                                          |
+| node              | ('DESKTOP-JFODRL0',)                                                              |
+| platform          | Windows-10-10.0.18362-SP0                                                         |
+| processor         | ('Intel64 Family 6 Model 158 Stepping 10, GenuineIntel',)                         |
+| processors        | Windows                                                                           |
+| python            | 3.7.4 (tags/v3.7.4:e09359112e, Jul  8 2019, 19:29:22) [MSC v.1916 32 bit (Intel)] |
+| release           | ('10',)                                                                           |
+| sys               | win32                                                                             |
+| system            | Windows                                                                           |
+| user              |                                                                                   |
+| version           | 10.0.18362                                                                        |
+| win_version       | ('10', '10.0.18362', 'SP0', '')                                                   |
++-------------------+-----------------------------------------------------------------------------------+
++-------------------------------+-------+---------------------+-----+----------------------+------+---------+-------------+---------------------------------+
+| timer                         | time  | start               | tag | node                 | user | system  | mac_version | win_version                     |
++-------------------------------+-------+---------------------+-----+----------------------+------+---------+-------------+---------------------------------+
+| File_upload                   | 7.263 | 2019-12-03 20:29:39 |     | ('DESKTOP-JFODRL0',) |      | Windows |             | ('10', '10.0.18362', 'SP0', '') |
+| File_list                     | 3.243 | 2019-12-03 20:29:46 |     | ('DESKTOP-JFODRL0',) |      | Windows |             | ('10', '10.0.18362', 'SP0', '') |
+| File_read                     | 6.47  | 2019-12-03 20:29:50 |     | ('DESKTOP-JFODRL0',) |      | Windows |             | ('10', '10.0.18362', 'SP0', '') |
+| LinearRegression_constructor  | 3.229 | 2019-12-03 20:29:56 |     | ('DESKTOP-JFODRL0',) |      | Windows |             | ('10', '10.0.18362', 'SP0', '') |
+| LinearRegression_fit          | 3.264 | 2019-12-03 20:29:59 |     | ('DESKTOP-JFODRL0',) |      | Windows |             | ('10', '10.0.18362', 'SP0', '') |
+| LinearRegression_get_params   | 3.235 | 2019-12-03 20:30:03 |     | ('DESKTOP-JFODRL0',) |      | Windows |             | ('10', '10.0.18362', 'SP0', '') |
+| LinearRegression_predict      | 3.213 | 2019-12-03 20:30:06 |     | ('DESKTOP-JFODRL0',) |      | Windows |             | ('10', '10.0.18362', 'SP0', '') |
+| LinearRegression_score        | 3.234 | 2019-12-03 20:30:09 |     | ('DESKTOP-JFODRL0',) |      | Windows |             | ('10', '10.0.18362', 'SP0', '') |
+| LinearRegression_get_property | 3.228 | 2019-12-03 20:30:12 |     | ('DESKTOP-JFODRL0',) |      | Windows |             | ('10', '10.0.18362', 'SP0', '') |
++-------------------------------+-------+---------------------+-----+----------------------+------+---------+-------------+---------------------------------+
+
+csv,timer,time,starttag,node,user,system,mac_version,win_version
+#csv,File_upload,7.263,None,('DESKTOP-JFODRL0',),,Windows,,('10', '10.0.18362', 'SP0', '')
+#csv,File_list,3.243,None,('DESKTOP-JFODRL0',),,Windows,,('10', '10.0.18362', 'SP0', '')
+#csv,File_read,6.47,None,('DESKTOP-JFODRL0',),,Windows,,('10', '10.0.18362', 'SP0', '')
+#csv,LinearRegression_constructor,3.229,None,('DESKTOP-JFODRL0',),,Windows,,('10', '10.0.18362', 'SP0', '')
+#csv,LinearRegression_fit,3.264,None,('DESKTOP-JFODRL0',),,Windows,,('10', '10.0.18362', 'SP0', '')
+#csv,LinearRegression_get_params,3.235,None,('DESKTOP-JFODRL0',),,Windows,,('10', '10.0.18362', 'SP0', '')
+#csv,LinearRegression_predict,3.213,None,('DESKTOP-JFODRL0',),,Windows,,('10', '10.0.18362', 'SP0', '')
+#csv,LinearRegression_score,3.234,None,('DESKTOP-JFODRL0',),,Windows,,('10', '10.0.18362', 'SP0', '')
+#csv,LinearRegression_get_property,3.228,None,('DESKTOP-JFODRL0',),,Windows,,('10', '10.0.18362', 'SP0', '')
+
