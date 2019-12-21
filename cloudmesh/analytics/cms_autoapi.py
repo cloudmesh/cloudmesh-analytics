@@ -72,6 +72,11 @@ class CodeGenerator:
         all['port'] = port
         self._generate_from_template(all, output_name, template_name)
 
+    def generate_docker_stop(self, output_name, template_name, port):
+        all = {}
+        all['port'] = port
+        self._generate_from_template(all, output_name, template_name)
+
     def generate_dockerfile(self, output_name, template_name):
         self._generate_from_template(
             self.func_signatures, output_name, template_name)
@@ -357,6 +362,8 @@ def main_generate(class_name, port):
     #    output_name='analytics.py', template_name='command_interfaces.j2')
     code_gen.generate_docker_build_run(
         output_name='docker_build_run_commands.sh', template_name='docker_build_run_commands.j2', class_name=class_name.lower(), port=port)
+    code_gen.generate_docker_stop(
+        output_name='docker_stop.sh', template_name='docker_stop.j2', port=port)
 
     # if command_setting.json exists, means at least one service is started
     # need to add class_name-ip key pair

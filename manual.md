@@ -32,7 +32,11 @@
  cms analytics cons --class_name=LogisticRegression
  cms analytics --class_name=LogisticRegression fit --X=[[1,2],[3,4]] --y=[0,1]
  cms analytics --class_name=LogisticRegression predict --X=[[3,4]]
- cms analytics --class_name=LogisticRegression get_params
+ cms analytics --class_name=LogisticRegression 
+
+ # stop the two services
+ cms analytics server stop --cloud=local --class_name=LinearRegression
+ cms analytics server stop --cloud=local --class_name=LogisticRegression
 ```
 
 ## How to Run This Project

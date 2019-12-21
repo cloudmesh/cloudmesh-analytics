@@ -27,7 +27,7 @@ class AnalyticsCommand(PluginCommand):
             Usage:
                 analytics codegen sklearn linearmodel [--class_name=VALUE] [--port=PORT]
                 analytics server start [--cloud=CLOUD] [--class_name=VALUE]
-                analytics server stop [--cloud=CLOUD]
+                analytics server stop [--cloud=CLOUD] [--class_name=VALUE]
                 analytics [--class_name=VALUE] file upload [--filename=FILENAME]
                 analytics [--class_name=VALUE] file list
                 analytics [--class_name=VALUE] file read [--filename=FILENAME]
@@ -74,6 +74,11 @@ class AnalyticsCommand(PluginCommand):
             # from cloudmesh.analytics.build import server
             # server.run_app()
             subprocess.run(['sh', os.path.join(os.path.dirname(__file__), arguments['--class_name'], 'docker_build_run_commands.sh')])
+            print(f'Service {arguments["--class_name"]} starts.')
+
+        elif arguments.server and arguments.stop and arguments['--cloud']:
+            subprocess.run(['sh', os.path.join(os.path.dirname(__file__), arguments['--class_name'], 'docker_stop.sh')])
+            print(f'Service {arguments["--class_name"]} stops.')
 
         else:
             with open(setting_path, 'r') as settings:
