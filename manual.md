@@ -10,8 +10,8 @@
  cms analytics server start --cloud=local --class_name=LinearRegression
  cms analytics server start --cloud=local --class_name=LogisticRegression
  
- # upload files in two servers
- cd ./tests/test_uploaded_files/ (Assuming terminal is in PATH/cloudmesh-analytics/)
+ # upload files in two servers (Assuming terminal is in PATH/cloudmesh-analytics/)
+ cd ./tests/test_uploaded_files/ 
  cms analytics --class_name=LinearRegression file upload --filename=user_input_data.csv
  cms analytics --class_name=LogisticRegression file upload --filename=user_output_data.csv
  
