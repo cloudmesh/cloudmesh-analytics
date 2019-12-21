@@ -1,3 +1,5 @@
+#!/usr/bin/env sh
+
 # generate code for two services
 $ cms analytics codegen sklearn linearmodel --class_name=LinearRegression --port=5000
 $ cms analytics codegen sklearn linearmodel --class_name=LogisticRegression --port=5001
