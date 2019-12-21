@@ -176,8 +176,8 @@ requires cloudmesh-cloud.
 
 ### Benchmark 
 
-* [server in localhost](https://github.com/cloudmesh/benchmark/blob/master/results/1_local-yanwan.txt)
-* [server in azure](https://github.com/cloudmesh/benchmark/blob/master/results/azure-yanwan.txt)
+* [server in localhost](https://github.com/cloudmesh/cloudmesh-analytics/blob/master/tests/linearRegression-local-test.txt)
+* [server in azure](https://github.com/cloudmesh/cloudmesh-analytics/blob/master/tests/linearRegression-azure-test.txt)
 
 ## References 
 
