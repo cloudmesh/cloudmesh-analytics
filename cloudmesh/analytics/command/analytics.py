@@ -55,6 +55,7 @@ class AnalyticsCommand(PluginCommand):
                 analytics file put SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
                 analytics file list SERVICE [--cloud=CLOUD] [--port=PORT]
                 analytics file get SERVICE FILENAME [--cloud=CLOUD] [--port=PORT]
+                analytics file run SERVICE PARAMETERS... FILENAME [--cloud=CLOUD] [--port=PORT] [-v]
                 analytics run SERVICE PARAMETERS... [--cloud=CLOUD] [--port=PORT] [-v]
                 analytics SERVICE [--cloud=CLOUD] [--port=PORT] [-v]
 

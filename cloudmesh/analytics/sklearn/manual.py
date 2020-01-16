@@ -1,3 +1,4 @@
+import sklearn
 import sklearn.linear_model
 from cloudmesh.analytics.cms_autoapi import SignatureScraper
 from pprint import pprint
