@@ -1,7 +1,6 @@
 import typing
 from pprint import pprint
 from copy import deepcopy, copy
-from sklearn.linear_model import LinearRegression
 
 def a (x: int, y: float) -> int:
     """
