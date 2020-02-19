@@ -75,19 +75,26 @@ paths:
                   type: string
 """
 
-description = func.__doc__.strip().split("\n")[0]
-version = open('../VERSION','r').read()
-title = func.__name__
+def generate_openapi(f, write=True):
+    description = f.__doc__.strip().split("\n")[0]
+    version = open('../VERSION','r').read()
+    title = f.__name__
 
-spec = template.format(
-    title = title,
-    name = func.__name__,
-    description = description,
-    version = version
-)
+    spec = template.format(
+        title = title,
+        name = f.__name__,
+        description = description,
+        version = version
+    )
 
-print (spec)
+    if write:
+        version = open(f"{title}.yaml", 'w').write(spec)
 
-print (version)
+    return spec
 
-version = open(f"{title}.yaml",'w').write(spec)
+spec = generate_openapi(func)
+
+
+print(spec)
+
+
