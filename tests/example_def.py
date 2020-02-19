@@ -111,6 +111,8 @@ spec = generate_openapi(func)
 print(spec)
 
 for parameter, _type in  func.__annotations__.items():
+    if parameter == "return":
+        break
     print (parameter, _type)
     if _type == int:
         _type = 'integer'
