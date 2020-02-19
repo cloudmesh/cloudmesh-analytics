@@ -2,6 +2,7 @@ import typing
 from pprint import pprint
 from copy import deepcopy, copy
 from cloudmesh.common.util import readfile
+import textwrap
 
 def a (x: int, y: float) -> int:
     """
@@ -75,6 +76,18 @@ paths:
                   type: string
 """
 
+def generate_parameter(name, _type, description):
+    spec = textwrap.dedent(f"""
+        - in: query
+          name: {name}
+          schema:
+            type: {_type}
+          description: {description} 
+    
+    """)
+    return spec
+
+
 def generate_openapi(f, write=True):
     description = f.__doc__.strip().split("\n")[0]
     version = open('../VERSION','r').read()
@@ -96,5 +109,19 @@ spec = generate_openapi(func)
 
 
 print(spec)
+
+for parameter, _type in  func.__annotations__.items():
+    print (parameter, _type)
+    if _type == int:
+        _type = 'integer'
+    elif _type == bool:
+        _type = 'boolean'
+    elif _type == float:
+        _type = 'float'
+    else:
+        _type = 'unkown'
+
+    spec = generate_parameter(parameter, _type, "not yet available, you can read it from docstring")
+    print(spec)
 
 
