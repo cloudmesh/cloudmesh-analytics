@@ -77,9 +77,10 @@ paths:
 
 description = func.__doc__.strip().split("\n")[0]
 version = open('../VERSION','r').read()
+title = func.__name__
 
 spec = template.format(
-    title = func.__name__,
+    title = title,
     name = func.__name__,
     description = description,
     version = version
@@ -88,3 +89,5 @@ spec = template.format(
 print (spec)
 
 print (version)
+
+version = open(f"{title}.yaml",'w').write(spec)
