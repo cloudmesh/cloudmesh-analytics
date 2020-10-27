@@ -159,7 +159,7 @@ $ cms analytics server stop --cloud=local --class_name=LinearRegression
 $ cms analytics server stop --cloud=local --class_name=LogisticRegression
 ```
 
-The old version in master branch:
+The old version in main branch:
 
 ```bash
 $ cms analytics codegen sklearn linearmodel --class_name=LinearRegression

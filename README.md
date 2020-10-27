@@ -1,13 +1,13 @@
 # Cloudmesh Cloud AI Service
 
 
-[![image](https://img.shields.io/travis/TankerHQ/cloudmesh-bar.svg?branch=master)](https://travis-ci.org/TankerHQ/cloudmesn-bar)
+[![image](https://img.shields.io/travis/TankerHQ/cloudmesh-bar.svg?branch=main)](https://travis-ci.org/TankerHQ/cloudmesn-bar)
 
 [![image](https://img.shields.io/pypi/pyversions/cloudmesh-bar.svg)](https://pypi.org/project/cloudmesh-bar)
 
 [![image](https://img.shields.io/pypi/v/cloudmesh-bar.svg)](https://pypi.org/project/cloudmesh-bar/)
 
-[![image](https://img.shields.io/github/license/TankerHQ/python-cloudmesh-bar.svg)](https://github.com/TankerHQ/python-cloudmesh-bar/blob/master/LICENSE)
+[![image](https://img.shields.io/github/license/TankerHQ/python-cloudmesh-bar.svg)](https://github.com/TankerHQ/python-cloudmesh-bar/blob/main/LICENSE)
 
 
 The cloudmesh Cloud Ai service will provide AI capabilities that are
@@ -24,7 +24,7 @@ Team Members:
 * [Yanting Wan, hid 170](https://github.com/cloudmesh-community/fa19-516-151/graphs/contributors)
 * Gregor von Laszewski
 * Link to the project: <https://github.com/cloudmesh/cloudmesh-analytics>
-* Link to the manual: <https://github.com/cloudmesh/cloudmesh-analytics/blob/master/manual.md>
+* Link to the manual: <https://github.com/cloudmesh/cloudmesh-analytics/blob/main/manual.md>
 
 ## Instalation
 
@@ -176,8 +176,8 @@ requires cloudmesh-cloud.
 
 ### Benchmark 
 
-* [server in localhost](https://github.com/cloudmesh/cloudmesh-analytics/blob/master/tests/linearRegression-local-test.txt)
-* [server in azure](https://github.com/cloudmesh/cloudmesh-analytics/blob/master/tests/linearRegression-azure-test.txt)
+* [server in localhost](https://github.com/cloudmesh/cloudmesh-analytics/blob/main/tests/linearRegression-local-test.txt)
+* [server in azure](https://github.com/cloudmesh/cloudmesh-analytics/blob/main/tests/linearRegression-azure-test.txt)
 
 ## References 
 
